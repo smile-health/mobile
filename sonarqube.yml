@@ -1,0 +1,93 @@
+variables:
+  SONARQUBE_PROJECT_KEY: '${SONARQUBE_PROJECT_KEY}' # project name at SonarQube
+  SONARQUBE_HOST_URL: 'https://sonarqube.badr.co.id' # host url
+  SONARQUBE_TOKEN: '${SONARQUBE_TOKEN}' # SonarQube Token, CI/CD Secret Value
+
+.set-changed-files: &set-changed-files
+  before_script:
+    # list of file changes and append with comma
+    - git fetch --all
+    - export CHANGED_FILES=$(git diff --name-only "origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME" "origin/$CI_MERGE_REQUEST_TARGET_BRANCH_NAME" | paste -sd "," -)
+
+sonarqube_scan:
+  stage: sonar_scan
+  image:
+    name: sonarsource/sonar-scanner-cli:5.0.1
+    entrypoint: ['']
+  <<: *set-changed-files
+  variables:
+    SONAR_USER_HOME: '${CI_PROJECT_DIR}/.sonar'
+  cache:
+    key: '${CI_JOB_NAME}'
+    paths:
+      - .sonar/cache
+  script:
+    # Check Job Image
+    - |
+      sonar-scanner \
+        -Dsonar.projectKey=$SONARQUBE_PROJECT_KEY \
+        -Dsonar.sources=. \
+        -Dsonar.host.url=$SONARQUBE_HOST_URL \
+        -Dsonar.login=$SONARQUBE_TOKEN \
+        -Dsonar.qualitygate.wait=true \
+        -Dsonar.gitlab.project_id=$CI_PROJECT_ID \
+        -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA \
+        -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME \
+        -Dsonar.gitlab.merge_request_iid=$CI_MERGE_REQUEST_IID \
+        -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+  only:
+    - merge_requests
+  allow_failure: true
+  tags:
+    - docker
+
+sonarqube_status:
+  stage: sonar_scan
+  <<: *set-changed-files
+  script:
+    # Get Quality Gate status from SonarQube API
+    - echo "curl -s -u \"$SONARQUBE_TOKEN:\" \"$SONARQUBE_HOST_URL/api/qualitygates/project_status?projectKey=$SONARQUBE_PROJECT_KEY\""
+    - SONAR_STATUS=$(curl -s -u "$SONARQUBE_TOKEN:" "$SONARQUBE_HOST_URL/api/qualitygates/project_status?projectKey=$SONARQUBE_PROJECT_KEY" | jq -r .projectStatus.status)
+    - echo "SONAR STATUS= $SONAR_STATUS"
+    # SonarQube Project URL
+    - SONAR_URL="${SONARQUBE_HOST_URL}/dashboard?id=${SONARQUBE_PROJECT_KEY}"
+    # Get Issues from Change Files
+    - |
+      echo "FILE BERUBAH= $CHANGED_FILES"
+      CHANGED_FILES_ARRAY=(${CHANGED_FILES//,/ })
+      TOTAL_ISSUE=0
+      for FILE in "${CHANGED_FILES_ARRAY[@]}"; do
+        ISSUES=$(curl -s -u "$SONARQUBE_TOKEN:" "${SONARQUBE_HOST_URL}/api/issues/search?statuses=OPEN&types=BUG,VULNERABILITY,CODE_SMELL&componentKeys=${SONARQUBE_PROJECT_KEY}:${FILE}")
+        
+        ISSUE_COUNT=$(echo "$ISSUES" | jq '.total')
+        TOTAL_ISSUE=$((TOTAL_ISSUE + ISSUE_COUNT))
+      done
+    - |
+      printf '{ "SONARQUBE_PROJECT_KEY": "%s", "SONARQUBE_HOST": "%s", "SONARQUBE_TOKEN": "%s", "SONARQUBE_REPORT_FILES": "%s" }' "$SONARQUBE_PROJECT_KEY" "$SONARQUBE_HOST_URL" "$SONARQUBE_TOKEN" "$CHANGED_FILES" > param.json
+    - cat param.json
+    - |
+      curl -X POST "http://dev.badr.co.id:3300/generate-report-json" -H "Content-Type: application/json" --data-binary @param.json > sonarqube_report.json
+
+    - echo "Total Issue = $TOTAL_ISSUE"
+    - cat sonarqube_report.json
+
+    - |
+      GITLAB_RESPONSE=$(curl -X POST "https://gitlab.badr.co.id/api/v4/projects/$CI_PROJECT_ID/merge_requests/$CI_MERGE_REQUEST_IID/notes" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $GITLAB_API_TOKEN" \
+        --data-binary @sonarqube_report.json)
+    - echo "$GITLAB_RESPONSE"
+    # Show summary of total issue if not passed
+    - |
+      if [ $TOTAL_ISSUE -gt 0 ]; then
+        echo "SonarQube status is not OK. There's an issue = $TOTAL_ISSUE";
+        exit 1;
+      fi
+  needs:
+    - sonarqube_scan
+  only:
+    - merge_requests
+  artifacts:
+    paths:
+      - sonarqube_report.json
+    when: always

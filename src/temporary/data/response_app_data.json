@@ -1,0 +1,116 @@
+{
+  "customers": [
+    {
+      "id": 54480,
+      "name": "RS JUMO",
+      "address": "Jl. Jagalan, Kec. Jumo",
+      "code": "RSJUMO",
+      "status": 1,
+      "entity_tags": [
+        {
+          "id": 26,
+          "title": "PKL"
+        }
+      ]
+    },
+    {
+      "id": 36413,
+      "name": "Klinik Daqu Sehat Jumoyo Salam",
+      "address": "JL. JOGJA-MAGELANG KM. 23",
+      "code": "0148B001",
+      "status": 1,
+      "entity_tags": [
+        {
+          "id": 12,
+          "title": "Klinik"
+        }
+      ]
+    }
+  ],
+  "vendors": [
+    {
+      "id": 18296,
+      "name": "DINKES KAB. TEMANGGUNG",
+      "address": "Jl. Sultan Iskandar Muda No.8A Jakarta Selatan.",
+      "code": "3323",
+      "status": 1,
+      "entity_tags": [
+        {
+          "id": 7,
+          "title": "Dinas Kesehatan KabKota"
+        }
+      ]
+    },
+    {
+      "id": 55561,
+      "name": "DINKES PUTIH",
+      "address": "DINKES PUTIH",
+      "code": "DINKES PUTIH",
+      "status": 1,
+      "entity_tags": [
+        {
+          "id": 5,
+          "title": "Dinas Kesehatan Provinsi"
+        }
+      ]
+    }
+  ],
+  "master_activities_original": [
+    {
+      "id": 1,
+      "name": "Rutin",
+      "is_ordered_sales": 1,
+      "is_ordered_purchase": 0,
+      "is_patient_id": 0
+    },
+    {
+      "id": 2,
+      "name": "BIAS",
+      "is_ordered_sales": 0,
+      "is_ordered_purchase": 1,
+      "is_patient_id": 0
+    },
+    {
+      "id": 3,
+      "name": "ORI",
+      "is_ordered_sales": 1,
+      "is_ordered_purchase": 0,
+      "is_patient_id": 0
+    },
+    {
+      "id": 4,
+      "name": "Kampanye",
+      "is_ordered_sales": 0,
+      "is_ordered_purchase": 1,
+      "is_patient_id": 0
+    },
+    {
+      "id": 6,
+      "name": "COVID-19",
+      "is_ordered_sales": 0,
+      "is_ordered_purchase": 1,
+      "is_patient_id": 0
+    },
+    {
+      "id": 7,
+      "name": "BIAN",
+      "is_ordered_sales": 1,
+      "is_ordered_purchase": 1,
+      "is_patient_id": 0
+    },
+    {
+      "id": 8,
+      "name": "Umum",
+      "is_ordered_sales": 1,
+      "is_ordered_purchase": 1,
+      "is_patient_id": 0
+    },
+    {
+      "id": 86,
+      "name": "Rabies",
+      "is_ordered_sales": 1,
+      "is_ordered_purchase": 1,
+      "is_patient_id": 1
+    }
+  ]
+}

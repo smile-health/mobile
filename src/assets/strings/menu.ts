@@ -1,0 +1,215 @@
+import { HomeMenuItem } from '@/models'
+import {
+  MENU_ICON_NAMES,
+  MENU_KEYS,
+  MENU_NAMES,
+  ORDER_TYPE,
+  ROLES,
+  TRANSACTION_TYPE,
+  TYPE_CREATE_EXTERMINATION,
+  TYPE_EXTERMINATION_ORDER,
+  TYPE_EXTERMINATION_STOCK,
+  TYPE_VIEW_ORDER,
+} from '@/utils/Constants'
+
+export const MENU_ITEM: HomeMenuItem[] = [
+  {
+    key: MENU_KEYS.INVENTORY.ROOT,
+    name: MENU_NAMES.INVENTORY.ROOT,
+    childs: [
+      {
+        name: MENU_NAMES.INVENTORY.ADD_STOCK,
+        iconName: MENU_ICON_NAMES.INVENTORY.ADD_STOCK,
+        key: MENU_KEYS.INVENTORY.ADD_STOCK,
+        transactionType: TRANSACTION_TYPE.ADD_STOCK,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.REDUCE_STOCK,
+        iconName: MENU_ICON_NAMES.INVENTORY.REDUCE_STOCK,
+        key: MENU_KEYS.INVENTORY.REDUCE_STOCK,
+        transactionType: TRANSACTION_TYPE.REDUCE_STOCK,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.VIEW_STOCK,
+        iconName: MENU_ICON_NAMES.INVENTORY.VIEW_STOCK,
+        key: MENU_KEYS.INVENTORY.VIEW_STOCK,
+        transactionType: TRANSACTION_TYPE.VIEW_STOCK,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.STOCK_TAKING,
+        iconName: MENU_ICON_NAMES.INVENTORY.STOCK_TAKING,
+        key: MENU_KEYS.INVENTORY.STOCK_TAKING,
+        transactionType: TRANSACTION_TYPE.STOCK_TAKING,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.RECONCILIATION,
+        iconName: MENU_ICON_NAMES.INVENTORY.RECONCILIATION,
+        key: MENU_KEYS.INVENTORY.RECONCILIATION,
+        transactionType: TRANSACTION_TYPE.RECONCILIATION,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.CONSUMPTION,
+        iconName: MENU_ICON_NAMES.INVENTORY.CONSUMPTION,
+        key: MENU_KEYS.INVENTORY.CONSUMPTION,
+        transactionType: TRANSACTION_TYPE.CONSUMPTION,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.RETURN_ISSUE,
+        iconName: MENU_ICON_NAMES.INVENTORY.RETURN_ISSUE,
+        key: MENU_KEYS.INVENTORY.RETURN_ISSUE,
+        transactionType: TRANSACTION_TYPE.RETURN,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.DISCARDS,
+        iconName: MENU_ICON_NAMES.INVENTORY.DISCARDS,
+        key: MENU_KEYS.INVENTORY.DISCARDS,
+        transactionType: TRANSACTION_TYPE.DISCARDS,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.CANCEL_DISCARDS,
+        iconName: MENU_ICON_NAMES.INVENTORY.CANCEL_DISCARDS,
+        key: MENU_KEYS.INVENTORY.CANCEL_DISCARDS,
+        transactionType: TRANSACTION_TYPE.CANCEL_DISCARDS,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.TRANSFER_STOCK,
+        iconName: MENU_ICON_NAMES.INVENTORY.TRANSFER_STOCK,
+        key: MENU_KEYS.INVENTORY.TRANSFER_STOCK,
+        transactionType: TRANSACTION_TYPE.TRANSFER_STOCK,
+      },
+      {
+        name: MENU_NAMES.INVENTORY.VIEW_TRANSACTIONS,
+        iconName: MENU_ICON_NAMES.INVENTORY.VIEW_TRANSACTIONS,
+        key: MENU_KEYS.INVENTORY.VIEW_TRANSACTIONS,
+      },
+    ],
+  },
+  {
+    key: MENU_KEYS.ORDER.ROOT,
+    name: MENU_NAMES.ORDER.ROOT,
+    childs: [
+      {
+        name: MENU_NAMES.ORDER.LIST_ORDER,
+        iconName: MENU_ICON_NAMES.ORDER.LIST_ORDER,
+        key: MENU_KEYS.ORDER.LIST_ORDER,
+        orderType: TYPE_VIEW_ORDER,
+        role: [ROLES.MANAGER, ROLES.OPERATOR],
+      },
+      {
+        name: MENU_NAMES.ORDER.ADD_ORDER,
+        iconName: MENU_ICON_NAMES.ORDER.ADD_ORDER,
+        key: MENU_KEYS.ORDER.ADD_ORDER,
+        orderType: ORDER_TYPE.REQUEST,
+        role: [ROLES.MANAGER, ROLES.OPERATOR],
+      },
+      {
+        name: MENU_NAMES.ORDER.MAKE_DISTRIBUTION,
+        iconName: MENU_ICON_NAMES.ORDER.MAKE_DISTRIBUTION,
+        key: MENU_KEYS.ORDER.MAKE_DISTRIBUTION,
+        orderType: ORDER_TYPE.DISTRIBUTION,
+        role: [ROLES.MANAGER, ROLES.OPERATOR],
+      },
+      {
+        name: MENU_NAMES.ORDER.MAKE_RETURN,
+        iconName: MENU_ICON_NAMES.ORDER.MAKE_RETURN,
+        key: MENU_KEYS.ORDER.MAKE_RETURN,
+        orderType: ORDER_TYPE.RETURN,
+        role: [ROLES.MANAGER, ROLES.OPERATOR],
+      },
+      {
+        name: MENU_NAMES.ORDER.MAKE_RELOCATION,
+        iconName: MENU_ICON_NAMES.ORDER.MAKE_RELOCATION,
+        key: MENU_KEYS.ORDER.MAKE_RELOCATION,
+        orderType: ORDER_TYPE.RELOCATION,
+        role: [ROLES.MANAGER, ROLES.OPERATOR],
+      },
+      {
+        name: MENU_NAMES.ORDER.LIST_TICKETS,
+        iconName: MENU_ICON_NAMES.ORDER.LIST_TICKETS,
+        key: MENU_KEYS.ORDER.LIST_TICKETS,
+        orderType: ORDER_TYPE.REQUEST,
+        role: [ROLES.MANAGER],
+      },
+      {
+        name: MENU_NAMES.ORDER.TICKETING_SYSTEM,
+        iconName: MENU_ICON_NAMES.ORDER.TICKETING_SYSTEM,
+        key: MENU_KEYS.ORDER.TICKETING_SYSTEM,
+        orderType: ORDER_TYPE.REQUEST,
+        role: [ROLES.MANAGER],
+      },
+    ],
+  },
+  {
+    key: MENU_KEYS.DISPOSAL.ROOT,
+    name: MENU_NAMES.DISPOSAL.ROOT,
+    childs: [
+      {
+        name: MENU_NAMES.DISPOSAL.VIEW_DISPOSAL,
+        iconName: MENU_ICON_NAMES.DISPOSAL.VIEW_DISPOSAL,
+        key: MENU_KEYS.DISPOSAL.VIEW_DISPOSAL,
+        orderType: TYPE_EXTERMINATION_STOCK,
+      },
+      {
+        name: MENU_NAMES.DISPOSAL.LIST_DISPOSAL,
+        iconName: MENU_ICON_NAMES.DISPOSAL.LIST_DISPOSAL,
+        key: MENU_KEYS.DISPOSAL.LIST_DISPOSAL,
+        orderType: TYPE_EXTERMINATION_ORDER,
+      },
+      {
+        name: MENU_NAMES.DISPOSAL.CREATE_DISPOSAL,
+        iconName: MENU_ICON_NAMES.DISPOSAL.CREATE_DISPOSAL,
+        key: MENU_KEYS.DISPOSAL.CREATE_DISPOSAL,
+        orderType: TYPE_CREATE_EXTERMINATION,
+      },
+      {
+        name: MENU_NAMES.DISPOSAL.LIST_SELF_DISPOSAL,
+        iconName: MENU_ICON_NAMES.DISPOSAL.LIST_SELF_DISPOSAL,
+        key: MENU_KEYS.DISPOSAL.LIST_SELF_DISPOSAL,
+        type: TYPE_EXTERMINATION_ORDER,
+      },
+      {
+        name: MENU_NAMES.DISPOSAL.CREATE_SELF_DISPOSAL,
+        iconName: MENU_ICON_NAMES.DISPOSAL.CREATE_SELF_DISPOSAL,
+        key: MENU_KEYS.DISPOSAL.CREATE_SELF_DISPOSAL,
+        type: TYPE_CREATE_EXTERMINATION,
+      },
+    ],
+  },
+  {
+    key: MENU_KEYS.ASSETS.ROOT,
+    name: MENU_NAMES.ASSETS.ROOT,
+    childs: [
+      {
+        name: MENU_NAMES.ASSETS.VIEW_ASSET_INVENTORY,
+        iconName: MENU_ICON_NAMES.ASSETS.VIEW_ASSETS,
+        key: MENU_KEYS.ASSETS.VIEW_ASSET_INVENTORY,
+      },
+      {
+        name: MENU_NAMES.ASSETS.ADD_ASSET_INVENTORY,
+        iconName: MENU_ICON_NAMES.ASSETS.VIEW_ASSETS,
+        key: MENU_KEYS.ASSETS.ADD_ASSET_INVENTORY,
+      },
+    ],
+  },
+  {
+    key: MENU_KEYS.CUSTOMER_VENDOR.ROOT,
+    name: MENU_NAMES.CUSTOMER_VENDOR.ROOT,
+    childs: [
+      {
+        name: MENU_NAMES.CUSTOMER_VENDOR.DISTRIBUTION_CUSTOMER,
+        key: MENU_KEYS.CUSTOMER_VENDOR.DISTRIBUTION_CUSTOMER,
+        iconName: MENU_ICON_NAMES.CUSTOMER_VENDOR.CUSTOMER,
+      },
+      {
+        name: MENU_NAMES.CUSTOMER_VENDOR.CONSUMPTION_CUSTOMER,
+        key: MENU_KEYS.CUSTOMER_VENDOR.CONSUMPTION_CUSTOMER,
+        iconName: MENU_ICON_NAMES.CUSTOMER_VENDOR.CUSTOMER,
+      },
+      {
+        name: MENU_NAMES.CUSTOMER_VENDOR.VENDOR,
+        key: MENU_KEYS.CUSTOMER_VENDOR.VENDOR,
+        iconName: MENU_ICON_NAMES.CUSTOMER_VENDOR.VENDOR,
+      },
+    ],
+  },
+]

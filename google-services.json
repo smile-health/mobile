@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "39330161703",
+    "project_id": "smile-platform",
+    "storage_bucket": "smile-platform.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39330161703:android:1addf64349efdda0c41a02",
+        "android_client_info": {
+          "package_name": "com.smilemonitor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUsKYjJJPRfj9qC7U9GW3rMxAwBHbjwDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39330161703:android:19f955b0f38cbd67c41a02",
+        "android_client_info": {
+          "package_name": "com.smileplatformmobile.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUsKYjJJPRfj9qC7U9GW3rMxAwBHbjwDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39330161703:android:90da6b3d1a953438c41a02",
+        "android_client_info": {
+          "package_name": "com.smileplatformmobile.stg"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUsKYjJJPRfj9qC7U9GW3rMxAwBHbjwDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

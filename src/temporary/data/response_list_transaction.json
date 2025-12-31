@@ -1,0 +1,181 @@
+[
+  {
+    "key": "2024-12-27T10:43:18.000Z",
+    "data": [
+      {
+        "material_name": "Ads 0.05ml",
+        "total_qty": 300,
+        "stocks": [
+          {
+            "createdAt": "10:43",
+            "stock_id": 1,
+            "qty": 1000,
+            "activity": {
+              "id": 1,
+              "name": "Rutin"
+            },
+            "transaction_type": {
+              "id": 8,
+              "title": "Add Stock"
+            },
+            "transaction_reason": {
+              "id": 13,
+              "title": "APBD"
+            },
+            "batch": {
+              "code": "TCM23094",
+              "production_date": "2023-06-30 00:00:00",
+              "expired_date": "2026-05-30 14:59:59",
+              "manufacture": {
+                "id": 170,
+                "name": "CM-Chaomel",
+                "address": null
+              }
+            }
+          },
+          {
+            "createdAt": "10:43",
+            "stock_id": 2,
+            "qty": 100,
+            "activity": {
+              "id": 1,
+              "name": "Rutin"
+            },
+            "transaction_type": {
+              "id": 8,
+              "title": "Add Stock"
+            },
+            "transaction_reason": {
+              "id": 13,
+              "title": "APBD"
+            },
+            "batch": {
+              "code": "TCM23094",
+              "production_date": "2023-06-30 00:00:00",
+              "expired_date": "2026-05-30 14:59:59",
+              "manufacture": {
+                "id": 170,
+                "name": "CM-Chaomel",
+                "address": null
+              }
+            }
+          },
+          {
+            "createdAt": "10:43",
+            "stock_id": 3,
+            "qty": 100,
+            "activity": {
+              "id": 1,
+              "name": "Rutin"
+            },
+            "transaction_type": {
+              "id": 8,
+              "title": "Add Stock"
+            },
+            "transaction_reason": {
+              "id": 13,
+              "title": "APBD"
+            },
+            "batch": {
+              "code": "TCM23094",
+              "production_date": "2023-06-30 00:00:00",
+              "expired_date": "2026-05-30 14:59:59",
+              "manufacture": {
+                "id": 170,
+                "name": "CM-Chaomel",
+                "address": null
+              }
+            }
+          }
+        ]
+      },
+      {
+        "material_name": "Ads 0.05ml",
+        "total_qty": 300,
+        "stocks": [
+          {
+            "createdAt": "10:43",
+            "stock_id": 1,
+            "qty": 1000,
+            "activity": {
+              "id": 1,
+              "name": "Rutin"
+            },
+            "transaction_type": {
+              "id": 8,
+              "title": "Add Stock"
+            },
+            "transaction_reason": {
+              "id": 13,
+              "title": "APBD"
+            },
+            "batch": {
+              "code": "TCM23094",
+              "production_date": "2023-06-30 00:00:00",
+              "expired_date": "2026-05-30 14:59:59",
+              "manufacture": {
+                "id": 170,
+                "name": "CM-Chaomel",
+                "address": null
+              }
+            }
+          },
+          {
+            "createdAt": "10:43",
+            "stock_id": 2,
+            "qty": 100,
+            "activity": {
+              "id": 1,
+              "name": "Rutin"
+            },
+            "transaction_type": {
+              "id": 8,
+              "title": "Add Stock"
+            },
+            "transaction_reason": {
+              "id": 13,
+              "title": "APBD"
+            },
+            "batch": {
+              "code": "TCM23094",
+              "production_date": "2023-06-30 00:00:00",
+              "expired_date": "2026-05-30 14:59:59",
+              "manufacture": {
+                "id": 170,
+                "name": "CM-Chaomel",
+                "address": null
+              }
+            }
+          },
+          {
+            "createdAt": "10:43",
+            "stock_id": 3,
+            "qty": 100,
+            "activity": {
+              "id": 1,
+              "name": "Rutin"
+            },
+            "transaction_type": {
+              "id": 8,
+              "title": "Add Stock"
+            },
+            "transaction_reason": {
+              "id": 13,
+              "title": "APBD"
+            },
+            "batch": {
+              "code": "TCM23094",
+              "production_date": "2023-06-30 00:00:00",
+              "expired_date": "2026-05-30 14:59:59",
+              "manufacture": {
+                "id": 170,
+                "name": "CM-Chaomel",
+                "address": null
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

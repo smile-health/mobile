@@ -1,0 +1,410 @@
+[
+  {
+    "id": 2,
+    "title": "Issue",
+    "transaction_reasons": [
+      {
+        "id": 1,
+        "title": "Outbreak",
+        "is_other": 0,
+        "is_purchase": 0
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Discard",
+    "transaction_reasons": [
+      {
+        "id": 3,
+        "title": "Pecah",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 4,
+        "title": "Beku",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 5,
+        "title": "Kadaluwarsa/ED",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 6,
+        "title": "Rusak",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 9,
+        "title": "Tidak Ada Label",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 10,
+        "title": "ADS Bocor",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 11,
+        "title": "Dosis Kurang",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 12,
+        "title": "Uji BPOM (Siapkan Berita Acara)",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 37,
+        "title": "Vaksin Hilang (Siapkan Berita Acara)",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 45,
+        "title": "Kedaluwarsa/ED",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 46,
+        "title": "Beku",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 47,
+        "title": "Pecah",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 48,
+        "title": "Rusak",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 51,
+        "title": "Tidak Ada Label",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 52,
+        "title": "Uji BPOM (Siapkan Berita Acara)",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 74,
+        "title": "Uji Sampling Kemenkes (Siapkan Berita Acara)",
+        "is_other": 0,
+        "is_purchase": 0
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Return of Health Facilities",
+    "transaction_reasons": [
+      {
+        "id": 7,
+        "title": "Persediaan Menipis",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 8,
+        "title": "Persediaan Mencukupi",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 49,
+        "title": "Persediaan Menipis",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 50,
+        "title": "Persediaan Mencukupi",
+        "is_other": 0,
+        "is_purchase": 0
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Open Vial Acceptance",
+    "transaction_reasons": [
+      {
+        "id": 2,
+        "title": "Pengembalian dalam Gedung",
+        "is_other": 0,
+        "is_purchase": 0
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Add Stock",
+    "transaction_reasons": [
+      {
+        "id": 13,
+        "title": "APBD",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 14,
+        "title": "Lainnya",
+        "is_other": 1,
+        "is_purchase": 0
+      },
+      {
+        "id": 17,
+        "title": "Kesalahan Input",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 18,
+        "title": "Audit",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 19,
+        "title": "Perbedaan Stok",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 20,
+        "title": "Salah Batch/ED Pesanan Diterima",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 21,
+        "title": "Dipindahkan ke ORI/BIAS",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 22,
+        "title": "Dipindahkan Ke Rutin/BIAS",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 23,
+        "title": "Dipindahkan dari ORI",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 24,
+        "title": "Dipindahkan dari BIAS",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 25,
+        "title": "Dipindahkan dari Rutin",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 26,
+        "title": "Alokasi Pusat COVID19",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 53,
+        "title": "APBD",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 54,
+        "title": "Lainnya",
+        "is_other": 1,
+        "is_purchase": 0
+      },
+      {
+        "id": 57,
+        "title": "Kesalahan Input",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 58,
+        "title": "Audit",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 59,
+        "title": "Perbedaan Stok",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 60,
+        "title": "Alokasi Pusat",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 65,
+        "title": "Pembelian langsung",
+        "is_other": 0,
+        "is_purchase": 1
+      },
+      {
+        "id": 66,
+        "title": "Input Stok Awal",
+        "is_other": 0,
+        "is_purchase": 1
+      },
+      {
+        "id": 67,
+        "title": "Recall",
+        "is_other": 0,
+        "is_purchase": 1
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Remove Stock",
+    "transaction_reasons": [
+      {
+        "id": 15,
+        "title": "APBD",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 16,
+        "title": "Lainnya",
+        "is_other": 1,
+        "is_purchase": 0
+      },
+      {
+        "id": 27,
+        "title": "Kesalahan Input",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 28,
+        "title": "Audit",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 29,
+        "title": "Perbedaan Stok",
+        "is_other": 0,
+        "is_purchase": 0,
+        "transaction_type_id": 8
+      },
+      {
+        "id": 30,
+        "title": "Salah Batch/ED Pesanan Diterima",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 31,
+        "title": "Dipindahkan ke ORI/BIAS",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 32,
+        "title": "Dipindahkan Ke Rutin/BIAS",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 33,
+        "title": "Dipindahkan dari ORI",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 34,
+        "title": "Dipindahkan dari BIAS",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 35,
+        "title": "Dipindahkan dari Rutin",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 36,
+        "title": "Alokasi Pusat COVID19",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 55,
+        "title": "APBD",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 56,
+        "title": "Lainnya",
+        "is_other": 1,
+        "is_purchase": 0
+      },
+      {
+        "id": 61,
+        "title": "Kesalahan Input",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 62,
+        "title": "Audit",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 63,
+        "title": "Perbedaan Stok",
+        "is_other": 0,
+        "is_purchase": 0
+      },
+      {
+        "id": 64,
+        "title": "Alokasi Pusat",
+        "is_other": 0,
+        "is_purchase": 0
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "title": "Cancellation of Discard",
+    "transaction_reasons": []
+  }
+]

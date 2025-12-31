@@ -1,0 +1,1 @@
+export const COLOR_BRIGHTNESS_THRESHOLD = 140

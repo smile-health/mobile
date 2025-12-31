@@ -1,0 +1,69 @@
+[
+  {
+    "id": 18296,
+    "code": "3323",
+    "name": "DINKES KAB. TEMANGGUNG",
+    "address": "Jl. Sultan Iskandar Muda No.8A Jakarta Selatan.",
+    "users": [
+      {
+        "id": 16687,
+        "username": "d3323_far",
+        "firstname": "User Farmasi DINKES KAB. TEMANGGUNG",
+        "lastname": null,
+        "mobile_phone": "085780766535"
+      },
+      {
+        "id": 17059,
+        "username": "d3323_imun",
+        "firstname": "User Imunisasi DINKES KAB. TEMANGGUNG",
+        "lastname": null,
+        "mobile_phone": "085780766535"
+      }
+    ],
+    "entity_tags": [
+      {
+        "id": 7,
+        "title": "Dinas Kesehatan KabKota",
+        "entity_entity_tags": {
+          "entity_id": 18296,
+          "entity_tag_id": 7
+        }
+      }
+    ],
+    "mapping_entity": {
+      "id": 227,
+      "id_entitas_smile": 18296,
+      "id_pusdatin": null,
+      "id_bpjs": null,
+      "id_satu_sehat": 1000723145
+    },
+    "customer_vendors": {
+      "is_consumption": 0,
+      "is_distribution": 1,
+      "is_extermination": 1
+    }
+  },
+  {
+    "id": 55561,
+    "code": "DINKES PUTIH",
+    "name": "DINKES PUTIH",
+    "address": "DINKES PUTIH",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 5,
+        "title": "Dinas Kesehatan Provinsi",
+        "entity_entity_tags": {
+          "entity_id": 55561,
+          "entity_tag_id": 5
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 0,
+      "is_distribution": 1,
+      "is_extermination": 0
+    }
+  }
+]

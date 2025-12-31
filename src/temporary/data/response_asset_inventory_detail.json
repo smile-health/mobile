@@ -1,0 +1,131 @@
+{
+  "id": 2,
+  "serial_number": "SN-002Y",
+  "production_year": 2025,
+  "created_at": "2025-06-14T22:43:05.000Z",
+  "updated_at": "2025-06-14T22:51:04.000Z",
+  "asset_model": {
+    "id": 2,
+    "name": "Model B",
+    "net_capacity": 10,
+    "gross_capacity": 20
+  },
+  "asset_type": {
+    "id": 2,
+    "name": "Type B",
+    "min_temperature": 2.5,
+    "max_temperature": 5.5
+  },
+  "manufacture": {
+    "id": 134,
+    "name": "Mersi"
+  },
+  "working_status": {
+    "id": 1,
+    "name": "Berfungsi normal"
+  },
+  "entity": {
+    "id": 3,
+    "name": "DINKES KOTA BOGOR",
+    "is_puskesmas": 0
+  },
+  "entity_tag": {
+    "id": 7,
+    "title": "City/District Health Office"
+  },
+  "province": {
+    "id": "32",
+    "name": "PROV. JAWA BARAT"
+  },
+  "regency": {
+    "id": "3271",
+    "name": "KOTA BOGOR"
+  },
+  "sub_district": {
+    "id": "",
+    "name": ""
+  },
+  "village": {
+    "id": "",
+    "name": ""
+  },
+  "contact_person": {
+    "first": {
+      "id": 32804,
+      "name": "Eko Manufaktur"
+    },
+    "second": {
+      "id": 30583,
+      "name": "Susilo Nurcahyo"
+    },
+    "third": {
+      "id": 30649,
+      "name": "Wira Super"
+    }
+  },
+  "ownership": {
+    "id": 2,
+    "name": "Borrowed"
+  },
+  "borrowed_from": {
+    "id": 5,
+    "name": "DINKES KAB. BOGOR"
+  },
+  "budget_source": {
+    "id": 34,
+    "name": "Budget source dummy",
+    "year": 2025
+  },
+  "electricity": {
+    "id": 1,
+    "name": "0 Hours"
+  },
+  "warranty": {
+    "aset_vendor_id": 2,
+    "asset_vendor_name": "Vendor A",
+    "start_date": "2024-06-15T00:00:00.000Z",
+    "end_date": "2026-06-30T00:00:00.000Z"
+  },
+  "calibration": {
+    "aset_vendor_id": 2,
+    "asset_vendor_name": "Vendor A",
+    "last_date": "2025-06-15T00:00:00.000Z",
+    "schedule_id": 1,
+    "name": "Every Week"
+  },
+  "maintenance": {
+    "aset_vendor_id": 2,
+    "asset_vendor_name": "Vendor A",
+    "last_date": "2025-06-15T00:00:00.000Z",
+    "schedule_id": 1,
+    "name": "Every Week"
+  },
+  "status": {
+    "id": 1,
+    "name": "Active"
+  },
+  "programs": {
+    "id": 2,
+    "key": "wms",
+    "name": "Essential Drugs",
+    "config": {
+      "material": {
+        "is_hierarchy_enabled": true,
+        "is_batch_enabled": false
+      },
+      "color": "#680771"
+    }
+  },
+  "user_created_by": {
+    "id": 32093,
+    "username": "doringM_superadmin",
+    "firstname": "doringM_superadmin",
+    "lastname": null
+  },
+  "user_updated_by": {
+    "id": 32093,
+    "username": "doringM_superadmin",
+    "firstname": "doringM_superadmin",
+    "lastname": null
+  }
+}

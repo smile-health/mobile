@@ -1,0 +1,225 @@
+[
+  {
+    "id": 36413,
+    "code": "0148B001",
+    "name": "Klinik Daqu Sehat Jumoyo Salam",
+    "address": "JL. JOGJA-MAGELANG KM. 23",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 12,
+        "title": "Klinik",
+        "entity_entity_tags": {
+          "entity_id": 36413,
+          "entity_tag_id": 12
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 0,
+      "is_distribution": 1,
+      "is_extermination": 1
+    }
+  },
+  {
+    "id": 34705,
+    "code": "0163R005",
+    "name": "RS GUNUNG SAWO TEMANGGUNG",
+    "address": "Jl. Gatot Subroto KM 2",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 10,
+        "title": "Dalam Gedung",
+        "entity_entity_tags": {
+          "entity_id": 34705,
+          "entity_tag_id": 10
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  },
+  {
+    "id": 29689,
+    "code": "11181001_01",
+    "name": "PUSKESMAS JUMO DALAM GEDUNG",
+    "address": "Jl. Jagalan, Kec. Jumo",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 10,
+        "title": "Dalam Gedung",
+        "entity_entity_tags": {
+          "entity_id": 29689,
+          "entity_tag_id": 10
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  },
+  {
+    "id": 34820,
+    "code": "1118R001",
+    "name": "RSUD TEMANGGUNG",
+    "address": "Jl. Gajah Mada 1A Temanggung",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 11,
+        "title": "Rumah Sakit",
+        "entity_entity_tags": {
+          "entity_id": 34820,
+          "entity_tag_id": 11
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  },
+  {
+    "id": 34678,
+    "code": "1118R002",
+    "name": "RS NGESTI WALUYO",
+    "address": "Jl. Pahlawan Parakan Temanggung",
+    "users": [
+      {
+        "id": 47929,
+        "username": "rs_ngestiwaluyo",
+        "firstname": "RSK",
+        "lastname": "Ngesti Waluyo",
+        "mobile_phone": null
+      }
+    ],
+    "entity_tags": [
+      {
+        "id": 11,
+        "title": "Rumah Sakit",
+        "entity_entity_tags": {
+          "entity_id": 34678,
+          "entity_tag_id": 11
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 0,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  },
+  {
+    "id": 35964,
+    "code": "1118R003",
+    "name": "RS PKU MUHAMMADIYAH TEMANGGUNG",
+    "address": "Jl. Raya Kedu KM 2 Kalisat",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 11,
+        "title": "Rumah Sakit",
+        "entity_entity_tags": {
+          "entity_id": 35964,
+          "entity_tag_id": 11
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  },
+  {
+    "id": 54480,
+    "code": "RSJUMO",
+    "name": "RS JUMO",
+    "address": "Jl. Jagalan, Kec. Jumo",
+    "users": [
+      {
+        "id": 48212,
+        "username": "rs_jumo",
+        "firstname": "RS Jumo",
+        "lastname": null,
+        "mobile_phone": null
+      }
+    ],
+    "entity_tags": [
+      {
+        "id": 26,
+        "title": "PKL",
+        "entity_entity_tags": {
+          "entity_id": 54480,
+          "entity_tag_id": 26
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 1,
+      "is_extermination": 1
+    }
+  },
+  {
+    "id": 49474,
+    "code": "SD78787878",
+    "name": "SDN 01 JUMO",
+    "address": "Jl. Jumo no 34",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 14,
+        "title": "Sekolah",
+        "entity_entity_tags": {
+          "entity_id": 49474,
+          "entity_tag_id": 14
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  },
+  {
+    "id": 2262,
+    "code": "YUJ",
+    "name": "SMA Seruni Putih",
+    "address": "-",
+    "users": [],
+    "entity_tags": [
+      {
+        "id": 14,
+        "title": "Sekolah",
+        "entity_entity_tags": {
+          "entity_id": 2262,
+          "entity_tag_id": 14
+        }
+      }
+    ],
+    "mapping_entity": null,
+    "customer_vendors": {
+      "is_consumption": 1,
+      "is_distribution": 0,
+      "is_extermination": 0
+    }
+  }
+]

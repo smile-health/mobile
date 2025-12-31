@@ -1,0 +1,27 @@
+ [
+      {
+        "id": 284736,
+        "allocations": [
+          {
+            "stock_id": 126380,
+            "allocated_qty": 10,
+            "order_stock_status_id": 1
+          },
+          {
+            "stock_id": 126926,
+            "allocated_qty": 10,
+            "order_stock_status_id": 1
+          }
+        ]
+      },
+      {
+        "id": 284737,
+        "allocations": [
+          {
+            "stock_id": 126381,
+            "allocated_qty": 25,
+            "order_stock_status_id": 1
+          }
+        ]
+      }
+]

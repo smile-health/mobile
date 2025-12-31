@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "Rutin",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 2,
+    "name": "BIAS",
+    "is_ordered_sales": 0,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 3,
+    "name": "ORI",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 0,
+    "is_patient_id": 0
+  },
+  {
+    "id": 4,
+    "name": "Kampanye",
+    "is_ordered_sales": 0,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 6,
+    "name": "COVID-19",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 0,
+    "is_patient_id": 0
+  },
+  {
+    "id": 7,
+    "name": "BIAN",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 8,
+    "name": "Umum",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 86,
+    "name": "Rabies",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 1
+  },
+  {
+    "id": 108,
+    "name": "Kegiatan Baru Up",
+    "is_ordered_sales": 0,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 109,
+    "name": "Kegiatan Baru Top-Down",
+    "is_ordered_sales": 0,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  },
+  {
+    "id": 112,
+    "name": "Testing Kegiatan",
+    "is_ordered_sales": 1,
+    "is_ordered_purchase": 1,
+    "is_patient_id": 0
+  }
+]

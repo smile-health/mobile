@@ -1,0 +1,147 @@
+include:
+  - project: smile-platform/review-tools
+    ref: main
+    file: 'review.yml'
+
+image: node:20
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm
+
+stages:
+  - sonar_scan
+  - get_report
+  - upload_report
+  - open_ai_review_code
+  - sq_mr_scan
+  - validate_unit_test
+  - linter_and_expo_doctor
+  - eas_update
+  - dso
+
+before_script:
+  - |
+    echo "staging environtment"
+    export NAMESPACE=smile5
+
+npm-run-test:
+  stage: validate_unit_test
+  variables:
+    HUSKY: 0
+    CI: 'true'
+  tags:
+    - docker
+  only:
+    - merge_requests
+    - dev
+  script:
+    - npm install --cache .npm
+    - npm run test -- --ci --passWithNoTests
+
+linter-and-expo-doctor-check:
+  stage: linter_and_expo_doctor
+  variables:
+    HUSKY: 0
+    CI: 'true'
+  tags:
+    - docker
+  only:
+    - merge_requests
+    - dev
+  script:
+    - npm install --cache .npm
+    - npm run lint
+    - npx expo-doctor
+
+###########################################################################
+# dso scan
+###########################################################################
+dso_scans:
+  image: registry.code.unicc.org/components/dso/dso-scanner
+  stage: dso
+  script:
+    - dso-scanner
+  only:
+    - staging-scan
+  tags:
+    - kube-dev
+
+update-eas-dev-branch:
+  stage: eas_update
+  variables:
+    HUSKY: 0
+    CI: 'true'
+    EXPO_TOKEN: $EXPO_TOKEN
+    SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
+  tags:
+    - docker
+  only:
+    refs:
+      - dev
+  script:
+    - npm install --cache .npm
+    - node -v
+    - npx eas-cli update --auto --branch $CI_COMMIT_BRANCH --environment development || echo "⚠️ EAS update failed due to lightningcss compatibility issue. Please run EAS update manually from local environment."
+    - npx sentry-expo-upload-sourcemaps dist \
+      --release="$CI_COMMIT_SHA" \
+      --dist="$CI_COMMIT_BRANCH"
+
+update-eas-preview-branch:
+  stage: eas_update
+  variables:
+    HUSKY: 0
+    CI: 'true'
+    EXPO_TOKEN: $EXPO_TOKEN
+    SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
+  tags:
+    - docker
+  only:
+    refs:
+      - merge_requests
+  script:
+    - npm install --cache .npm
+    - node -v
+    - echo "preview/$(git log -1 --pretty=format:'%an')"
+    - npx eas-cli update --auto --branch "preview/$(git log -1 --pretty=format:'%an')" --environment development || echo "⚠️ EAS update failed due to lightningcss compatibility issue. Please run EAS update manually from local environment."
+
+update-eas-staging-branch:
+  stage: eas_update
+  variables:
+    HUSKY: 0
+    CI: 'true'
+    EXPO_TOKEN: $EXPO_TOKEN
+    SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
+  tags:
+    - docker
+  only:
+    refs:
+      - staging
+  script:
+    - npm install --cache .npm
+    - node -v
+    - npx eas-cli update --auto --branch $CI_COMMIT_BRANCH --environment development
+    - npx sentry-expo-upload-sourcemaps dist \
+      --release="$CI_COMMIT_SHA" \
+      --dist="$CI_COMMIT_BRANCH"
+
+update-eas-production-branch:
+  stage: eas_update
+  variables:
+    HUSKY: 0
+    CI: 'true'
+    EXPO_TOKEN: $EXPO_TOKEN
+    SENTRY_AUTH_TOKEN: $SENTRY_AUTH_TOKEN
+  tags:
+    - docker
+  only:
+    refs:
+      - prod/debug
+  script:
+    - npm install --cache .npm
+    - node -v
+    - npx eas-cli update --auto --branch $CI_COMMIT_BRANCH --environment development
+    - npx sentry-expo-upload-sourcemaps dist \
+      --release="$CI_COMMIT_SHA" \
+      --dist="$CI_COMMIT_BRANCH"

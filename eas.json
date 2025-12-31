@@ -1,0 +1,66 @@
+{
+  "cli": {
+    "version": ">= 10.2.4"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "channel": "dev"
+    },
+    "ios_simulator_dev": {
+      "ios": {
+        "simulator": true
+      },
+      "distribution": "internal",
+      "channel": "dev"
+    },
+    "preview_dev_internal": {
+      "distribution": "internal",
+      "channel": "dev",
+      "env": {
+        "APP_ENVIRONMENT": "development",
+        "SENTRY_ORG": "smile-platform-mobile",
+        "SENTRY_PROJECT": "smile-v5-mobile"
+      }
+    },
+    "preview_dev_public": {
+      "channel": "dev",
+      "env": {
+        "APP_ENVIRONMENT": "development",
+        "SENTRY_ORG": "smile-platform-mobile",
+        "SENTRY_PROJECT": "smile-v5-mobile"
+      }
+    },
+    "preview_staging_internal": {
+      "distribution": "internal",
+      "channel": "staging",
+      "env": {
+        "APP_ENVIRONMENT": "staging",
+        "SENTRY_ORG": "smile-platform-mobile",
+        "SENTRY_PROJECT": "smile-v5-mobile"
+      }
+    },
+    "preview_staging_public": {
+      "distribution": "store",
+      "channel": "staging",
+      "env": {
+        "APP_ENVIRONMENT": "staging",
+        "SENTRY_ORG": "smile-platform-mobile",
+        "SENTRY_PROJECT": "smile-v5-mobile"
+      }
+    },
+    "production": {
+      "env": {
+        "APP_ENVIRONMENT": "production",
+        "SENTRY_ORG": "smile-platform-mobile",
+        "SENTRY_PROJECT": "smile-v5-mobile"
+      },
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "staging": {},
+    "production": {}
+  }
+}

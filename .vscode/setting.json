@@ -1,0 +1,30 @@
+{
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "cx\\(([^)]*)\\)",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)",
+      "clsx\\(([^)]*)\\)",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)"
+    ]
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "html": "HTML",
+    "typescript": "typescript"
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    ".*Styles.*",
+    ".*ClassName*.",
+    ".*Preset*."
+  ],
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  "editor.wordWrap": "on"
+}

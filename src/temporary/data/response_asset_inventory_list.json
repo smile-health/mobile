@@ -1,0 +1,58 @@
+{
+  "total": 1,
+  "perPage": 10,
+  "page": 1,
+  "total_page": 1,
+  "list_pagination": [10, 25, 50, 100],
+  "data": [
+    {
+      "id": 2,
+      "serial_number": "SN-002Y",
+      "name": "Model B",
+      "prod_year": "2025",
+      "temp": null,
+      "status": 1,
+      "working_status": "Berfungsi normal",
+      "working_status_id": 1,
+      "created_at": "2025-06-14T22:43:05.000Z",
+      "updated_at": "2025-06-14T22:51:04.000Z",
+      "warranty_start_date": "2024-06-15T00:00:00.000Z",
+      "warranty_end_date": "2026-06-30T00:00:00.000Z",
+      "last_maintenance_date": "2025-06-15T00:00:00.000Z",
+      "last_calibration_date": "2025-06-15T00:00:00.000Z",
+
+      "manufacture_id": 134,
+      "manufacture": {
+        "id": 134,
+        "name": "Mersi"
+      },
+      "model_id": 2,
+      "asset_model": {
+        "id": 2,
+        "name": "Model B",
+        "capacity": 10,
+        "capacity_gross": 20,
+        "capacity_nett": 10
+      },
+      "type_id": 2,
+      "asset_type": {
+        "id": 2,
+        "name": "Type B",
+        "min_temp": 2.5,
+        "max_temp": 5.5
+      },
+      "entity_id": 3,
+      "entity": {
+        "id": 3,
+        "name": "DINKES KOTA BOGOR",
+        "address": "",
+        "code": ""
+      },
+      "asset_status": {
+        "id": 1,
+        "name": "Active"
+      },
+      "latest_log": null
+    }
+  ]
+}

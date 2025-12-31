@@ -1,0 +1,66 @@
+{
+  "assetTypeOptions": [
+    { "label": "Microscope", "value": 1 },
+    { "label": "Centrifuge", "value": 2 },
+    { "label": "Incubator", "value": 3 }
+  ],
+  "assetModelOptions": [
+    { "label": "Model A", "value": 1 },
+    { "label": "Model B", "value": 2 },
+    { "label": "Model C", "value": 3 }
+  ],
+  "manufacturerOptions": [
+    { "label": "PT EMS", "value": 1 },
+    { "label": "Olympus", "value": 2 },
+    { "label": "Tasco", "value": 3 }
+  ],
+  "workingStatusOptions": [
+    { "label": "Function", "value": 1 },
+    { "label": "Standby", "value": 2 },
+    { "label": "Repair", "value": 3 },
+    { "label": "Damaged", "value": 4 },
+    { "label": "Unrepairable", "value": 5 },
+    { "label": "Defrosting", "value": 6 },
+    { "label": "Not Used", "value": 7 },
+    { "label": "Unsubscribes", "value": 8 }
+  ],
+  "scheduleOptions": [
+    { "label": "Monthly", "value": 1 },
+    { "label": "Quarterly", "value": 2 },
+    { "label": "Bi-annually", "value": 3 },
+    { "label": "Annually", "value": 4 }
+  ],
+  "vendorOptions": [
+    { "label": "Vendor A", "value": 1 },
+    { "label": "Vendor B", "value": 2 },
+    { "label": "Vendor C", "value": 3 }
+  ],
+  "budgetYearOptions": [
+    { "label": "2022", "value": 2022 },
+    { "label": "2023", "value": 2023 },
+    { "label": "2024", "value": 2024 }
+  ],
+  "budgetSourceOptions": [
+    { "label": "APBN", "value": 1 },
+    { "label": "APBD", "value": 2 },
+    { "label": "Hibah", "value": 3 }
+  ],
+  "electricityAvailabilityOptions": [
+    { "label": "8 Hours", "value": 1 },
+    { "label": "12 Hours", "value": 2 },
+    { "label": "24 Hours", "value": 3 }
+  ],
+  "borrowedFromOptions": [
+    { "label": "Hospital A", "value": 1 },
+    { "label": "Hospital B", "value": 2 },
+    { "label": "Clinic C", "value": 3 },
+    { "label": "Laboratory D", "value": 4 }
+  ],
+  "contactPersonOptions": [
+    { "label": "Annisa Nurul", "value": 807897575661 },
+    { "label": "Rizky Jayawisata", "value": 807897575662 },
+    { "label": "Budi Santoso", "value": 807897575663 },
+    { "label": "Dewi Anggraini", "value": 807897575664 },
+    { "label": "Fajar Ramadhan", "value": 807897575665 }
+  ]
+}

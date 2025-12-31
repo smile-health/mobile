@@ -1,0 +1,47 @@
+[
+  {
+    "order_type": null,
+    "title": "ALL",
+    "total": 389
+  },
+  {
+    "order_type": 1,
+    "title": "PENDING",
+    "total": 71
+  },
+  {
+    "order_type": 2,
+    "title": "CONFIRMED",
+    "total": 103
+  },
+  {
+    "order_type": 3,
+    "title": "ALLOCATED",
+    "total": 18
+  },
+  {
+    "order_type": 4,
+    "title": "SHIPPED",
+    "total": 79
+  },
+  {
+    "order_type": 5,
+    "title": "FULFILLED",
+    "total": 94
+  },
+  {
+    "order_type": 6,
+    "title": "CANCELED",
+    "total": 24
+  },
+  {
+    "order_type": 7,
+    "title": "INDEPENDENT_EXTERMINATION",
+    "total": 0
+  },
+  {
+    "order_type": 8,
+    "title": "DRAFT",
+    "total": 0
+  }
+]
