@@ -1,6 +1,7 @@
 # SMILE PLATFORM MOBILE
 
-This is an Expo-based React Native project.
+## About
+This document purpose to provide information about SMILE mobile-apps installation and how to develop it.
 
 ## 1. Folder Structure
 
