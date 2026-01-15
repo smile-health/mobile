@@ -1,7 +1,7 @@
 # SMILE PLATFORM MOBILE
 
 ## About
-This document purpose to provide information about SMILE mobile-apps installation and how to develop it.
+This document aims to provide information on the installation and development of the SMILE mobile applications.
 
 ## 1. Folder Structure
 
