@@ -6,9 +6,6 @@ import {
   ORDER_TYPE,
   ROLES,
   TRANSACTION_TYPE,
-  TYPE_CREATE_EXTERMINATION,
-  TYPE_EXTERMINATION_ORDER,
-  TYPE_EXTERMINATION_STOCK,
   TYPE_VIEW_ORDER,
 } from '@/utils/Constants'
 
@@ -139,42 +136,43 @@ export const MENU_ITEM: HomeMenuItem[] = [
       },
     ],
   },
-  {
-    key: MENU_KEYS.DISPOSAL.ROOT,
-    name: MENU_NAMES.DISPOSAL.ROOT,
-    childs: [
-      {
-        name: MENU_NAMES.DISPOSAL.VIEW_DISPOSAL,
-        iconName: MENU_ICON_NAMES.DISPOSAL.VIEW_DISPOSAL,
-        key: MENU_KEYS.DISPOSAL.VIEW_DISPOSAL,
-        orderType: TYPE_EXTERMINATION_STOCK,
-      },
-      {
-        name: MENU_NAMES.DISPOSAL.LIST_DISPOSAL,
-        iconName: MENU_ICON_NAMES.DISPOSAL.LIST_DISPOSAL,
-        key: MENU_KEYS.DISPOSAL.LIST_DISPOSAL,
-        orderType: TYPE_EXTERMINATION_ORDER,
-      },
-      {
-        name: MENU_NAMES.DISPOSAL.CREATE_DISPOSAL,
-        iconName: MENU_ICON_NAMES.DISPOSAL.CREATE_DISPOSAL,
-        key: MENU_KEYS.DISPOSAL.CREATE_DISPOSAL,
-        orderType: TYPE_CREATE_EXTERMINATION,
-      },
-      {
-        name: MENU_NAMES.DISPOSAL.LIST_SELF_DISPOSAL,
-        iconName: MENU_ICON_NAMES.DISPOSAL.LIST_SELF_DISPOSAL,
-        key: MENU_KEYS.DISPOSAL.LIST_SELF_DISPOSAL,
-        type: TYPE_EXTERMINATION_ORDER,
-      },
-      {
-        name: MENU_NAMES.DISPOSAL.CREATE_SELF_DISPOSAL,
-        iconName: MENU_ICON_NAMES.DISPOSAL.CREATE_SELF_DISPOSAL,
-        key: MENU_KEYS.DISPOSAL.CREATE_SELF_DISPOSAL,
-        type: TYPE_CREATE_EXTERMINATION,
-      },
-    ],
-  },
+  // Disposal menu temporarily hidden
+  // {
+  //   key: MENU_KEYS.DISPOSAL.ROOT,
+  //   name: MENU_NAMES.DISPOSAL.ROOT,
+  //   childs: [
+  //     {
+  //       name: MENU_NAMES.DISPOSAL.VIEW_DISPOSAL,
+  //       iconName: MENU_ICON_NAMES.DISPOSAL.VIEW_DISPOSAL,
+  //       key: MENU_KEYS.DISPOSAL.VIEW_DISPOSAL,
+  //       orderType: TYPE_EXTERMINATION_STOCK,
+  //     },
+  //     {
+  //       name: MENU_NAMES.DISPOSAL.LIST_DISPOSAL,
+  //       iconName: MENU_ICON_NAMES.DISPOSAL.LIST_DISPOSAL,
+  //       key: MENU_KEYS.DISPOSAL.LIST_DISPOSAL,
+  //       orderType: TYPE_EXTERMINATION_ORDER,
+  //     },
+  //     {
+  //       name: MENU_NAMES.DISPOSAL.CREATE_DISPOSAL,
+  //       iconName: MENU_ICON_NAMES.DISPOSAL.CREATE_DISPOSAL,
+  //       key: MENU_KEYS.DISPOSAL.CREATE_DISPOSAL,
+  //       orderType: TYPE_CREATE_EXTERMINATION,
+  //     },
+  //     {
+  //       name: MENU_NAMES.DISPOSAL.LIST_SELF_DISPOSAL,
+  //       iconName: MENU_ICON_NAMES.DISPOSAL.LIST_SELF_DISPOSAL,
+  //       key: MENU_KEYS.DISPOSAL.LIST_SELF_DISPOSAL,
+  //       type: TYPE_EXTERMINATION_ORDER,
+  //     },
+  //     {
+  //       name: MENU_NAMES.DISPOSAL.CREATE_SELF_DISPOSAL,
+  //       iconName: MENU_ICON_NAMES.DISPOSAL.CREATE_SELF_DISPOSAL,
+  //       key: MENU_KEYS.DISPOSAL.CREATE_SELF_DISPOSAL,
+  //       type: TYPE_CREATE_EXTERMINATION,
+  //     },
+  //   ],
+  // },
   {
     key: MENU_KEYS.ASSETS.ROOT,
     name: MENU_NAMES.ASSETS.ROOT,
