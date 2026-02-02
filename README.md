@@ -108,7 +108,7 @@ project-root
 1. Clone the repository:
 
    ```bash
-   git clone https://gitlab.badr.co.id/smile-platform/mobile-react-native.git
+   git clone git@github.com:smile-health/mobile.git
    ```
 
 2. Navigate to the project directory:
