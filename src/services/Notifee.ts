@@ -37,7 +37,7 @@ const { notifee, AuthorizationStatus, AndroidImportance, EventType } = (() => {
       },
     }
   }
-  const RealNotifee = require('@notifee/react-native')
+  const RealNotifee = require('react-native-notify-kit')
   return {
     notifee: RealNotifee.default,
     AuthorizationStatus: RealNotifee.AuthorizationStatus,
