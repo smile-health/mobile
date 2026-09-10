@@ -52,6 +52,8 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
         'android.permission.RECORD_AUDIO',
         'android.permission.READ_EXTERNAL_STORAGE',
         'android.permission.WRITE_EXTERNAL_STORAGE',
+        'android.permission.READ_MEDIA_IMAGES',
+        'android.permission.READ_MEDIA_VIDEO',
         'android.permission.SYSTEM_ALERT_WINDOW',
         'android.permission.USE_BIOMETRIC',
         'android.permission.USE_FINGERPRINT',
