@@ -47,7 +47,7 @@ jest.mock('@/i18n', () => ({
 }))
 
 // Mock @notifee/react-native
-jest.mock('@notifee/react-native', () => {
+jest.mock('react-native-notify-kit', () => {
   const mockNotifee = {
     createChannel: jest.fn().mockResolvedValue(),
     displayNotification: jest.fn().mockResolvedValue(),
