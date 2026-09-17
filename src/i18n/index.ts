@@ -19,9 +19,9 @@ i18n
   .use(ChainedBackend)
   .use(initReactI18next)
   .init({
-    lng: Localization.getLocales()[0].languageCode || 'id',
+    lng: Localization.getLocales()[0].languageCode || 'en',
     ns: 'translation',
-    fallbackLng: 'id',
+    fallbackLng: 'en',
     resources,
     backend: {
       backends: [Backend, resourceTobackend(resources)],

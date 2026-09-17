@@ -18,7 +18,11 @@ export default function SplashScreen({ navigation }: Props) {
   const { i18n } = useTranslation()
   useEffect(() => {
     const loadUserData = async () => {
-      const userData = await loadLocalData(STORAGE_KEY.USER_LOGIN)
+      const [userData, authToken] = await Promise.all([
+        loadLocalData(STORAGE_KEY.USER_LOGIN),
+        loadLocalData(STORAGE_KEY.ACCESS_TOKEN),
+      ])
+      setAuthToken(authToken ?? '')
       await ExpoSplashScreen.hideAsync()
 
       if (userData) {
@@ -32,21 +36,15 @@ export default function SplashScreen({ navigation }: Props) {
 
     const loadLanguage = async () => {
       const setting = await loadLocalData(STORAGE_KEY.SETTINGS)
-      const language: TxCode = setting?.language ?? 'id'
+      const language: TxCode = setting?.language ?? 'en'
 
       i18n.changeLanguage(language)
       setApiLanguage(language)
       dispatch(setLanguage(language))
     }
 
-    const loadAuthToken = async () => {
-      const authToken = (await loadLocalData(STORAGE_KEY.ACCESS_TOKEN)) ?? ''
-      setAuthToken(authToken)
-    }
-
     loadUserData()
     loadLanguage()
-    loadAuthToken()
   }, [dispatch, navigation, i18n])
   return <View />
 }

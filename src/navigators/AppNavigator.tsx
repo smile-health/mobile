@@ -162,7 +162,7 @@ const screenList: ListScreenType[] = [
     options: {
       header: () => (
         <Toolbar
-          title='SMILE Indonesia'
+          title='SMILE'
           showBackButton={false}
           statusBarColor={colors.app()}
           backgroundClassName='bg-app'

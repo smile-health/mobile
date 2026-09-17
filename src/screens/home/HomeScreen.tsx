@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Linking, View, Text, FlatList, RefreshControl } from 'react-native'
+import { View, Text, FlatList, RefreshControl } from 'react-native'
 import { Icons } from '@/assets/icons'
 import { MENU_ITEM } from '@/assets/strings/menu'
 import Accordion from '@/components/accordion/Accordion'
@@ -37,7 +37,7 @@ import mockNotifData from '@/temporary/data/response_app_notifications.json'
 import AppStyles from '@/theme/AppStyles'
 import colors from '@/theme/colors'
 import { filterMenuByRole, getTestID } from '@/utils/CommonUtils'
-import { LINK_ELEARNING, MENU_KEYS, MENU_NAMES } from '@/utils/Constants'
+import { MENU_KEYS, MENU_NAMES } from '@/utils/Constants'
 import useProgramId from '@/utils/hooks/useProgramId'
 import { navigate } from '@/utils/NavigationUtils'
 import ListFooter from './component/ListFooter'
@@ -94,10 +94,6 @@ export default function HomeScreen() {
 
   function dismissDialog() {
     setDialog({ modalVisible: false })
-  }
-
-  function handleOpenElearning() {
-    Linking.openURL(LINK_ELEARNING)
   }
 
   function handleOpenHelpCenter() {
@@ -163,25 +159,6 @@ export default function HomeScreen() {
     )
   }
 
-  const renderFooter = () => {
-    return (
-      <View>
-        <ListFooter
-          testID='listfooter-elearning'
-          name={t('home.elearning')}
-          Icon={Icons.IcElearning}
-          onPress={handleOpenElearning}
-        />
-        <ListFooter
-          testID='listfooter-help-center'
-          name={t('help_center.title')}
-          Icon={Icons.IcHelpCenter}
-          onPress={handleOpenHelpCenter}
-        />
-      </View>
-    )
-  }
-
   const renderItem = ({ item, index }) => {
     const isOpen = selectedMenu === index
     const data = { notifData: orderNotif ?? mockNotifData, menuName: item.name }
@@ -239,7 +216,12 @@ export default function HomeScreen() {
             />
           }
         />
-        {renderFooter()}
+        <ListFooter
+          testID='listfooter-help-center'
+          name={t('help_center.title')}
+          Icon={Icons.IcHelpCenter}
+          onPress={handleOpenHelpCenter}
+        />
         <LoadingDialog
           testID='loadingdialog-load-notif'
           modalVisible={isLoading}

@@ -157,13 +157,6 @@ export default function LoginScreen({ navigation }: Props) {
         <View>
           <View className='flex-row justify-center my-8'>
             <Image
-              source={Images.ImgLogoHealtMinistry}
-              resizeMode='contain'
-              className='w-[89px] h-10 self-center'
-              {...getTestID('image-healthministry')}
-            />
-            <View className='w-10' />
-            <Image
               source={Images.ImgLogoUndp}
               resizeMode='contain'
               className='w-10 h-10 self-center'

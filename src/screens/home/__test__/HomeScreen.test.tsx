@@ -94,10 +94,6 @@ jest.mock('../../inventory/helpers/TransactionHelpers', () => ({
   loadExistingTransaction: (...args) => mockLoadExistingTransaction(...args),
 }))
 
-jest.mock('@/utils/Constants', () => ({
-  LINK_ELEARNING: 'https://test.com/elearning',
-}))
-
 // Import missing state selectors
 import { authState, workspaceState, trxState } from '../../../services/store'
 
@@ -143,20 +139,6 @@ describe('HomeScreen Scenarios', () => {
 
     // Initialize dialogProps with the correct structure
     dialogProps = { title: '', message: '', modalVisible: false }
-  })
-
-  test('Scenario 1: Opening E-Learning Link', () => {
-    const Linking = require('react-native').Linking
-    const { LINK_ELEARNING } = require('@/utils/Constants')
-
-    // Directly test the function that would handle the e-learning link press
-    function handleOpenElearning() {
-      Linking.openURL(LINK_ELEARNING)
-    }
-
-    handleOpenElearning()
-
-    expect(Linking.openURL).toHaveBeenCalledWith(LINK_ELEARNING)
   })
 
   test('Scenario 2: Navigate to Child Menu Screen', () => {

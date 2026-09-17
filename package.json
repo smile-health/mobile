@@ -1,6 +1,6 @@
 {
   "name": "smile-platform-mobile",
-  "version": "5.0.13",
+  "version": "5.0.0",
   "main": "index.js",
   "scripts": {
     "start": "expo start --dev-client",
