@@ -17,7 +17,7 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
     ...config,
     name: 'SMILE Health',
     slug: 'smile-platform-via-smile-monitor',
-    version: '5.0.13',
+    version: '5.0.0',
     newArchEnabled: true,
     orientation: 'portrait',
     icon: './src/assets/images/img_smile_logo_rectangle.png',
@@ -36,14 +36,14 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
         UIBackgroundModes: ['remote-notification'],
         ITSAppUsesNonExemptEncryption: false,
       },
-      buildNumber: '28',
+      buildNumber: '1',
       entitlements: {
         'aps-environment': 'production',
       },
     },
     android: {
       edgeToEdgeEnabled: true,
-      versionCode: 28,
+      versionCode: 1,
       icon: './src/assets/images/img_smile_logo_rectangle.png',
       package: 'com.smilemonitor',
       allowBackup: false,
@@ -102,7 +102,7 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
         },
       ],
     ],
-    runtimeVersion: '5.0.13',
+    runtimeVersion: '5.0.0',
     updates: {
       url: 'https://u.expo.dev/92dcbd5b-7287-493c-9300-4afe661da4a4',
     },
@@ -127,11 +127,14 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
       name: 'Smile Platform Stg',
       android: {
         ...defaultConfig.android,
-        package: 'com.smilemonitor.stg',
+        package: 'com.smileplatformmobile.stg',
       },
       ios: {
         ...defaultConfig.ios,
-        bundleIdentifier: 'com.smilemonitor.stg',
+        bundleIdentifier: 'com.smileplatformmobile.stg',
+        entitlements: {
+          'aps-environment': 'production',
+        },
       },
     }
   } else {
@@ -140,23 +143,16 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
       name: 'Smile Platform Dev',
       android: {
         ...defaultConfig.android,
-        package: 'com.smilemonitor.dev',
+        package: 'com.smileplatformmobile.dev',
       },
       ios: {
         ...defaultConfig.ios,
-        bundleIdentifier: 'com.smilemonitor.dev',
+        bundleIdentifier: 'com.smileplatformmobile.dev',
+        entitlements: {
+          'aps-environment': 'development',
+        },
       },
-      plugins: [
-        ...(defaultConfig.plugins as [string, any][]),
-        [
-          'expo-build-properties',
-          {
-            android: {
-              usesCleartextTraffic: true,
-            },
-          },
-        ],
-      ],
+      plugins: defaultConfig.plugins,
     }
   }
 }
