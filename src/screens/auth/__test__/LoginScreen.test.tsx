@@ -82,7 +82,6 @@ jest.mock('@/assets/icons', () => ({
 jest.mock('@/assets/images', () => ({
   Images: {
     ImgLogoSmile: 'ImgLogoSmile',
-    ImgLogoHealtMinistry: 'ImgLogoHealtMinistry',
     ImgLogoUndp: 'ImgLogoUndp',
   },
 }))
@@ -143,7 +142,6 @@ describe('LoginScreen', () => {
 
     // Test logo and branding
     expect(getByTestId('image-logo')).toBeTruthy()
-    expect(getByTestId('image-healthministry')).toBeTruthy()
     expect(getByTestId('image-undp')).toBeTruthy()
 
     // Test form elements
