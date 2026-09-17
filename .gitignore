@@ -36,3 +36,8 @@ yarn-error.*
 
 # generated file
 coverage/
+android/
+ios/
+
+# Build APK
+*.apk
