@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  SafeAreaView,
   SectionList,
   SectionListData,
   SectionListRenderItem,
@@ -9,9 +8,11 @@ import {
   View,
 } from 'react-native'
 import { ParseKeys } from 'i18next'
+import { Button } from '@/components/buttons'
 import { FieldValue } from '@/components/list/FieldValue'
 import { ItemSeparator } from '@/components/list/ItemSeparator'
 import { useLanguage } from '@/i18n/useLanguage'
+import { AppStackScreenProps } from '@/navigators'
 import { useFetchProfileQuery } from '@/services/apis'
 import AppStyles from '@/theme/AppStyles'
 import colors from '@/theme/colors'
@@ -26,11 +27,21 @@ type SectionHeader = (info: {
   section: SectionListData<SectionData, Section>
 }) => React.ReactElement
 
+interface Props extends AppStackScreenProps<'ProfileDetail'> {}
+
 const itemSeparator = () => <ItemSeparator className='h-4' />
 
-export default function ProfileDetailScreen() {
+export default function ProfileDetailScreen({ navigation }: Props) {
   const { t } = useLanguage()
   const { data, isError, isLoading } = useFetchProfileQuery()
+
+  const navigateToEditProfile = () => {
+    navigation.navigate('EditProfile')
+  }
+
+  const navigateToEditPassword = () => {
+    navigation.navigate('EditPassword')
+  }
 
   if (isLoading) {
     return (
@@ -95,11 +106,11 @@ export default function ProfileDetailScreen() {
 
   const renderSectionSeparator = ({ leadingItem, trailingSection }) =>
     leadingItem && trailingSection ? (
-      <View className='border-b border-b-quillGrey my-4' />
+      <View className='bg-lightBlueGray py-1 my-4' />
     ) : null
 
   return (
-    <SafeAreaView className='flex-1 bg-white'>
+    <View className='flex-1 bg-white'>
       <SectionList
         sections={SECTION_DATA}
         keyExtractor={({ label }) => label}
@@ -111,6 +122,24 @@ export default function ProfileDetailScreen() {
         SectionSeparatorComponent={renderSectionSeparator}
         renderSectionHeader={renderSectionHeader}
       />
-    </SafeAreaView>
+      <View className='flex-row bg-white p-4 shadow-sm gap-x-2'>
+        <Button
+          text={t('button.change_password')}
+          preset='outlined-primary'
+          containerClassName='flex-1 border-bluePrimary'
+          textClassName='text-bluePrimary'
+          onPress={navigateToEditPassword}
+          {...getTestID('btn-nav-edit-password')}
+        />
+        <Button
+          text={t('button.change_profile')}
+          preset='outlined-primary'
+          containerClassName='flex-1 border-bluePrimary'
+          textClassName='text-bluePrimary'
+          onPress={navigateToEditProfile}
+          {...getTestID('btn-nav-edit-profile')}
+        />
+      </View>
+    </View>
   )
 }

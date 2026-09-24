@@ -101,37 +101,26 @@ export default function ProfileScreen({ navigation }: Props) {
     navigation.navigate('ProfileDetail')
   }
 
-  const navigateToEditProfile = () => {
-    navigation.navigate('EditProfile')
-  }
-
-  const navigateToEditPassword = () => {
-    navigation.navigate('EditPassword')
-  }
-
-  const navigateToChangeHistory = () => {
-    if (user) {
-      navigation.navigate('ChangeHistory', { userId: user.id })
-    }
-  }
-
   const handleLanguageSelect = (selectedLanguage: LanguageOption) => {
     changeLanguage(selectedLanguage.code)
   }
 
   return (
-    <SafeAreaView edges={['top']} className='bg-whiteSmoke flex-1'>
+    <SafeAreaView edges={['top']} className='flex-1 bg-white'>
       <StatusBar barStyle='dark-content' backgroundColor={colors.whiteSmoke} />
-      <View className='flex-1 items-start pt-4'>
+      <View className='flex-1 pt-4'>
         <ImageButton
           Icon={Icons.IcDelete}
           size={24}
           onPress={navigation.goBack}
-          containerClassName='mb-6 ml-4'
+          containerClassName='mb-6 ml-4 self-start'
           {...getTestID('btn-back-profile')}
         />
-        <View className='flex-row gap-x-[13px] px-4'>
-          <View className='rounded-full bg-white h-12 w-12 items-center justify-center'>
+        <Text className={cn('pl-4', AppStyles.labelBold)}>
+          {t('title.my_account')}
+        </Text>
+        <View className='flex-row gap-x-3 px-4 items-center py-4'>
+          <View className='rounded-full bg-brandPictonBlue h-12 w-12 items-center justify-center'>
             <Text className={cn(AppStyles.textMedium, 'text-lg')}>
               {getInitials(`${user?.firstname ?? ''} ${user?.lastname ?? ''}`)}
             </Text>
@@ -140,7 +129,7 @@ export default function ProfileScreen({ navigation }: Props) {
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={navigateToProfileDetail}
-              className='flex-row justify-between'
+              className='flex-row justify-between items-center'
               {...getTestID('btn-nav-detail-profile')}>
               <View>
                 <Text className={AppStyles.textMediumLarge}>
@@ -150,38 +139,13 @@ export default function ProfileScreen({ navigation }: Props) {
                   {`${user?.firstname ?? ''} ${user?.lastname ?? ''}`}
                 </Text>
               </View>
-              <Icons.IcChevronRight />
+              <Icons.IcChevronRight width={20} height={20} />
             </TouchableOpacity>
-            <View className='flex-row gap-x-4 mt-2'>
-              <Button
-                text={t('button.change_profile')}
-                textClassName='text-scienceBlue'
-                onPress={navigateToEditProfile}
-                {...getTestID('btn-nav-edit-profile')}
-              />
-              <Button
-                text={t('button.change_password')}
-                textClassName='text-scienceBlue'
-                onPress={navigateToEditPassword}
-                {...getTestID('btn-nav-edit-password')}
-              />
-            </View>
           </View>
         </View>
-        <View
-          className={cn(AppStyles.border, 'self-stretch my-2 mx-4 px-3 py-2')}
-          {...getTestID('profile-entity')}>
-          <Text className={AppStyles.textMedium}>{user?.entity.name}</Text>
-          <Text className={AppStyles.labelRegular}>{user?.entity.address}</Text>
-        </View>
-        <Button
-          onPress={navigateToChangeHistory}
-          text={t('common.change_history')}
-          RightIcon={Icons.IcChevronRight}
-          rightIconSize={20}
-          containerClassName='justify-between w-full py-2 px-4'
-          {...getTestID('btn-change-history')}
-        />
+
+        <View className='bg-lightBlueGray h-1' />
+
         <PopupMenu
           data={options}
           labelField='name'
@@ -194,15 +158,28 @@ export default function ProfileScreen({ navigation }: Props) {
           onPressItem={handleLanguageSelect}>
           <Button
             onPress={handleOpenLanguageMenu}
-            RightIcon={Icons.IcExpandMore}
-            rightIconSize={24}
-            containerClassName='justify-between w-full py-2 px-4'
+            RightIcon={Icons.IcChevronRight}
+            rightIconSize={20}
+            containerClassName='justify-between w-full p-4'
             {...getTestID('btn-popup-languange')}>
-            <Text className={AppStyles.textMedium}>{t('common.language')}</Text>
-            <Text className={AppStyles.labelRegular}>{currentLang?.name}</Text>
+            <View className='flex-row gap-3'>
+              <Icons.IcGlobe />
+              <View>
+                <Text className={AppStyles.textMedium}>
+                  {t('common.language')}
+                </Text>
+                <Text className={AppStyles.labelRegular}>
+                  {currentLang?.name}
+                </Text>
+              </View>
+            </View>
           </Button>
         </PopupMenu>
+
+        <View className='bg-lightBlueGray h-1' />
       </View>
+
+      {/* Footer */}
       <View className='gap-4 p-4'>
         <Text
           className={cn(
@@ -215,7 +192,7 @@ export default function ProfileScreen({ navigation }: Props) {
           rightIconSize={20}
           text={t('common.logout')}
           textClassName='text-lavaRed'
-          containerClassName='justify-start w-full gap-x-2'
+          containerClassName='justify-between w-full gap-x-2'
           {...getTestID('btn-logout')}
         />
       </View>

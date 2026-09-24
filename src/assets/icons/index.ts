@@ -38,6 +38,7 @@ import IcFilterFilled from './ic_filter_filled.svg'
 import IcFilterOutline from './ic_filter_outline.svg'
 import IcFilterOutlined from './ic_filter_outlined.svg'
 import IcFlag from './ic_flag.svg'
+import IcGlobe from './ic_globe.svg'
 import IcHelpCenter from './ic_help_center.svg'
 import IcHome from './ic_home.svg'
 import IcInfo from './ic_info.svg'
@@ -148,4 +149,5 @@ export const Icons = {
   IcSendMail,
   IcWhatsapp,
   IcStar,
+  IcGlobe,
 }
