@@ -172,6 +172,7 @@ export default function EditProfileScreen({ navigation }: Props) {
               maximumDate={new Date()}
               label={t('label.birthdate')}
               onDateChange={handleDateChange}
+              {...getTestID('birthday-input')}
             />
             <PhoneInput
               name='mobile_phone'
