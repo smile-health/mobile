@@ -2,6 +2,7 @@ module.exports = {
   preset: 'react-native',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
+    '\\.svg$': '<rootDir>/src/test-utils/svgMock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/mocks/(.*)$': '<rootDir>/src/__mocks__/$1', // Map to the new mocks directory under src
   },
