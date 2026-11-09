@@ -1,0 +1,20 @@
+import React from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
+import { render } from '@testing-library/react-native'
+
+/** Render komponen yang memakai useFormContext dengan nilai default form. */
+export const renderWithForm = (
+  ui: React.ReactElement,
+  defaultValues: any = {},
+  capture?: (form: any) => void
+) => {
+  const Wrapper = ({ children }: any) => {
+    const form = useForm({ defaultValues })
+    capture?.(form)
+    return <FormProvider {...form}>{children}</FormProvider>
+  }
+  return render(ui, { wrapper: Wrapper })
+}
+
+export const nav = () => require('@react-navigation/native').__nav
+export const route = () => require('@react-navigation/native').__route
