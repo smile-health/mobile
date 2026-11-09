@@ -1,9 +1,20 @@
-import { emptyListFixture, listFixture } from './fixtures'
+import { chaosList, emptyListFixture, listFixture } from './fixtures'
 
-type Mode = 'data' | 'empty' | 'loading' | 'error'
+type Mode = 'data' | 'empty' | 'loading' | 'error' | 'chaos'
 let mode: Mode = 'data'
-export const setRtkMode = (m: Mode) => {
+let chaosState: any = null
+export const setRtkMode = (m: Mode, seed = 0) => {
   mode = m
+  if (m === 'chaos') {
+    chaosState = {
+      data: chaosList(seed),
+      isLoading: false,
+      isFetching: false,
+      isSuccess: true,
+      isError: false,
+      refetch,
+    }
+  }
 }
 
 const unwrapResult = () => Promise.resolve({ data: [], id: 1 })
@@ -24,7 +35,7 @@ const states = {
   loading: { data: undefined, isLoading: true, isFetching: true, isSuccess: false, isError: false, refetch },
   error: { data: undefined, error: { status: 500 }, isLoading: false, isFetching: false, isSuccess: false, isError: true, refetch },
 }
-const queryState = () => states[mode]
+const queryState = () => (mode === 'chaos' ? chaosState : states[mode])
 
 const lazyResult = { data: dataFx, isSuccess: true }
 const lazyTriggerFn = jest.fn(() => {

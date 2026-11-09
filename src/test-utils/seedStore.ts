@@ -4,7 +4,23 @@ import { item, listFixture } from './fixtures'
 
 const featuresDir = path.resolve(__dirname, '../services/features')
 
+const rich = {
+  ...item,
+  entity_id: 1,
+  program_id: 1,
+  config: {
+    material: { is_hierarchy_enabled: 1, is_batch_enabled: 1 },
+    order: { is_enabled: 1 },
+    stock: { is_enabled: 1 },
+  },
+  program: { id: 1, name: 'P', config: { material: { is_hierarchy_enabled: 1 } } },
+  entity: { id: 1, name: 'E', type: 1 },
+  activities: [{ id: 1, name: 'A' }],
+}
+
 const payloads = (): unknown[] => [
+  rich,
+  { data: rich, list: [rich], key: 'k', id: 1 },
   item,
   listFixture(),
   [item],

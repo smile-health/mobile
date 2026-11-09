@@ -98,7 +98,7 @@ import path from 'path'
 import React from 'react'
 import { render, renderHook, cleanup, act } from '@testing-library/react-native'
 import { setRtkMode } from '@/test-utils/rtkMock'
-import { item, listFixture } from '@/test-utils/fixtures'
+import { chaosItem, chaosList, item, listFixture } from '@/test-utils/fixtures'
 import { seedStore, schemaSamples } from '@/test-utils/seedStore'
 
 const srcRoot = path.resolve(__dirname, '..')
@@ -164,8 +164,15 @@ const argSets: any[][] = [
 
 jest.setTimeout(120000)
 
+let hookSeed = 0
+const SEEDS = 6
 const handlerArgs: any[][] = [[], [item], [anyValue], ['x']]
-const hookArgs: any[][] = [[], [baseProps], [anyValue]]
+const hookArgs: any[][] = [[], [baseProps], [anyValue], [chaosItem(1)], [{ ...baseProps, item: chaosItem(2), data: chaosList(2) }],
+  [item, item],
+  [chaosItem(1), chaosItem(2)],
+  [chaosItem(3), chaosItem(4), chaosItem(5)],
+  [chaosItem(6), listFixture()],
+  [listFixture(), chaosItem(7), item]]
 
 const errs: Record<string, number> = {}
 const note = (e: unknown) => {
@@ -298,9 +305,28 @@ describe.each([['store kosong', false], ['store terisi', true]])('smoke + fuzz k
           })
           cleanup()
         }
+        for (let seed = 0; seed < SEEDS; seed++) {
+          setRtkMode('chaos', seed)
+          const c = chaosItem(seed)
+          await safe(async () => {
+            const screen = render(
+              React.createElement(v, {
+                ...baseProps,
+                item: c,
+                data: c,
+                items: chaosList(seed),
+              })
+            )
+            await act(async () => {
+              await Promise.resolve()
+            })
+            if (seed % 2 === 0) await fireHandlers(screen)
+          })
+          cleanup()
+        }
       } else if (/^use[A-Z]/.test(k) && typeof v === 'function') {
-        for (const m of ['data', 'empty'] as const) {
-          setRtkMode(m)
+        for (const m of ['data', 'empty', 'chaos', 'chaos'] as const) {
+          setRtkMode(m, m === 'chaos' ? (hookSeed += 1) : 0)
           for (const args of hookArgs) {
             await safe(async () => {
               const hook = renderHook(() => v(...args))
