@@ -12,8 +12,7 @@ export interface TransactionListFilter {
 }
 
 export interface TransactionListParams
-  extends PaginateParam,
-    TransactionListFilter {
+  extends PaginateParam, TransactionListFilter {
   entity_id?: number
 }
 
@@ -24,8 +23,7 @@ export interface TransactionDiscardFilter {
 }
 
 export interface TransactionDiscardParams
-  extends PaginateParam,
-    TransactionDiscardFilter {
+  extends PaginateParam, TransactionDiscardFilter {
   entity_id?: number
   activity_id?: number
   material_id?: number
@@ -37,8 +35,7 @@ export interface TransactionConsumptionFilter {
 }
 
 export interface TransactionConsumptionParams
-  extends PaginateParam,
-    TransactionConsumptionFilter {
+  extends PaginateParam, TransactionConsumptionFilter {
   entity_id?: number
   activity_id?: number
   material_id?: number

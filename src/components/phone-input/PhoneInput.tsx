@@ -9,8 +9,10 @@ import { getTestID } from '@/utils/CommonUtils'
 import { Country, getCountryByCode } from './countries'
 import CountryPicker from './CountryPicker'
 
-interface PhoneInputProps
-  extends Omit<TextInputProps, 'value' | 'onChangeText'> {
+interface PhoneInputProps extends Omit<
+  TextInputProps,
+  'value' | 'onChangeText'
+> {
   name: string
   control: Control<any>
   defaultCountry?: string

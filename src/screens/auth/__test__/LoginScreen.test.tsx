@@ -132,8 +132,9 @@ describe('LoginScreen', () => {
     )
   })
 
-  it('should render screen correctly with all required elements', () => {
-    const { getByTestId, getByText, getByPlaceholderText } = renderLoginScreen()
+  it('should render screen correctly with all required elements', async () => {
+    const { getByTestId, getByText, getByPlaceholderText } =
+      await renderLoginScreen()
 
     // Test header elements
     expect(getByTestId('btn-openlanguage')).toBeTruthy()
@@ -174,7 +175,7 @@ describe('LoginScreen', () => {
 
 describe('When password visibility eye-icon pressed', () => {
   it('toggles password visibility', async () => {
-    const { getByPlaceholderText, getByTestId } = renderLoginScreen()
+    const { getByPlaceholderText, getByTestId } = await renderLoginScreen()
     const passwordInput = getByPlaceholderText('common.password')
     expect(passwordInput.props.secureTextEntry).toBe(true)
 
@@ -210,7 +211,7 @@ describe('When valid username and password are provided', () => {
       { isLoading: true },
     ])
 
-    const { getByTestId } = renderLoginScreen()
+    const { getByTestId } = await renderLoginScreen()
 
     // Fill in form fields and wait for state updates
     const usernameInput = getByTestId('textfield-username')
@@ -242,7 +243,7 @@ describe('When valid username and password are provided', () => {
 
 describe('When username and password are blank', () => {
   it('disables the login button and does not allow submission', async () => {
-    const { getByTestId } = renderLoginScreen()
+    const { getByTestId } = await renderLoginScreen()
 
     expect(getByTestId('textfield-username').props.value).toBe('')
     expect(getByTestId('textfield-password').props.value).toBe('')
@@ -290,7 +291,7 @@ describe('When simulating API login response', () => {
       { isLoading: false },
     ])
 
-    const { getByTestId } = renderLoginScreen()
+    const { getByTestId } = await renderLoginScreen()
 
     // Fill in form fields
     const usernameInput = getByTestId('textfield-username')

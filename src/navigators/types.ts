@@ -192,8 +192,7 @@ export type AppStackParamList = {
   StockTakingMaterial: { needRefresh: boolean } | undefined
   StockTakingTrademarkMaterial: undefined
   CreateStockTaking:
-    | { newBatch?: StockTakingFormItem; deleteAll?: boolean }
-    | undefined
+    { newBatch?: StockTakingFormItem; deleteAll?: boolean } | undefined
   AddBatchStockTaking: { batchList: StockTakingFormItem[] }
   StockTakingHistory: undefined
   ReviewStockTaking: { data: StockTakingForm; createdAt: string }

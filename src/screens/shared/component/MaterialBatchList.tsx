@@ -16,21 +16,20 @@ import StockActivityButton from '../../inventory/component/button/StockActivityB
 import { StockSection } from '../types/MaterialDetail'
 import type { UseMaterialDetailDistReturnResult } from '@/screens/order/hooks/useMaterialDetailDistReturn'
 
-interface MaterialBatchListProps
-  extends Pick<
-    UseMaterialDetailDistReturnResult,
-    | 'methods'
-    | 'selectedStockId'
-    | 'enrichedStocks'
-    | 'sectionData'
-    | 'handleToggleBatch'
-    | 'isOpenSheet'
-    | 'openSheet'
-    | 'closeSheet'
-    | 'handleSubmit'
-    | 'isBatch'
-    | 'isAnyQtyExceedStock'
-  > {
+interface MaterialBatchListProps extends Pick<
+  UseMaterialDetailDistReturnResult,
+  | 'methods'
+  | 'selectedStockId'
+  | 'enrichedStocks'
+  | 'sectionData'
+  | 'handleToggleBatch'
+  | 'isOpenSheet'
+  | 'openSheet'
+  | 'closeSheet'
+  | 'handleSubmit'
+  | 'isBatch'
+  | 'isAnyQtyExceedStock'
+> {
   activeActivityName?: string
   onSelectActivity: (item: StockDetail) => void
   renderHeader: () => React.ReactElement

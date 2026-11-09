@@ -4,11 +4,10 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { SearchBar, SearchBarProps } from '../SearchBar'
 import { Toolbar, ToolbarProps } from '../Toolbar'
 
-interface SearchToolbarProps
-  extends Omit<
-    SearchBarProps,
-    'name' | 'control' | 'onSubmitEditing' | 'onResetField'
-  > {
+interface SearchToolbarProps extends Omit<
+  SearchBarProps,
+  'name' | 'control' | 'onSubmitEditing' | 'onResetField'
+> {
   isSearch: boolean
   setIsSearch: Dispatch<SetStateAction<boolean>>
   toolbarProps: ToolbarProps

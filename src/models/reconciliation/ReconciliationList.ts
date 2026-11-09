@@ -9,8 +9,7 @@ export interface ReconciliationFilter {
 }
 
 export interface ReconciliationListParams
-  extends PaginateParam,
-    ReconciliationFilter {
+  extends PaginateParam, ReconciliationFilter {
   entity_id?: number
   activity_id?: number
   material_id?: number

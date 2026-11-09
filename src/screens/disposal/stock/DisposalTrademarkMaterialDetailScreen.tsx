@@ -9,8 +9,7 @@ import { getSelectedDisposalStock } from '@/services/features'
 import { stockState, useAppSelector } from '@/services/store'
 import DisposalStockDetailBatchSection from '../component/DisposalStockDetailBatchSection'
 
-interface Props
-  extends AppStackScreenProps<'DisposalTrademarkMaterialDetail'> {}
+interface Props extends AppStackScreenProps<'DisposalTrademarkMaterialDetail'> {}
 export default function DisposalTrademarkMaterialDetailScreen({
   route,
 }: Props) {

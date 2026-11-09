@@ -94,11 +94,11 @@ export const TicketFilter = forwardRef(function TicketFilter(
 
     return Boolean(
       entity_id ||
-        from_arrived_date ||
-        to_arrived_date ||
-        order_id ||
-        do_number ||
-        order_id_do_number
+      from_arrived_date ||
+      to_arrived_date ||
+      order_id ||
+      do_number ||
+      order_id_do_number
     )
   }, [filter])
 

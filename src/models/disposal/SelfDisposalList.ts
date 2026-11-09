@@ -13,8 +13,7 @@ export interface SelfDisposalListFilter {
 }
 
 export interface SelfDisposalListParams
-  extends SelfDisposalListFilter,
-    PaginateParam {
+  extends SelfDisposalListFilter, PaginateParam {
   entity_id?: number
 }
 
