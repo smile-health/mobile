@@ -11,8 +11,8 @@ describe('CardWorkspace', () => {
     onPress: jest.fn(),
   }
 
-  it('renders correctly with required props', () => {
-    const { getByTestId, getByText } = render(
+  it('renders correctly with required props', async () => {
+    const { getByTestId, getByText } = await render(
       <CardWorkspace {...defaultProps} />
     )
 
@@ -26,9 +26,9 @@ describe('CardWorkspace', () => {
     expect(getByText('TW')).toBeTruthy()
   })
 
-  it('handles onPress event', () => {
+  it('handles onPress event', async () => {
     const onPress = jest.fn()
-    const { getByTestId } = render(
+    const { getByTestId } = await render(
       <CardWorkspace {...defaultProps} onPress={onPress} />
     )
 
@@ -38,8 +38,8 @@ describe('CardWorkspace', () => {
     expect(onPress).toHaveBeenCalledTimes(1)
   })
 
-  it('applies custom className props correctly', () => {
-    const { getByTestId, getByText } = render(
+  it('applies custom className props correctly', async () => {
+    const { getByTestId, getByText } = await render(
       <CardWorkspace
         {...defaultProps}
         containerClassName='custom-container'

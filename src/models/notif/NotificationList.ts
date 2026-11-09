@@ -6,8 +6,7 @@ export interface NotificationListFilter {
 }
 
 export interface NotificationListParams
-  extends PaginateParam,
-    NotificationListFilter {}
+  extends PaginateParam, NotificationListFilter {}
 
 export interface NotificationListResponse extends PaginateResponse {
   data: NotificationData[]

@@ -18,8 +18,10 @@ import { cn } from '@/theme/theme-config'
 import { getTestID } from '@/utils/CommonUtils'
 import { ImageButton } from '../buttons'
 
-export interface DropdownProps<T>
-  extends Omit<BaseDropdownProps<T>, 'onChange' | 'labelField' | 'valueField'> {
+export interface DropdownProps<T> extends Omit<
+  BaseDropdownProps<T>,
+  'onChange' | 'labelField' | 'valueField'
+> {
   name: string
   control?: Control<any>
   preset?: keyof typeof dropdownPresets

@@ -15,8 +15,10 @@ import AppStyles from '@/theme/AppStyles'
 import { cn } from '@/theme/theme-config'
 import { getTestID } from '@/utils/CommonUtils'
 
-export interface PopupMenuProps<T>
-  extends Omit<FlatListProps<T>, 'renderItem' | 'ref'> {
+export interface PopupMenuProps<T> extends Omit<
+  FlatListProps<T>,
+  'renderItem' | 'ref'
+> {
   modalVisible: boolean
   dismissDialog: () => void
   labelField: keyof T
