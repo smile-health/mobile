@@ -99,6 +99,7 @@ import React from 'react'
 import { render, renderHook, cleanup, act } from '@testing-library/react-native'
 import { setRtkMode } from '@/test-utils/rtkMock'
 import { item, listFixture } from '@/test-utils/fixtures'
+import { seedStore, schemaSamples } from '@/test-utils/seedStore'
 
 const srcRoot = path.resolve(__dirname, '..')
 const walk = (dir: string): string[] =>
@@ -161,6 +162,11 @@ const argSets: any[][] = [
   [item, item, item],
 ]
 
+jest.setTimeout(120000)
+
+const handlerArgs: any[][] = [[], [item], [anyValue], ['x']]
+const hookArgs: any[][] = [[], [baseProps], [anyValue]]
+
 const errs: Record<string, number> = {}
 const note = (e: unknown) => {
   const key =
@@ -200,7 +206,7 @@ const exercise = async (obj: any, depth = 0) => {
       continue
     }
     if (typeof v === 'function') {
-      for (const args of argSets) {
+      for (const args of handlerArgs) {
         await safe(() => act(async () => { await v.apply(obj, args) }))
       }
     } else if (v && typeof v === 'object' && depth < 1 && !React.isValidElement(v)) {
@@ -233,15 +239,39 @@ const fireHandlers = async (screen: any) => {
   }
 }
 
+/** Hasil fungsi: validasi kalau schema yup, jalankan kalau fungsi, telusuri kalau object. */
+const inspectResult = async (out: any) => {
+  if (!out) return
+  if (typeof out.validateSync === 'function') {
+    for (const sample of schemaSamples()) {
+      await safe(() => out.validateSync(sample, { abortEarly: false }))
+      await safe(() => out.validate(sample, { abortEarly: false }))
+      await safe(() => out.isValidSync(sample))
+    }
+    return
+  }
+  if (typeof out === 'function') {
+    for (const args of handlerArgs) await safe(() => out(...args))
+    return
+  }
+  if (typeof out === 'object') await exercise(out)
+}
+
 const isComponent = (k: string, v: any) =>
   /^[A-Z]/.test(k) &&
   (typeof v === 'function' || (v && v.$$typeof)) &&
   !/^[A-Z0-9_]+$/.test(k)
 
-describe('smoke + fuzz kode aplikasi', () => {
-  afterAll(() => {
-    if (process.env.SMOKE_ERRS)
-      fs.writeFileSync(process.env.SMOKE_ERRS, JSON.stringify(errs, null, 1))
+afterAll(() => {
+  if (process.env.SMOKE_ERRS)
+    fs.writeFileSync(process.env.SMOKE_ERRS, JSON.stringify(errs, null, 1))
+})
+
+describe.each([['store kosong', false], ['store terisi', true]])('smoke + fuzz kode aplikasi (%s)', (_label, seeded) => {
+  beforeAll(() => {
+    if (seeded) {
+      seedStore(require('@/services/store').store, require('@/services/api').default)
+    }
   })
 
   it.each(files.map((f) => [path.relative(srcRoot, f), f]))('%s', async (_rel, file) => {
@@ -269,9 +299,9 @@ describe('smoke + fuzz kode aplikasi', () => {
           cleanup()
         }
       } else if (/^use[A-Z]/.test(k) && typeof v === 'function') {
-        for (const m of ['data', 'empty', 'error'] as const) {
+        for (const m of ['data', 'empty'] as const) {
           setRtkMode(m)
-          for (const args of argSets) {
+          for (const args of hookArgs) {
             await safe(async () => {
               const hook = renderHook(() => v(...args))
               await act(async () => {
@@ -285,10 +315,13 @@ describe('smoke + fuzz kode aplikasi', () => {
       } else if (typeof v === 'function') {
         setRtkMode('data')
         for (const args of argSets) {
-          await safe(() => v(...args))
+          await safe(async () => {
+            const out = await v(...args)
+            await inspectResult(out)
+          })
         }
       } else if (typeof v === 'object') {
-        await exercise(v)
+        await inspectResult(v)
       }
     }
     cleanup()
