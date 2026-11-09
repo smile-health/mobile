@@ -88,7 +88,6 @@ const extras = {
 }
 const shapes: unknown[] = [
   Object.assign([item], extras),
-  // eslint-disable-next-line unicorn/prefer-spread
   Object.assign([], { ...extras, data: [], list: [], items: [] }),
 ]
 
@@ -96,9 +95,10 @@ const makeStore = () =>
   configureStore({
     reducer: { [api.reducerPath]: api.reducer },
     middleware: (gdm) =>
-      gdm({ serializableCheck: false, immutableCheck: false }).concat(
-        api.middleware
-      ),
+      [
+        ...gdm({ serializableCheck: false, immutableCheck: false }),
+        api.middleware,
+      ] as any,
   })
 
 const argVariants = [
