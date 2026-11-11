@@ -33,7 +33,7 @@ describe('CardWorkspace', () => {
     )
 
     const card = getByTestId('test-workspace')
-    fireEvent.press(card)
+    await fireEvent.press(card)
 
     expect(onPress).toHaveBeenCalledTimes(1)
   })

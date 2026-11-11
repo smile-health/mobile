@@ -102,14 +102,14 @@ describe('MaterialItem', () => {
     const { getByTestId } = await render(
       <MaterialItem {...baseProps} onPress={onPress} />
     )
-    fireEvent.press(getByTestId('material-list-Material A'))
+    await fireEvent.press(getByTestId('material-list-Material A'))
     expect(onPress).toHaveBeenCalled()
   })
 
   it('does not call onPress when not provided', async () => {
     const { getByTestId } = await render(<MaterialItem {...baseProps} />)
     // Should not throw error when pressed
-    fireEvent.press(getByTestId('material-list-Material A'))
+    await fireEvent.press(getByTestId('material-list-Material A'))
   })
 
   it('shows empty date when updatedAt is missing', async () => {
