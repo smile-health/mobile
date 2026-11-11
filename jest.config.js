@@ -3,6 +3,9 @@ module.exports = {
   preset: '@react-native/jest-preset',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
+    '\\.svg$': '<rootDir>/src/__mocks__/svgMock.js',
+    '^react-native-reanimated$':
+      '<rootDir>/src/__mocks__/react-native-reanimated.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/mocks/(.*)$': '<rootDir>/src/__mocks__/$1', // Map to the new mocks directory under src
   },

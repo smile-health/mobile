@@ -133,5 +133,15 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "^1.14.7",
+    "@xmldom/xmldom@^0.8.0": "^0.8.15",
+    "brace-expansion@^2.0.0": "^2.1.7",
+    "minimatch@^9.0.0": "^9.0.9",
+    "node-forge": "^1.4.3",
+    "picomatch@^2.0.0": "^2.3.2",
+    "ws@^8.0.0": "^8.22.2",
+    "glob@^10.0.0": "^10.5.0"
   }
 }
