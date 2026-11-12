@@ -201,6 +201,7 @@ beforeAll(() => {
 
 let hookSeed = 0
 const SEEDS = 12
+const PROP_SEEDS = 10
 const handlerArgs: any[][] = [[], [item], ['x'], [1], [anyValue]]
 const hookArgs: any[][] = [[], [baseProps], [anyValue], [chaosItem(1)], [{ ...baseProps, item: chaosItem(2), data: chaosList(2) }],
   [item, item],
@@ -230,6 +231,46 @@ const SKIP_KEYS = new Set([
 ])
 
 // Layar yang handler submit-nya menolak promise secara async tanpa catch bila state fuzz tidak lengkap.
+const hashKey = (str: string) => {
+  let h = 5
+  for (let i = 0; i < str.length; i++) h = (h * 33 + str.charCodeAt(i)) >>> 0
+  return h
+}
+/** Props "kacau": nama prop -> nilai dipilih dari kumpulan nilai berdasar hash(nama)+seed. */
+const propsChaos = (seed: number): any => {
+  const cache: Record<string, any> = {}
+  return new Proxy({} as any, {
+    get: (_t, k) => {
+      if (typeof k === 'symbol') return undefined
+      if (k in cache) return cache[k]
+      let v: any
+      if (/^on[A-Z]/.test(k) || /^(handle|set|toggle|render)[A-Z]/.test(k)) v = jest.fn()
+      else if (k === 't') v = (x: string) => x
+      else if (k === 'navigation') v = nav
+      else {
+        const opts = [
+          chaosItem(seed),
+          chaosList(seed),
+          0,
+          1,
+          'abc',
+          true,
+          false,
+          null,
+          undefined,
+          [],
+          [chaosItem(seed + 1)],
+          { id: 1 },
+        ]
+        v = opts[(hashKey(k) + seed) % opts.length]
+      }
+      cache[k] = v
+      return v
+    },
+    has: () => true,
+  })
+}
+
 const NO_FIRE = /RelocationFinalReviewScreen/
 
 const errs: Record<string, number> = {}
@@ -387,6 +428,23 @@ describe.each([['store kosong', false], ['store terisi', true]])('smoke + fuzz k
               await fireHandlers(screen)
           })
           cleanup()
+        }
+        // Variasi props: tiap nama prop mendapat nilai deterministik berbeda per seed,
+        // sehingga prop selain item/data/items (batch, material, order, ...) ikut bervariasi.
+        const renderFn = typeof v === 'function' ? v : (v.type ?? v.render)
+        if (typeof renderFn === 'function') {
+          for (let seed = 0; seed < PROP_SEEDS; seed++) {
+            setRtkMode(seed % 3 === 0 ? 'empty' : 'chaos', seed)
+            const proxyProps = propsChaos(seed)
+            const Wrapper = () => renderFn(proxyProps, null)
+            await safe(async () => {
+              render(React.createElement(Wrapper))
+              await act(async () => {
+                await Promise.resolve()
+              })
+            })
+            cleanup()
+          }
         }
       } else if (/^use[A-Z]/.test(k) && typeof v === 'function') {
         for (const m of ['data', 'empty', 'chaos', 'chaos'] as const) {
