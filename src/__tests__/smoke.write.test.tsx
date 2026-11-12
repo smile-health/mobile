@@ -97,6 +97,7 @@ jest.mock('@react-navigation/native', () => {
 })
 jest.mock('@/utils/NavigationUtils', () => ({
   navigateToLogin: jest.fn(),
+  navigateAndReset: jest.fn(),
   navigate: jest.fn(),
   goBack: jest.fn(),
   navigationRef: { isReady: () => false, navigate: jest.fn() },
@@ -129,7 +130,7 @@ const files = ['screens', 'hooks', 'services']
 const modes = ['data', 'empty', 'loading', 'error'] as const
 
 // Proxy "apa saja": bisa dipanggil, diakses, diiterasi; dipakai sebagai argumen.
-const anyValue: any = new Proxy(function () {}, {
+const anyValue: any = new Proxy((() => undefined) as any, {
   get: (_t, k) => {
     if (k === Symbol.toPrimitive) return () => 1
     if (k === Symbol.iterator) return function* () {}
@@ -195,6 +196,26 @@ const hookArgs: any[][] = [[], [baseProps], [anyValue], [chaosItem(1)], [{ ...ba
   [chaosItem(6), listFixture()],
   [listFixture(), chaosItem(7), item]]
 
+// replaceReducer merusak store global; sisanya API react-hook-form yang
+// melempar error async jika dipanggil dengan argumen asal.
+const SKIP_KEYS = new Set([
+  'constructor',
+  'replaceReducer',
+  'control',
+  'watch',
+  'register',
+  'subscribe',
+  'setValue',
+  'getValues',
+  'setError',
+  'trigger',
+  'unregister',
+  'setFocus',
+  'resetField',
+  'getFieldState',
+  'formState',
+])
+
 const errs: Record<string, number> = {}
 const note = (e: unknown) => {
   const key =
@@ -226,7 +247,7 @@ const exercise = async (obj: any, depth = 0) => {
     for (const k of Object.getOwnPropertyNames(proto)) keys.add(k)
   }
   for (const k of keys) {
-    if (k === 'constructor' || k === 'replaceReducer') continue // replaceReducer merusak store global
+    if (SKIP_KEYS.has(k)) continue
     let v: any
     try {
       v = obj[k]
