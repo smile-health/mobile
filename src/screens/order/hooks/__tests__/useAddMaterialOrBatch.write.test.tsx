@@ -26,6 +26,9 @@ beforeEach(() => {
 })
 afterEach(() => jest.useRealTimers())
 
+// Override harus stabil antar render: hook mereset form tiap referensinya berubah.
+const overrideOld: any = { batch_code: 'OLD' }
+const overrideSame: any = { batch_code: 'B2' }
 const material: any = { id: 5, name: 'Mat', is_managed_in_batch: true, batches: [] }
 const batchData: any = { batch_code: 'B2', expired_date: '2030-01-01', qty: 4, reason: 'r', detail_reason: 'd' }
 
@@ -50,13 +53,13 @@ describe('useAddMaterialOrBatch', () => {
   })
 
   it('edit batch dengan kode berubah menghapus batch lama', () => {
-    const { result } = renderHook(() => useAddMaterialOrBatch(material, 'batch', { batch_code: 'OLD' } as any))
+    const { result } = renderHook(() => useAddMaterialOrBatch(material, 'batch', overrideOld))
     act(() => result.current.handleSubmitToStore(batchData))
     expect(mockDispatch.mock.calls[0][0]).toEqual({ type: 'removeBatch', payload: { materialId: 5, batchCode: 'OLD' } })
   })
 
   it('edit batch dengan kode sama tidak menghapus', () => {
-    const { result } = renderHook(() => useAddMaterialOrBatch(material, 'batch', { batch_code: 'B2' } as any))
+    const { result } = renderHook(() => useAddMaterialOrBatch(material, 'batch', overrideSame))
     act(() => result.current.handleSubmitToStore(batchData))
     expect(mockDispatch.mock.calls[0][0].type).toBe('addBatch')
   })
