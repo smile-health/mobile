@@ -81,6 +81,8 @@ export const seedStore = (store: any, api: any) => {
       }
     }
   }
+  // action fulfilled palsu ikut diproses reducer cache RTK Query; bersihkan agar tidak merusak state cache.
+  store.dispatch(api.util.resetApiState())
 }
 
 /** Contoh nilai untuk validasi schema yup. */
