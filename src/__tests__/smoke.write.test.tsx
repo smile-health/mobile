@@ -31,6 +31,17 @@ jest.mock('@/services/apis/transfer-stock.api', () => require('@/test-utils/rtkM
 jest.mock('@/services/apis/vaccine-sequence.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/vaccine-sequence.api')))
 jest.mock('@/services/apis/workspaces.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/workspaces.api')))
 
+jest.mock('@/storage', () => ({
+  saveLocalData: jest.fn().mockResolvedValue(undefined),
+  loadLocalData: jest.fn().mockResolvedValue(null),
+  loadArrayData: jest.fn().mockResolvedValue([]),
+  loadMultipleLocalData: jest.fn().mockResolvedValue({}),
+  updateLocalData: jest.fn().mockResolvedValue(undefined),
+  updateArrayData: jest.fn().mockResolvedValue(undefined),
+  removeLocalData: jest.fn().mockResolvedValue(undefined),
+  removeMultipleLocalData: jest.fn().mockResolvedValue(undefined),
+  clearLocalData: jest.fn().mockResolvedValue(undefined),
+}))
 jest.mock('i18next', () => {
   const t = (k: string) => k
   const i18n = { t, language: 'en', changeLanguage: jest.fn(), exists: () => true }
@@ -135,6 +146,8 @@ const anyValue: any = new Proxy((() => undefined) as any, {
     if (k === Symbol.toPrimitive) return () => 1
     if (k === Symbol.iterator) return function* () {}
     if (k === 'then') return undefined
+    if (k === 'arguments' || k === 'caller' || k === 'prototype')
+      return (_t as any)[k]
     if (k === 'length') return 0
     return anyValue
   },
@@ -188,7 +201,7 @@ beforeAll(() => {
 
 let hookSeed = 0
 const SEEDS = 12
-const handlerArgs: any[][] = [[], [item], ['x'], [1]]
+const handlerArgs: any[][] = [[], [item], ['x'], [1], [anyValue]]
 const hookArgs: any[][] = [[], [baseProps], [anyValue], [chaosItem(1)], [{ ...baseProps, item: chaosItem(2), data: chaosList(2) }],
   [item, item],
   [chaosItem(1), chaosItem(2)],
