@@ -23,7 +23,11 @@ export const navModule = {
     React.useEffect(() => cb(), [])
   },
   useIsFocused: () => true,
-  createNavigationContainerRef: () => ({ isReady: () => false, navigate: jest.fn(), current: null }),
+  createNavigationContainerRef: () => ({
+    isReady: () => false,
+    navigate: jest.fn(),
+    current: null,
+  }),
   NavigationContainer: ({ children }: any) => children,
   CommonActions: { navigate: jest.fn(), reset: jest.fn() },
   StackActions: { replace: jest.fn(), push: jest.fn(), popToTop: jest.fn() },

@@ -1,7 +1,13 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
+)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
 )
 
 import React from 'react'
@@ -20,13 +26,19 @@ const stockItem = (id: number, name: string) => ({
   total_disposal_received_qty: 3,
   updated_at: '2025-01-01',
 })
-const detailItem = { material_id: 9, disposal_discard_qty: 1, disposal_received_qty: 1 }
+const detailItem = {
+  material_id: 9,
+  disposal_discard_qty: 1,
+  disposal_received_qty: 1,
+}
 
 describe('DisposalMaterialList', () => {
   it('menampilkan item dan memanggil onPressMaterial', () => {
     const onPress = jest.fn()
     const data = [stockItem(1, 'Alpha'), stockItem(2, 'Beta')]
-    render(<DisposalMaterialList data={data as any} onPressMaterial={onPress} />)
+    render(
+      <DisposalMaterialList data={data as any} onPressMaterial={onPress} />
+    )
     fireEvent.press(screen.getByText('Alpha'))
     expect(onPress).toHaveBeenCalledWith(data[0])
     expect(screen.getByText('Beta')).toBeTruthy()
@@ -36,7 +48,13 @@ describe('DisposalMaterialList', () => {
     const onPress = jest.fn()
     render(
       <DisposalMaterialList
-        data={[detailItem, { ...detailItem, material_id: 0 }, { ...detailItem, material_id: 5, updated_at: 'x' }] as any}
+        data={
+          [
+            detailItem,
+            { ...detailItem, material_id: 0 },
+            { ...detailItem, material_id: 5, updated_at: 'x' },
+          ] as any
+        }
         onPressMaterial={onPress}
         title='T'
         type={undefined}
@@ -47,7 +65,13 @@ describe('DisposalMaterialList', () => {
 
   it('menampilkan teks kosong dan memicu onEndReach', () => {
     const onEnd = jest.fn()
-    render(<DisposalMaterialList data={[]} onPressMaterial={jest.fn()} onEndReach={onEnd} />)
+    render(
+      <DisposalMaterialList
+        data={[]}
+        onPressMaterial={jest.fn()}
+        onEndReach={onEnd}
+      />
+    )
     expect(screen.getByText('no_items_found')).toBeTruthy()
     const list = screen.UNSAFE_getByProps({ onEndReachedThreshold: 0.1 })
     list.props.onEndReached()
@@ -56,7 +80,12 @@ describe('DisposalMaterialList', () => {
   })
 
   it('onEndReached aman tanpa callback', () => {
-    render(<DisposalMaterialList data={[stockItem(1, 'A')] as any} onPressMaterial={jest.fn()} />)
+    render(
+      <DisposalMaterialList
+        data={[stockItem(1, 'A')] as any}
+        onPressMaterial={jest.fn()}
+      />
+    )
     const list = screen.UNSAFE_getByProps({ onEndReachedThreshold: 0.1 })
     expect(() => list.props.onEndReached()).not.toThrow()
   })
@@ -86,7 +115,9 @@ const batchStock: any = {
 
 describe('DisposalStockBatchItem', () => {
   it('menampilkan detail batch dan alasan', () => {
-    render(<DisposalStockBatchItem disposalStock={batchStock} isManagedInBatch />)
+    render(
+      <DisposalStockBatchItem disposalStock={batchStock} isManagedInBatch />
+    )
     expect(screen.getByText('BX1')).toBeTruthy()
     expect(screen.getByText('Rutin')).toBeTruthy()
     expect(screen.getAllByText('disposal.reason_qty').length).toBe(2)
@@ -95,7 +126,12 @@ describe('DisposalStockBatchItem', () => {
   it('tanpa batch dan qty 0 menampilkan placeholder', () => {
     render(
       <DisposalStockBatchItem
-        disposalStock={{ ...batchStock, batch: null, disposal_discard_qty: undefined, disposal_received_qty: 0 }}
+        disposalStock={{
+          ...batchStock,
+          batch: null,
+          disposal_discard_qty: undefined,
+          disposal_received_qty: 0,
+        }}
         isManagedInBatch={false}
       />
     )
@@ -106,7 +142,10 @@ describe('DisposalStockBatchItem', () => {
   it('batch ada tetapi tidak dikelola per batch dan tanpa manufaktur', () => {
     render(
       <DisposalStockBatchItem
-        disposalStock={{ ...batchStock, batch: { ...batchStock.batch, manufacture: null } }}
+        disposalStock={{
+          ...batchStock,
+          batch: { ...batchStock.batch, manufacture: null },
+        }}
         isManagedInBatch={false}
       />
     )
@@ -121,10 +160,12 @@ describe('DisposalStockDetailBatchSection', () => {
       <DisposalStockDetailBatchSection
         isBatch
         detail={detail}
-        sections={[
-          { title: 'active_batch', data: [batchStock] },
-          { title: 'empty', data: [] },
-        ] as any}
+        sections={
+          [
+            { title: 'active_batch', data: [batchStock] },
+            { title: 'empty', data: [] },
+          ] as any
+        }
       />
     )
     expect(screen.getByText('active_batch')).toBeTruthy()
@@ -147,13 +188,22 @@ describe('DisposalStockDetailBatchSection', () => {
 
 describe('DisposalMaterialBatchItem', () => {
   const onToggle = jest.fn()
-  const base = { type: 'self' as any, stock: batchStock, expanded: true, activity: 'Rutin', onToggleExpand: onToggle }
+  const base = {
+    type: 'self' as any,
+    stock: batchStock,
+    expanded: true,
+    activity: 'Rutin',
+    onToggleExpand: onToggle,
+  }
   beforeEach(() => jest.clearAllMocks())
 
   it('tanpa quantities: tombol tambah menavigasi ke AddDisposal', () => {
     render(<DisposalMaterialBatchItem {...base} />)
     fireEvent.press(screen.getByTestId('btn-add-disposal-qty-5'))
-    expect(navMock.navigate).toHaveBeenCalledWith('AddDisposal', expect.objectContaining({ disposalStock: batchStock }))
+    expect(navMock.navigate).toHaveBeenCalledWith(
+      'AddDisposal',
+      expect.objectContaining({ disposalStock: batchStock })
+    )
   })
 
   it('tombol tambah memakai onEdit jika ada', () => {
@@ -170,10 +220,24 @@ describe('DisposalMaterialBatchItem', () => {
       <DisposalMaterialBatchItem
         {...base}
         onEdit={onEdit}
-        quantities={{
-          discard: [{ disposal_stock_id: 1, transaction_reason_name: 'Rusak', disposal_qty: 2 }],
-          received: [{ disposal_stock_id: 2, transaction_reason_name: 'Kadaluarsa', disposal_qty: 1 }],
-        } as any}
+        quantities={
+          {
+            discard: [
+              {
+                disposal_stock_id: 1,
+                transaction_reason_name: 'Rusak',
+                disposal_qty: 2,
+              },
+            ],
+            received: [
+              {
+                disposal_stock_id: 2,
+                transaction_reason_name: 'Kadaluarsa',
+                disposal_qty: 1,
+              },
+            ],
+          } as any
+        }
       />
     )
     fireEvent.press(screen.getByTestId('btn-edit-disposal-qty-5'))
@@ -185,7 +249,12 @@ describe('DisposalMaterialBatchItem', () => {
       <DisposalMaterialBatchItem
         {...base}
         expanded={false}
-        stock={{ ...batchStock, batch: null, disposal_discard_qty: undefined, disposal_received_qty: undefined }}
+        stock={{
+          ...batchStock,
+          batch: null,
+          disposal_discard_qty: undefined,
+          disposal_received_qty: undefined,
+        }}
         quantities={{ discard: [], received: [] } as any}
       />
     )

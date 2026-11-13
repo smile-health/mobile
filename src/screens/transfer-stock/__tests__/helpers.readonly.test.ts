@@ -30,7 +30,9 @@ const material: any = {
 
 describe('TransferStockHelpers', () => {
   it('getAllStocks meratakan detail dan aman untuk undefined', () => {
-    expect(getAllStocks([{ stocks: [1] }, { stocks: [2, 3] }] as any)).toEqual([1, 2, 3])
+    expect(getAllStocks([{ stocks: [1] }, { stocks: [2, 3] }] as any)).toEqual([
+      1, 2, 3,
+    ])
     expect(getAllStocks()).toEqual([])
   })
 
@@ -132,14 +134,27 @@ describe('TransferStockHelpers', () => {
           total_available_qty: 3,
         },
       } as any)
-    ).toEqual({ name: 'M', updatedAt: 'u', qty: 5, min: 1, max: 9, available: 3, allocated: 2 })
+    ).toEqual({
+      name: 'M',
+      updatedAt: 'u',
+      qty: 5,
+      min: 1,
+      max: 9,
+      available: 3,
+      allocated: 2,
+    })
   })
 
   it('createTransferStockPayload mengisi default', () => {
     expect(
       createTransferStockPayload(
         [
-          { material_id: 1, stock_id: 2, destination_activity: { value: 7 }, change_qty: 3 },
+          {
+            material_id: 1,
+            stock_id: 2,
+            destination_activity: { value: 7 },
+            change_qty: 3,
+          },
           { material_id: 1, change_qty: 1 },
         ] as any,
         5,
@@ -163,8 +178,16 @@ describe('TransferStockHelpers', () => {
   it('createReviewItems mengelompokkan per material', () => {
     const r = createReviewItems(
       [
-        { material_id: 1, material_name: 'A', created_at: '2025-01-01 10:00:00' },
-        { material_id: 1, material_name: 'A', created_at: '2025-01-01 10:00:00' },
+        {
+          material_id: 1,
+          material_name: 'A',
+          created_at: '2025-01-01 10:00:00',
+        },
+        {
+          material_id: 1,
+          material_name: 'A',
+          created_at: '2025-01-01 10:00:00',
+        },
         { material_id: 2, material_name: 'B', created_at: null },
       ] as any,
       { name: 'Prog' } as any
@@ -173,6 +196,8 @@ describe('TransferStockHelpers', () => {
     expect(r[0].items).toHaveLength(2)
     expect(r[0].items[0].program_name).toBe('Prog')
     expect(r[1].materialName).toBe('B')
-    expect(createReviewItems([{ material_id: 1 }] as any)[0].items[0].program_name).toBe('')
+    expect(
+      createReviewItems([{ material_id: 1 }] as any)[0].items[0].program_name
+    ).toBe('')
   })
 })

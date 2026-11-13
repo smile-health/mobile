@@ -1,11 +1,24 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-gesture-handler', () => ({ FlatList: require('react-native').FlatList }))
-jest.mock('@/components/portals/Portal', () => ({ __esModule: true, default: ({ children }: any) => children }))
-jest.mock('@/components/toolbar/hooks/useToolbar', () => ({ useToolbar: jest.fn() }))
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
+)
+jest.mock('react-native-gesture-handler', () => ({
+  FlatList: require('react-native').FlatList,
+}))
+jest.mock('@/components/portals/Portal', () => ({
+  __esModule: true,
+  default: ({ children }: any) => children,
+}))
+jest.mock('@/components/toolbar/hooks/useToolbar', () => ({
+  useToolbar: jest.fn(),
+}))
 
 const mockProgramHook = jest.fn()
 jest.mock('../hooks/useTransferStockProgram', () => ({
@@ -20,11 +33,11 @@ jest.mock('../hooks/useTransferStockForm', () => ({
 
 import React from 'react'
 import { fireEvent, render, screen, act } from '@testing-library/react-native'
-import { FormWrapper } from '@/test-utils/misc-form'
 import { useToolbar } from '@/components/toolbar/hooks/useToolbar'
+import { FormWrapper } from '@/test-utils/misc-form'
 import TransferStockFormItem from '../components/TransferStockFormItem'
-import TransferStockProgramScreen from '../TransferStockProgramScreen'
 import CreateTransferStockScreen from '../CreateTransferStockScreen'
+import TransferStockProgramScreen from '../TransferStockProgramScreen'
 
 const t = (k: string) => k
 
@@ -67,7 +80,11 @@ describe('TransferStockProgramScreen', () => {
   })
 
   it('dialog transaksi draft tampil dan bisa ditutup', () => {
-    render(<Wrapper hook={{ ...base, isOpenModalExistTrx: true, draftProgram: undefined }} />)
+    render(
+      <Wrapper
+        hook={{ ...base, isOpenModalExistTrx: true, draftProgram: undefined }}
+      />
+    )
     fireEvent.press(screen.getByText('button.ok'))
     expect(base.closeModalExistTrx).toHaveBeenCalled()
   })
@@ -93,8 +110,15 @@ const item: any = {
 describe('TransferStockFormItem', () => {
   const renderItem = (it: any, props: any = {}, onForm?: any) =>
     render(
-      <FormWrapper defaultValues={{ items: { activeBatch: [it], expiredBatch: [] } }} onForm={onForm}>
-        <TransferStockFormItem index={0} batchType='activeBatch' isSelected {...props} />
+      <FormWrapper
+        defaultValues={{ items: { activeBatch: [it], expiredBatch: [] } }}
+        onForm={onForm}>
+        <TransferStockFormItem
+          index={0}
+          batchType='activeBatch'
+          isSelected
+          {...props}
+        />
       </FormWrapper>
     )
 
@@ -123,7 +147,13 @@ describe('TransferStockFormItem', () => {
 
   it('tanpa batch, tanpa anggaran, collapse dinonaktifkan', () => {
     renderItem(
-      { ...item, batch: null, budget_source: null, activity: undefined, change_qty: null },
+      {
+        ...item,
+        batch: null,
+        budget_source: null,
+        activity: undefined,
+        change_qty: null,
+      },
       { disableCollapse: true, isSelected: false }
     )
     expect(screen.queryByText('label.manufacturer')).toBeNull()
@@ -134,7 +164,9 @@ describe('TransferStockFormItem', () => {
 describe('CreateTransferStockScreen', () => {
   const baseHook = (over: any = {}) => {
     const { useForm } = require('react-hook-form')
-    const methods = useForm({ defaultValues: { items: { activeBatch: [item], expiredBatch: [] } } })
+    const methods = useForm({
+      defaultValues: { items: { activeBatch: [item], expiredBatch: [] } },
+    })
     return {
       t,
       title: 'Judul',
@@ -157,12 +189,19 @@ describe('CreateTransferStockScreen', () => {
       ...over,
     }
   }
-  const material: any = { material: { name: 'Vaksin' }, aggregate: { total_qty: 3 } }
+  const material: any = {
+    material: { name: 'Vaksin' },
+    aggregate: { total_qty: 3 },
+  }
   const Harness = ({ over }: { over?: any }) => {
     const hook = baseHook(over)
     mockFormHook.mockReturnValue(hook)
     ;(Harness as any).hook = hook
-    return <CreateTransferStockScreen {...({ route: { params: { material, materials: [material] } } } as any)} />
+    return (
+      <CreateTransferStockScreen
+        {...({ route: { params: { material, materials: [material] } } } as any)}
+      />
+    )
   }
 
   it('tombol simpan dan next material memanggil handler', () => {
@@ -183,7 +222,11 @@ describe('CreateTransferStockScreen', () => {
   })
 
   it('tanpa batch, tanpa next material, dan data kosong', () => {
-    render(<Harness over={{ isBatch: false, hasNextMaterial: false, sections: [] }} />)
+    render(
+      <Harness
+        over={{ isBatch: false, hasNextMaterial: false, sections: [] }}
+      />
+    )
     expect(screen.queryByTestId('btn-next-material-tranfer-stock')).toBeNull()
     expect(screen.getByText('empty_state.no_data_available')).toBeTruthy()
   })

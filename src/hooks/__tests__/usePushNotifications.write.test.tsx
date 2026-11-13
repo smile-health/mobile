@@ -3,7 +3,10 @@ jest.mock('@/services/FirebaseMessaging', () => {
   create.AuthorizationStatus = { AUTHORIZED: 1, PROVISIONAL: 2, DENIED: 0 }
   return { __esModule: true, default: create }
 })
-jest.mock('@/services/Notifee', () => ({ __esModule: true, default: { setBadgeCount: jest.fn().mockResolvedValue(undefined) } }))
+jest.mock('@/services/Notifee', () => ({
+  __esModule: true,
+  default: { setBadgeCount: jest.fn().mockResolvedValue() },
+}))
 jest.mock('@/services/firebase', () => ({
   firebaseMessagingService: {
     checkPermission: jest.fn(),
@@ -12,21 +15,37 @@ jest.mock('@/services/firebase', () => ({
   },
 }))
 jest.mock('@/services/push-notification', () => ({
-  pushNotificationStorageService: { processOfflineQueue: jest.fn(), incrementBadgeCount: jest.fn() },
-  pushNotificationHandlerService: { initialize: jest.fn(), isServiceInitialized: jest.fn() },
+  pushNotificationStorageService: {
+    processOfflineQueue: jest.fn(),
+    incrementBadgeCount: jest.fn(),
+  },
+  pushNotificationHandlerService: {
+    initialize: jest.fn(),
+    isServiceInitialized: jest.fn(),
+  },
 }))
-jest.mock('@/storage', () => ({ loadLocalData: jest.fn(), saveLocalData: jest.fn() }))
+jest.mock('@/storage', () => ({
+  loadLocalData: jest.fn(),
+  saveLocalData: jest.fn(),
+}))
 jest.mock('@/utils/NetworkUtils', () => ({ isNetworkAvailable: jest.fn() }))
 
 import { AppState } from 'react-native'
-import mockCreate from '@/services/FirebaseMessaging'
 import { act, renderHook, waitFor } from '@testing-library/react-native'
 import { firebaseMessagingService as fm } from '@/services/firebase'
+import mockCreate from '@/services/FirebaseMessaging'
 import notifee from '@/services/Notifee'
-import { pushNotificationHandlerService as handler, pushNotificationStorageService as store } from '@/services/push-notification'
+import {
+  pushNotificationHandlerService as handler,
+  pushNotificationStorageService as store,
+} from '@/services/push-notification'
 import { loadLocalData, saveLocalData } from '@/storage'
 import { isNetworkAvailable } from '@/utils/NetworkUtils'
-import { useNotificationBadge, useNotificationPermission, usePushNotifications } from '../usePushNotifications'
+import {
+  useNotificationBadge,
+  useNotificationPermission,
+  usePushNotifications,
+} from '../usePushNotifications'
 
 const f = fm as jest.Mocked<typeof fm>
 beforeEach(() => {
@@ -67,7 +86,9 @@ describe('usePushNotifications', () => {
     const { result } = renderHook(() => usePushNotifications())
     await waitFor(() => expect(result.current.token).toBe('tok'))
     f.checkPermission.mockRejectedValue(new Error('x'))
-    await expect(result.current.requestPermission()).rejects.toThrow('Failed to request notification permission')
+    await expect(result.current.requestPermission()).rejects.toThrow(
+      'Failed to request notification permission'
+    )
   })
 
   it('initializePushNotifications: token baru, token tersimpan, gagal', async () => {
@@ -96,7 +117,10 @@ describe('usePushNotifications', () => {
   it('AppState active: sinkron antrian offline hanya bila online & terinisialisasi', async () => {
     const remove = jest.fn()
     let cb: any
-    const spy = jest.spyOn(AppState, 'addEventListener').mockImplementation(((_: string, c: any) => {
+    const spy = jest.spyOn(AppState, 'addEventListener').mockImplementation(((
+      _: string,
+      c: any
+    ) => {
       cb = c
       return { remove }
     }) as any)
@@ -118,14 +142,23 @@ describe('usePushNotifications', () => {
 })
 
 describe('useNotificationPermission', () => {
-  it.each([[1, 'granted'], [2, 'provisional'], [0, 'denied'], [9, 'not-determined']])('status %s => %s', async (s, label) => {
-    (mockCreate as jest.Mock).mockReturnValue({ hasPermission: jest.fn().mockResolvedValue(s) })
+  it.each([
+    [1, 'granted'],
+    [2, 'provisional'],
+    [0, 'denied'],
+    [9, 'not-determined'],
+  ])('status %s => %s', async (s, label) => {
+    ;(mockCreate as jest.Mock).mockReturnValue({
+      hasPermission: jest.fn().mockResolvedValue(s),
+    })
     const { result } = renderHook(() => useNotificationPermission())
     await waitFor(() => expect(result.current.permissionStatus).toBe(label))
   })
 
   it('error => "error"', async () => {
-    (mockCreate as jest.Mock).mockReturnValue({ hasPermission: jest.fn().mockRejectedValue(new Error('x')) })
+    ;(mockCreate as jest.Mock).mockReturnValue({
+      hasPermission: jest.fn().mockRejectedValue(new Error('x')),
+    })
     const { result } = renderHook(() => useNotificationPermission())
     let r: any
     await act(async () => {

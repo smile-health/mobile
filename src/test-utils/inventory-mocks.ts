@@ -1,38 +1,146 @@
 /* Import paling awal di test komponen inventory: mendaftarkan mock bersama. */
-jest.mock('@/services/apis/asset-inventory.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/asset-inventory.api')))
-jest.mock('@/services/apis/asset.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/asset.api')))
-jest.mock('@/services/apis/auth.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/auth.api')))
-jest.mock('@/services/apis/budget-source.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/budget-source.api')))
-jest.mock('@/services/apis/cva.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/cva.api')))
-jest.mock('@/services/apis/disposal.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/disposal.api')))
-jest.mock('@/services/apis/entity.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/entity.api')))
-jest.mock('@/services/apis/event-report-count.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/event-report-count.api')))
-jest.mock('@/services/apis/event-report-detail.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/event-report-detail.api')))
-jest.mock('@/services/apis/event-report.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/event-report.api')))
-jest.mock('@/services/apis/inventory.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/inventory.api')))
-jest.mock('@/services/apis/materials.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/materials.api')))
-jest.mock('@/services/apis/notification.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/notification.api')))
-jest.mock('@/services/apis/order.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/order.api')))
-jest.mock('@/services/apis/profile.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/profile.api')))
-jest.mock('@/services/apis/reason.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/reason.api')))
-jest.mock('@/services/apis/reconciliation.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/reconciliation.api')))
-jest.mock('@/services/apis/setting.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/setting.api')))
-jest.mock('@/services/apis/stock-taking.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/stock-taking.api')))
-jest.mock('@/services/apis/ticket-material.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/ticket-material.api')))
-jest.mock('@/services/apis/transaction-types.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/transaction-types.api')))
-jest.mock('@/services/apis/transaction.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/transaction.api')))
-jest.mock('@/services/apis/transfer-stock.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/transfer-stock.api')))
-jest.mock('@/services/apis/vaccine-sequence.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/vaccine-sequence.api')))
-jest.mock('@/services/apis/workspaces.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/workspaces.api')))
+jest.mock('@/services/apis/asset-inventory.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/asset-inventory.api')
+  )
+)
+jest.mock('@/services/apis/asset.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/asset.api')
+  )
+)
+jest.mock('@/services/apis/auth.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/auth.api')
+  )
+)
+jest.mock('@/services/apis/budget-source.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/budget-source.api')
+  )
+)
+jest.mock('@/services/apis/cva.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/cva.api')
+  )
+)
+jest.mock('@/services/apis/disposal.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/disposal.api')
+  )
+)
+jest.mock('@/services/apis/entity.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/entity.api')
+  )
+)
+jest.mock('@/services/apis/event-report-count.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/event-report-count.api')
+  )
+)
+jest.mock('@/services/apis/event-report-detail.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/event-report-detail.api')
+  )
+)
+jest.mock('@/services/apis/event-report.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/event-report.api')
+  )
+)
+jest.mock('@/services/apis/inventory.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/inventory.api')
+  )
+)
+jest.mock('@/services/apis/materials.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/materials.api')
+  )
+)
+jest.mock('@/services/apis/notification.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/notification.api')
+  )
+)
+jest.mock('@/services/apis/order.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/order.api')
+  )
+)
+jest.mock('@/services/apis/profile.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/profile.api')
+  )
+)
+jest.mock('@/services/apis/reason.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/reason.api')
+  )
+)
+jest.mock('@/services/apis/reconciliation.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/reconciliation.api')
+  )
+)
+jest.mock('@/services/apis/setting.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/setting.api')
+  )
+)
+jest.mock('@/services/apis/stock-taking.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/stock-taking.api')
+  )
+)
+jest.mock('@/services/apis/ticket-material.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/ticket-material.api')
+  )
+)
+jest.mock('@/services/apis/transaction-types.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/transaction-types.api')
+  )
+)
+jest.mock('@/services/apis/transaction.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/transaction.api')
+  )
+)
+jest.mock('@/services/apis/transfer-stock.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/transfer-stock.api')
+  )
+)
+jest.mock('@/services/apis/vaccine-sequence.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/vaccine-sequence.api')
+  )
+)
+jest.mock('@/services/apis/workspaces.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/workspaces.api')
+  )
+)
 
 jest.mock('i18next', () => {
   const t = (k: string) => k
-  const i18n = { t, language: 'en', changeLanguage: jest.fn(), exists: () => true }
+  const i18n = {
+    t,
+    language: 'en',
+    changeLanguage: jest.fn(),
+    exists: () => true,
+  }
   return { __esModule: true, default: i18n, t, ...i18n }
 })
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
 )
 jest.mock('react-native-gesture-handler', () => {
   const RN = require('react-native')
@@ -81,7 +189,8 @@ jest.mock('@react-navigation/native', () => {
       require('react').useEffect(() => cb(), [])
     },
     useIsFocused: () => true,
-    useNavigationState: (sel: any) => sel({ index: 0, routes: [{ name: 'n' }] }),
+    useNavigationState: (sel: any) =>
+      sel({ index: 0, routes: [{ name: 'n' }] }),
     CommonActions: { navigate: jest.fn(), reset: jest.fn() },
     StackActions: { replace: jest.fn(), push: jest.fn(), popToTop: jest.fn() },
   }

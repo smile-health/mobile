@@ -10,8 +10,7 @@ import { OrderForm } from '@/screens/shared/component/OrderForm'
 import { getTestID } from '@/utils/CommonUtils'
 import useRelcoationTrademarkDetailForm from '../hooks/relocation/useRelocationTrademarkDetailForm'
 
-interface Props
-  extends AppStackScreenProps<'RelocationTrademarkMaterialDetail'> {}
+interface Props extends AppStackScreenProps<'RelocationTrademarkMaterialDetail'> {}
 
 export default function RelocationTrademarkMaterialDetailScreen({
   route,

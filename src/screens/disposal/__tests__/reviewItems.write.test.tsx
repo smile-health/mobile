@@ -1,16 +1,25 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
+)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
 
 import React from 'react'
 import { fireEvent, render, screen, act } from '@testing-library/react-native'
 import { FormWrapper } from '@/test-utils/misc-form'
 import DisposalInputItem from '../components/DisposalInputItem'
-import DisposalShipmentItem from '../components/shipment-list/DisposalShipmentItem'
 import ReviewDisposalStockItem from '../components/ReviewDisposalStockItem'
 import ReviewItemDisposal from '../components/ReviewItemDisposal'
+import DisposalShipmentItem from '../components/shipment-list/DisposalShipmentItem'
 
 const t: any = (k: string) => k
-const label: any = { qty: 'q', stockDiscard: 'discard', stockReceived: 'received' }
+const label: any = {
+  qty: 'q',
+  stockDiscard: 'discard',
+  stockReceived: 'received',
+}
 const qty = (id: number) => ({
   disposal_stock_id: id,
   transaction_reason_id: id,
@@ -21,7 +30,11 @@ const qty = (id: number) => ({
 const stockOf = (extra: any = {}) => ({
   stock_id: 1,
   activity: { name: 'Rutin' },
-  batch: { code: 'BT', expired_date: '2030-01-01', manufacture: { name: 'Bio' } },
+  batch: {
+    code: 'BT',
+    expired_date: '2030-01-01',
+    manufacture: { name: 'Bio' },
+  },
   discard: [qty(1)],
   received: [qty(2)],
   ...extra,
@@ -29,7 +42,14 @@ const stockOf = (extra: any = {}) => ({
 
 describe('ReviewDisposalStockItem', () => {
   it('menampilkan batch, discard dan received', () => {
-    render(<ReviewDisposalStockItem stock={stockOf() as any} qty={2} t={t} label={label} />)
+    render(
+      <ReviewDisposalStockItem
+        stock={stockOf() as any}
+        qty={2}
+        t={t}
+        label={label}
+      />
+    )
     expect(screen.getByText('BT')).toBeTruthy()
     expect(screen.getByText('discard')).toBeTruthy()
     expect(screen.getByText('received')).toBeTruthy()
@@ -38,7 +58,9 @@ describe('ReviewDisposalStockItem', () => {
   it('tanpa batch dan tanpa qty tidak menampilkan blok terkait', () => {
     render(
       <ReviewDisposalStockItem
-        stock={stockOf({ batch: undefined, discard: [], received: undefined }) as any}
+        stock={
+          stockOf({ batch: undefined, discard: [], received: undefined }) as any
+        }
         qty={0}
         t={t}
         label={label}
@@ -75,7 +97,10 @@ describe('ReviewItemDisposal', () => {
   })
 
   it('tanpa batch tidak menampilkan label batch', () => {
-    const item: any = { material: { name: 'V', is_managed_in_batch: 0 }, disposal: [] }
+    const item: any = {
+      material: { name: 'V', is_managed_in_batch: 0 },
+      disposal: [],
+    }
     render(<ReviewItemDisposal item={item} type={'self' as any} />)
     expect(screen.queryByText('disposal.material_batch')).toBeNull()
   })

@@ -1,24 +1,41 @@
 const mockInputs: any[] = []
 const mockDropdowns: any[] = []
 
-jest.mock('@/components/ActivityLabel', () => ({ __esModule: true, default: () => null }))
+jest.mock('@/components/ActivityLabel', () => ({
+  __esModule: true,
+  default: () => null,
+}))
 jest.mock('@/components/dropdown/Dropdown', () => ({
   __esModule: true,
-  default: (p: any) => { mockDropdowns.push(p); return null },
+  default: (p: any) => {
+    mockDropdowns.push(p)
+    return null
+  },
 }))
 jest.mock('@/components/forms', () => ({
-  InputNumber: (p: any) => { mockInputs.push(p); return null },
+  InputNumber: (p: any) => {
+    mockInputs.push(p)
+    return null
+  },
 }))
 jest.mock('@/components/list/InfoRow', () => {
   const { Text } = require('react-native')
-  return { InfoRow: ({ label, value }: any) => <Text>{`${label}=${value}`}</Text> }
+  return {
+    InfoRow: ({ label, value }: any) => <Text>{`${label}=${value}`}</Text>,
+  }
 })
-jest.mock('@/components/separator/Separator', () => ({ __esModule: true, default: () => null }))
+jest.mock('@/components/separator/Separator', () => ({
+  __esModule: true,
+  default: () => null,
+}))
 jest.mock('../EmptyStockView', () => {
   const { Text } = require('react-native')
   return { EmptyStockView: () => <Text>empty-view</Text> }
 })
-jest.mock('../StockInfoSection', () => ({ __esModule: true, default: () => null }))
+jest.mock('../StockInfoSection', () => ({
+  __esModule: true,
+  default: () => null,
+}))
 
 import React from 'react'
 import { render } from '@testing-library/react-native'
@@ -29,7 +46,12 @@ const t: any = (k: string) => k
 const stock = (id: number, qty: number) => ({
   id,
   available_qty: qty,
-  batch: { code: `B${id}`, expired_date: '2030-01-01', production_date: '2029-01-01', manufacture: { name: 'Man' } },
+  batch: {
+    code: `B${id}`,
+    expired_date: '2030-01-01',
+    production_date: '2029-01-01',
+    manufacture: { name: 'Man' },
+  },
   activity: { name: 'A' },
 })
 const item = (over: any = {}): any => ({
@@ -39,16 +61,45 @@ const item = (over: any = {}): any => ({
   stocks: [stock(1, 5), stock(2, 0)],
   ...over,
 })
-const draft = [{ children: [{ stock: [{ stock_id: 1, draft_allocated_qty: 3, draft_order_stock_status_id: 2 }] }] }]
+const draft = [
+  {
+    children: [
+      {
+        stock: [
+          {
+            stock_id: 1,
+            draft_allocated_qty: 3,
+            draft_order_stock_status_id: 2,
+          },
+        ],
+      },
+    ],
+  },
+]
 
-beforeEach(() => { mockInputs.length = 0; mockDropdowns.length = 0 })
+beforeEach(() => {
+  mockInputs.length = 0
+  mockDropdowns.length = 0
+})
 
 describe('AllocationMaterialHierarchyRenderer', () => {
   const setup = (it: any, extra: any = {}) => {
     const setValue = jest.fn()
-    const watch = jest.fn((name: string) => (name.endsWith('draft_allocated_qty') ? extra.watched : undefined))
+    const watch = jest.fn((name: string) =>
+      name.endsWith('draft_allocated_qty') ? extra.watched : undefined
+    )
     const utils = render(
-      <Hier item={it} index={2} isBatch={extra.isBatch ?? false} control={{} as any} t={t} setValue={setValue} watch={watch} materialParentId={5} draftData={draft} />
+      <Hier
+        item={it}
+        index={2}
+        isBatch={extra.isBatch ?? false}
+        control={{} as any}
+        t={t}
+        setValue={setValue}
+        watch={watch}
+        materialParentId={5}
+        draftData={draft}
+      />
     )
     return { setValue, watch, ...utils }
   }
@@ -86,16 +137,25 @@ describe('AllocationMaterialHierarchyRenderer', () => {
   })
 
   it('material sensitif suhu menampilkan dropdown status dan menyimpan pilihan', () => {
-    const { setValue } = setup(item({ material: { id: 11, name: 'M', is_temperature_sensitive: 1 } }), { watched: 1 })
+    const { setValue } = setup(
+      item({ material: { id: 11, name: 'M', is_temperature_sensitive: 1 } }),
+      { watched: 1 }
+    )
     expect(mockDropdowns).toHaveLength(2)
     expect(mockDropdowns[1].disable).toBe(true)
     expect(mockDropdowns[0].value).toBe(2)
     mockDropdowns[0].onChangeValue('x')
-    expect(setValue).toHaveBeenCalledWith('order_items.2.children[0].allocations.0.draft_order_stock_status', 'x')
+    expect(setValue).toHaveBeenCalledWith(
+      'order_items.2.children[0].allocations.0.draft_order_stock_status',
+      'x'
+    )
   })
 
   it('mode batch menampilkan info batch', () => {
-    const { getByText, getAllByText } = setup(item(), { isBatch: true, watched: 1 })
+    const { getByText, getAllByText } = setup(item(), {
+      isBatch: true,
+      watched: 1,
+    })
     getByText('section.material_batch')
     expect(getAllByText(/label.expired_date=/)).toHaveLength(2)
   })
@@ -114,7 +174,15 @@ describe('AllocationMaterialNonHierarchyRenderer', () => {
   const setup = (it: any, isBatch = false) => {
     const setValue = jest.fn()
     const utils = render(
-      <NonHier item={it} index={1} isBatch={isBatch} control={{} as any} t={t} setValue={setValue} draftData={draft} />
+      <NonHier
+        item={it}
+        index={1}
+        isBatch={isBatch}
+        control={{} as any}
+        t={t}
+        setValue={setValue}
+        draftData={draft}
+      />
     )
     return { setValue, ...utils }
   }
@@ -128,12 +196,21 @@ describe('AllocationMaterialNonHierarchyRenderer', () => {
     const { setValue } = setup(item())
     expect(mockInputs[0].value).toBe(3)
     mockInputs[0].onChangeText(8)
-    expect(setValue).toHaveBeenCalledWith('order_items.1.children.1.allocations.0.allocated_qty', '8')
-    expect(setValue).toHaveBeenCalledWith('order_items.1.children.1.allocations.0.stock_id', 1)
+    expect(setValue).toHaveBeenCalledWith(
+      'order_items.1.children.1.allocations.0.allocated_qty',
+      '8'
+    )
+    expect(setValue).toHaveBeenCalledWith(
+      'order_items.1.children.1.allocations.0.stock_id',
+      1
+    )
   })
 
   it('sensitif suhu: dropdown status; mode batch: info batch', () => {
-    const { getByText, getAllByText } = setup(item({ material: { id: 1, name: 'M', is_temperature_sensitive: 1 } }), true)
+    const { getByText, getAllByText } = setup(
+      item({ material: { id: 1, name: 'M', is_temperature_sensitive: 1 } }),
+      true
+    )
     expect(mockDropdowns).toHaveLength(2)
     expect(mockDropdowns[0].value).toBe(2)
     getByText('section.material_batch')

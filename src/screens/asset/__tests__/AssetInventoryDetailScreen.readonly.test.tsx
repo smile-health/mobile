@@ -3,8 +3,12 @@ const mockRefetch = jest.fn()
 jest.mock('../hooks/useAssetInventoryDetail', () => ({
   useAssetInventoryDetail: () => mockHook,
 }))
-jest.mock('@/components/toolbar/hooks/useToolbar', () => ({ useToolbar: jest.fn() }))
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/components/toolbar/hooks/useToolbar', () => ({
+  useToolbar: jest.fn(),
+}))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('@react-navigation/native', () => ({
   useFocusEffect: (cb: any) => require('react').useEffect(() => cb(), []),
   createNavigationContainerRef: () => ({}),
@@ -15,8 +19,15 @@ import { render, screen, cleanup } from '@testing-library/react-native'
 import AssetInventoryDetailScreen from '../AssetInventoryDetailScreen'
 
 const fmt = (d?: string) => (d ? `D:${d}` : '-')
-const contact = (n?: string | null, p?: string | null) => (!n && !p ? '-' : `${n ?? ''}|${p ?? ''}`)
-const base = { refetchDetail: mockRefetch, isLoadingDetail: false, isError: false, formatDate: fmt, formatContactPerson: contact }
+const contact = (n?: string | null, p?: string | null) =>
+  !n && !p ? '-' : `${n ?? ''}|${p ?? ''}`
+const base = {
+  refetchDetail: mockRefetch,
+  isLoadingDetail: false,
+  isError: false,
+  formatDate: fmt,
+  formatContactPerson: contact,
+}
 const props: any = { navigation: {}, route: { params: { id: 1 } } }
 const full: any = {
   entity: { name: 'Ent' },
@@ -29,11 +40,23 @@ const full: any = {
   manufacture: { name: 'MfA' },
   borrowed_from: { name: 'Borrow' },
   working_status: { id: 1, name: 'Working' },
-  contact_person: { first: { name: 'N1', number: '1' }, second: { name: 'N2', number: '2' }, third: { name: 'N3', number: '3' } },
+  contact_person: {
+    first: { name: 'N1', number: '1' },
+    second: { name: 'N2', number: '2' },
+    third: { name: 'N3', number: '3' },
+  },
   ownership: { id: 1, qty: 5, name: 'Own' },
   electricity: { name: 'PLN' },
-  warranty: { asset_vendor_name: 'WV', start_date: '2025-01-01', end_date: '2026-01-01' },
-  calibration: { name: 'Cal', asset_vendor_name: 'CV', last_date: '2025-01-01' },
+  warranty: {
+    asset_vendor_name: 'WV',
+    start_date: '2025-01-01',
+    end_date: '2026-01-01',
+  },
+  calibration: {
+    name: 'Cal',
+    asset_vendor_name: 'CV',
+    last_date: '2025-01-01',
+  },
   maintenance: { name: 'Mt', asset_vendor_name: 'MV', last_date: '2025-01-01' },
   status: 1,
 }
@@ -101,7 +124,7 @@ describe('AssetInventoryDetailScreen', () => {
         electricity: undefined,
         calibration: {},
         maintenance: {},
-        warranty: { },
+        warranty: {},
         status: 0,
       },
     }

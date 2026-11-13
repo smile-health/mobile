@@ -54,8 +54,8 @@ const run = async (type: any, over: any) => {
       abortEarly: false,
     })
     return [] as string[]
-  } catch (e: any) {
-    return e.errors as string[]
+  } catch (error: any) {
+    return error.errors as string[]
   }
 }
 
@@ -84,27 +84,44 @@ describe('createTransactionStockSchema', () => {
     expect(
       await run(K.REDUCE_STOCK, { transaction_reason_id: null })
     ).toContain('validation.required')
-    expect(
-      await run(K.CONSUMPTION, { transaction_reason_id: null })
-    ).toEqual([])
+    expect(await run(K.CONSUMPTION, { transaction_reason_id: null })).toEqual(
+      []
+    )
   })
 
   it('other_reason wajib bila alasan is_other', async () => {
     expect(
       await run(K.REDUCE_STOCK, {
-        transaction_reason: { value: 1, label: 'r', is_other: true, is_purchase: false },
+        transaction_reason: {
+          value: 1,
+          label: 'r',
+          is_other: true,
+          is_purchase: false,
+        },
       })
     ).toContain('validation.required')
   })
 
   it('tambah stok pembelian: harga, tahun, sumber dana wajib', async () => {
     const e = await run(K.ADD_STOCK, {
-      transaction_reason: { value: 1, label: 'r', is_other: false, is_purchase: true },
+      transaction_reason: {
+        value: 1,
+        label: 'r',
+        is_other: false,
+        is_purchase: true,
+      },
     })
-    expect(e.filter((x) => x === 'validation.required').length).toBeGreaterThanOrEqual(3)
+    expect(
+      e.filter((x) => x === 'validation.required').length
+    ).toBeGreaterThanOrEqual(3)
     expect(
       await run(K.REDUCE_STOCK, {
-        transaction_reason: { value: 1, label: 'r', is_other: false, is_purchase: true },
+        transaction_reason: {
+          value: 1,
+          label: 'r',
+          is_other: false,
+          is_purchase: true,
+        },
       })
     ).toEqual([])
   })
@@ -163,13 +180,16 @@ describe('createTransactionStockSchema', () => {
       expect(await run(K.REDUCE_STOCK, open({ close_vial_qty: 0 }))).toContain(
         'validation.zero_quantity'
       )
-      expect(await run(K.REDUCE_STOCK, open({ close_vial_qty: 200 }))).toContain(
-        'transaction.validation.max_qty'
-      )
+      expect(
+        await run(K.REDUCE_STOCK, open({ close_vial_qty: 200 }))
+      ).toContain('transaction.validation.max_qty')
     })
     it('max_open_vial_qty 0 membuat open vial nullable', async () => {
       expect(
-        await run(K.REDUCE_STOCK, open({ max_open_vial_qty: 0, open_vial_qty: null }))
+        await run(
+          K.REDUCE_STOCK,
+          open({ max_open_vial_qty: 0, open_vial_qty: null })
+        )
       ).toEqual([])
     })
   })

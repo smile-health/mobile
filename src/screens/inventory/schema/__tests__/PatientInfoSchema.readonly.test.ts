@@ -33,8 +33,8 @@ const errors = async (v: any) => {
   try {
     await schema.validate(v, { abortEarly: false })
     return []
-  } catch (e: any) {
-    return e.errors as string[]
+  } catch (error: any) {
+    return error.errors as string[]
   }
 }
 
@@ -137,7 +137,9 @@ describe('PatientInfoSchema', () => {
     expect(
       await errors(
         base({
-          patients: [{ identity_type: IDENTITY_TYPE.NIK + 1, patient_id: 'abc' }],
+          patients: [
+            { identity_type: IDENTITY_TYPE.NIK + 1, patient_id: 'abc' },
+          ],
         })
       )
     ).toEqual([])
@@ -150,7 +152,10 @@ describe('PatientInfoSchema', () => {
   })
 
   it('menolak patient_id duplikat dalam form', async () => {
-    const p = { identity_type: IDENTITY_TYPE.NIK, patient_id: '1234567890123456' }
+    const p = {
+      identity_type: IDENTITY_TYPE.NIK,
+      patient_id: '1234567890123456',
+    }
     expect(await errors(base({ patients: [p, { ...p }] }))).toContain(
       'transaction.validation.uniq_patient_id'
     )
@@ -166,7 +171,9 @@ describe('PatientInfoSchema', () => {
       await errors(
         base({
           patient_ids: { nik: [], non_nik: ['abc'] },
-          patients: [{ identity_type: IDENTITY_TYPE.NIK + 1, patient_id: 'abc' }],
+          patients: [
+            { identity_type: IDENTITY_TYPE.NIK + 1, patient_id: 'abc' },
+          ],
         })
       )
     ).toContain('transaction.validation.uniq_patient_id')

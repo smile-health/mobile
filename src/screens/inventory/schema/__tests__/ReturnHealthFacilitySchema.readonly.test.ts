@@ -36,8 +36,8 @@ const run = async (over: any) => {
   try {
     await schema.validate({ selectedTrx: [row(over)] }, { abortEarly: false })
     return [] as string[]
-  } catch (e: any) {
-    return e.errors as string[]
+  } catch (error: any) {
+    return error.errors as string[]
   }
 }
 
@@ -64,9 +64,9 @@ describe('ReturnHealthFacilitySchema', () => {
   })
 
   it('broken_qty wajib saat ada discard', async () => {
-    expect(await run({ is_any_discard: true, broken_qty: undefined })).toContain(
-      'validation.required'
-    )
+    expect(
+      await run({ is_any_discard: true, broken_qty: undefined })
+    ).toContain('validation.required')
     expect(await run({ is_any_discard: true, broken_qty: 0 })).toContain(
       'validation.zero_quantity'
     )
@@ -90,7 +90,11 @@ describe('ReturnHealthFacilitySchema', () => {
 
   it('transaction_reason_id wajib bila ada qty dan discard', async () => {
     expect(
-      await run({ is_any_discard: true, broken_qty: 5, transaction_reason_id: null })
+      await run({
+        is_any_discard: true,
+        broken_qty: 5,
+        transaction_reason_id: null,
+      })
     ).toContain('validation.required')
   })
 
@@ -133,21 +137,21 @@ describe('ReturnHealthFacilitySchema', () => {
 
     it('open_vial wajib bila close_vial terisi', async () => {
       expect(await run(open({ open_vial_qty: undefined }))).toBeDefined()
-      expect(await run(open({ open_vial_qty: 0, close_vial_qty: 10 }))).toContain(
-        'validation.required'
-      )
+      expect(
+        await run(open({ open_vial_qty: 0, close_vial_qty: 10 }))
+      ).toContain('validation.required')
     })
 
     it('close_vial: kelipatan dan batas max', async () => {
       expect(await run(open({ close_vial_qty: 15 }))).toContain(
         'transaction.validation.multiply_qty'
       )
-      expect(await run(open({ close_vial_qty: 40, open_vial_qty: 0 }))).toContain(
-        'transaction.validation.max_qty_vaccine'
-      )
-      expect(await run(open({ close_vial_qty: 30, open_vial_qty: 5 }))).toContain(
-        'transaction.validation.max_qty_vaccine'
-      )
+      expect(
+        await run(open({ close_vial_qty: 40, open_vial_qty: 0 }))
+      ).toContain('transaction.validation.max_qty_vaccine')
+      expect(
+        await run(open({ close_vial_qty: 30, open_vial_qty: 5 }))
+      ).toContain('transaction.validation.max_qty_vaccine')
       expect(await run(open({ close_vial_qty: 0 }))).toContain(
         'validation.zero_quantity'
       )

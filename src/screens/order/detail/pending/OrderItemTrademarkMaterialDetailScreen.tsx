@@ -10,8 +10,7 @@ import {
 } from '@/services/store'
 import { ORDER_KEY } from '@/utils/Constants'
 
-interface Props
-  extends AppStackScreenProps<'OrderItemTrademarkMaterialDetail'> {}
+interface Props extends AppStackScreenProps<'OrderItemTrademarkMaterialDetail'> {}
 
 export default function OrderItemTrademarkMaterialDetailScreen({
   route,

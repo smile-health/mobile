@@ -1,6 +1,9 @@
 jest.mock('@/components/dropdown/Dropdown', () => {
   const { Text } = require('react-native')
-  return { __esModule: true, default: ({ name }: any) => <Text>{`dd:${name}`}</Text> }
+  return {
+    __esModule: true,
+    default: ({ name }: any) => <Text>{`dd:${name}`}</Text>,
+  }
 })
 jest.mock('@/components/forms', () => {
   const { Pressable, Text } = require('react-native')
@@ -14,7 +17,10 @@ jest.mock('@/components/forms', () => {
 })
 jest.mock('@/components/ActivityLabel', () => {
   const { Text } = require('react-native')
-  return { __esModule: true, default: ({ name }: any) => <Text>{`act:${name}`}</Text> }
+  return {
+    __esModule: true,
+    default: ({ name }: any) => <Text>{`act:${name}`}</Text>,
+  }
 })
 
 import React from 'react'
@@ -23,7 +29,12 @@ import BaseOrderItemRenderer from '../BaseOrderItemRenderer'
 
 const stocks: any[] = [
   { id: 1, batch: { code: 'B1' }, activity_name: 'Rutin', allocated_qty: 5 },
-  { id: 2, batch: { code: 'B2' }, activity: { name: 'Tambahan' }, allocated_qty: 3 },
+  {
+    id: 2,
+    batch: { code: 'B2' },
+    activity: { name: 'Tambahan' },
+    allocated_qty: 3,
+  },
   { id: 3, allocated_qty: 1 },
 ]
 const form: any = {
@@ -54,16 +65,23 @@ const setup = (props: any = {}) => {
 describe('BaseOrderItemRenderer', () => {
   it('non-hierarki memakai receives index stok dan setValue saat diubah', () => {
     const setValue = setup()
-    expect(screen.getByText(/order_items.0.receives.0.received_qty=4/)).toBeTruthy()
-    fireEvent.press(screen.getByTestId('in:order_items.0.receives.0.received_qty'))
-    expect(setValue).toHaveBeenCalledWith('order_items.0.receives.0.received_qty', 7)
+    expect(screen.getByText(/order_item(?:s.0.receive){2}d_qty=4/)).toBeTruthy()
+    fireEvent.press(
+      screen.getByTestId('in:order_items.0.receives.0.received_qty')
+    )
+    expect(setValue).toHaveBeenCalledWith(
+      'order_items.0.receives.0.received_qty',
+      7
+    )
     expect(screen.getByText('act:Rutin')).toBeTruthy()
     expect(screen.getByText('act:Tambahan')).toBeTruthy()
   })
 
   it('hierarki memakai receives milik anak', () => {
     setup({ isHierarchy: true, childIdx: 0, stocks: [stocks[0]] })
-    expect(screen.getByText(/children.0.receives.0.received_qty=2/)).toBeTruthy()
+    expect(
+      screen.getByText(/children.0.receives.0.received_qty=2/)
+    ).toBeTruthy()
   })
 
   it('inputProps menggantikan nilai, nama field, dan perubahan', () => {
@@ -91,7 +109,9 @@ describe('BaseOrderItemRenderer', () => {
         return <Text>{`extra:${s.id}`}</Text>
       },
     })
-    expect(screen.getByText('dd:order_items.0.receives.0.material_status')).toBeTruthy()
+    expect(
+      screen.getByText('dd:order_items.0.receives.0.material_status')
+    ).toBeTruthy()
     expect(screen.getByText('extra:1')).toBeTruthy()
   })
 

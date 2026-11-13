@@ -5,51 +5,159 @@
  * dirender dalam beberapa mode data (data, kosong, loading, error).
  * Tag `write`: store dan mock mutation berubah selama render dan interaksi.
  */
-jest.mock('@/services/apis/asset-inventory.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/asset-inventory.api')))
-jest.mock('@/services/apis/asset.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/asset.api')))
-jest.mock('@/services/apis/auth.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/auth.api')))
-jest.mock('@/services/apis/budget-source.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/budget-source.api')))
-jest.mock('@/services/apis/cva.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/cva.api')))
-jest.mock('@/services/apis/disposal.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/disposal.api')))
-jest.mock('@/services/apis/entity.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/entity.api')))
-jest.mock('@/services/apis/event-report-count.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/event-report-count.api')))
-jest.mock('@/services/apis/event-report-detail.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/event-report-detail.api')))
-jest.mock('@/services/apis/event-report.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/event-report.api')))
-jest.mock('@/services/apis/inventory.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/inventory.api')))
-jest.mock('@/services/apis/materials.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/materials.api')))
-jest.mock('@/services/apis/notification.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/notification.api')))
-jest.mock('@/services/apis/order.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/order.api')))
-jest.mock('@/services/apis/profile.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/profile.api')))
-jest.mock('@/services/apis/reason.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/reason.api')))
-jest.mock('@/services/apis/reconciliation.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/reconciliation.api')))
-jest.mock('@/services/apis/setting.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/setting.api')))
-jest.mock('@/services/apis/stock-taking.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/stock-taking.api')))
-jest.mock('@/services/apis/ticket-material.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/ticket-material.api')))
-jest.mock('@/services/apis/transaction-types.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/transaction-types.api')))
-jest.mock('@/services/apis/transaction.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/transaction.api')))
-jest.mock('@/services/apis/transfer-stock.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/transfer-stock.api')))
-jest.mock('@/services/apis/vaccine-sequence.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/vaccine-sequence.api')))
-jest.mock('@/services/apis/workspaces.api', () => require('@/test-utils/rtkMock').wrapApiModule(jest.requireActual('@/services/apis/workspaces.api')))
+jest.mock('@/services/apis/asset-inventory.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/asset-inventory.api')
+  )
+)
+jest.mock('@/services/apis/asset.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/asset.api')
+  )
+)
+jest.mock('@/services/apis/auth.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/auth.api')
+  )
+)
+jest.mock('@/services/apis/budget-source.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/budget-source.api')
+  )
+)
+jest.mock('@/services/apis/cva.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/cva.api')
+  )
+)
+jest.mock('@/services/apis/disposal.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/disposal.api')
+  )
+)
+jest.mock('@/services/apis/entity.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/entity.api')
+  )
+)
+jest.mock('@/services/apis/event-report-count.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/event-report-count.api')
+  )
+)
+jest.mock('@/services/apis/event-report-detail.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/event-report-detail.api')
+  )
+)
+jest.mock('@/services/apis/event-report.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/event-report.api')
+  )
+)
+jest.mock('@/services/apis/inventory.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/inventory.api')
+  )
+)
+jest.mock('@/services/apis/materials.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/materials.api')
+  )
+)
+jest.mock('@/services/apis/notification.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/notification.api')
+  )
+)
+jest.mock('@/services/apis/order.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/order.api')
+  )
+)
+jest.mock('@/services/apis/profile.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/profile.api')
+  )
+)
+jest.mock('@/services/apis/reason.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/reason.api')
+  )
+)
+jest.mock('@/services/apis/reconciliation.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/reconciliation.api')
+  )
+)
+jest.mock('@/services/apis/setting.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/setting.api')
+  )
+)
+jest.mock('@/services/apis/stock-taking.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/stock-taking.api')
+  )
+)
+jest.mock('@/services/apis/ticket-material.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/ticket-material.api')
+  )
+)
+jest.mock('@/services/apis/transaction-types.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/transaction-types.api')
+  )
+)
+jest.mock('@/services/apis/transaction.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/transaction.api')
+  )
+)
+jest.mock('@/services/apis/transfer-stock.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/transfer-stock.api')
+  )
+)
+jest.mock('@/services/apis/vaccine-sequence.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/vaccine-sequence.api')
+  )
+)
+jest.mock('@/services/apis/workspaces.api', () =>
+  require('@/test-utils/rtkMock').wrapApiModule(
+    jest.requireActual('@/services/apis/workspaces.api')
+  )
+)
 
 jest.mock('@/storage', () => ({
-  saveLocalData: jest.fn().mockResolvedValue(undefined),
+  saveLocalData: jest.fn().mockResolvedValue(),
   loadLocalData: jest.fn().mockResolvedValue(null),
   loadArrayData: jest.fn().mockResolvedValue([]),
   loadMultipleLocalData: jest.fn().mockResolvedValue({}),
-  updateLocalData: jest.fn().mockResolvedValue(undefined),
-  updateArrayData: jest.fn().mockResolvedValue(undefined),
-  removeLocalData: jest.fn().mockResolvedValue(undefined),
-  removeMultipleLocalData: jest.fn().mockResolvedValue(undefined),
-  clearLocalData: jest.fn().mockResolvedValue(undefined),
+  updateLocalData: jest.fn().mockResolvedValue(),
+  updateArrayData: jest.fn().mockResolvedValue(),
+  removeLocalData: jest.fn().mockResolvedValue(),
+  removeMultipleLocalData: jest.fn().mockResolvedValue(),
+  clearLocalData: jest.fn().mockResolvedValue(),
 }))
 jest.mock('i18next', () => {
   const t = (k: string) => k
-  const i18n = { t, language: 'en', changeLanguage: jest.fn(), exists: () => true }
+  const i18n = {
+    t,
+    language: 'en',
+    changeLanguage: jest.fn(),
+    exists: () => true,
+  }
   return { __esModule: true, default: i18n, t, ...i18n }
 })
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
 )
 jest.mock('react-native-pager-view', () => {
   const mockReact = require('react')
@@ -67,7 +175,8 @@ jest.mock('react-native-pager-view', () => {
 jest.mock('react-redux', () => {
   return {
     Provider: ({ children }: any) => children,
-    useSelector: (sel: any) => sel(require('@/services/store').store.getState()),
+    useSelector: (sel: any) =>
+      sel(require('@/services/store').store.getState()),
     useDispatch: () => require('@/services/store').store.dispatch,
     useStore: () => require('@/services/store').store,
   }
@@ -98,12 +207,17 @@ jest.mock('@react-navigation/native', () => {
       React.useEffect(() => cb(), [])
     },
     useIsFocused: () => true,
-    useNavigationState: (sel: any) => sel({ index: 0, routes: [{ name: 'n' }] }),
+    useNavigationState: (sel: any) =>
+      sel({ index: 0, routes: [{ name: 'n' }] }),
     useTheme: () => ({ colors: {} }),
     CommonActions: { navigate: jest.fn(), reset: jest.fn() },
     StackActions: { replace: jest.fn(), push: jest.fn(), popToTop: jest.fn() },
     NavigationContainer: ({ children }: any) => children,
-    createNavigationContainerRef: () => ({ isReady: () => false, navigate: jest.fn(), current: null }),
+    createNavigationContainerRef: () => ({
+      isReady: () => false,
+      navigate: jest.fn(),
+      current: null,
+    }),
   }
 })
 jest.mock('@/utils/NavigationUtils', () => ({
@@ -114,12 +228,12 @@ jest.mock('@/utils/NavigationUtils', () => ({
   navigationRef: { isReady: () => false, navigate: jest.fn() },
 }))
 
-import fs from 'fs'
-import path from 'path'
 import React from 'react'
 import { render, renderHook, cleanup, act } from '@testing-library/react-native'
-import { setRtkMode } from '@/test-utils/rtkMock'
+import fs from 'node:fs'
+import path from 'node:path'
 import { chaosItem, chaosList, item, listFixture } from '@/test-utils/fixtures'
+import { setRtkMode } from '@/test-utils/rtkMock'
 import { seedStore, schemaSamples } from '@/test-utils/seedStore'
 
 const srcRoot = path.resolve(__dirname, '..')
@@ -141,11 +255,11 @@ const files = ['screens', 'hooks', 'services']
 const modes = ['data', 'empty', 'loading', 'error'] as const
 
 // Proxy "apa saja": bisa dipanggil, diakses, diiterasi; dipakai sebagai argumen.
-const anyValue: any = new Proxy((() => undefined) as any, {
+const anyValue: any = new Proxy((() => {}) as any, {
   get: (_t, k) => {
     if (k === Symbol.toPrimitive) return () => 1
     if (k === Symbol.iterator) return function* () {}
-    if (k === 'then') return undefined
+    if (k === 'then') return
     if (k === 'arguments' || k === 'caller' || k === 'prototype')
       return (_t as any)[k]
     if (k === 'length') return 0
@@ -185,13 +299,13 @@ const argSets: any[][] = [
   [item, item, item],
 ]
 
-jest.setTimeout(120000)
+jest.setTimeout(120_000)
 // Handler async yang dipicu fuzz boleh menolak promise; jangan gagalkan test lain.
 beforeEach(() => {
   process.removeAllListeners('unhandledRejection')
   process.removeAllListeners('uncaughtException')
-  process.on('unhandledRejection', () => undefined)
-  process.on('uncaughtException', () => undefined)
+  process.on('unhandledRejection', () => {})
+  process.on('uncaughtException', () => {})
 })
 beforeAll(() => {
   const AsyncStorage = require('@react-native-async-storage/async-storage')
@@ -203,12 +317,18 @@ let hookSeed = 0
 const SEEDS = 12
 const PROP_SEEDS = 10
 const handlerArgs: any[][] = [[], [item], ['x'], [1], [anyValue]]
-const hookArgs: any[][] = [[], [baseProps], [anyValue], [chaosItem(1)], [{ ...baseProps, item: chaosItem(2), data: chaosList(2) }],
+const hookArgs: any[][] = [
+  [],
+  [baseProps],
+  [anyValue],
+  [chaosItem(1)],
+  [{ ...baseProps, item: chaosItem(2), data: chaosList(2) }],
   [item, item],
   [chaosItem(1), chaosItem(2)],
   [chaosItem(3), chaosItem(4), chaosItem(5)],
   [chaosItem(6), listFixture()],
-  [listFixture(), chaosItem(7), item]]
+  [listFixture(), chaosItem(7), item],
+]
 
 // replaceReducer merusak store global; sisanya API react-hook-form yang
 // melempar error async jika dipanggil dengan argumen asal.
@@ -241,10 +361,11 @@ const propsChaos = (seed: number): any => {
   const cache: Record<string, any> = {}
   return new Proxy({} as any, {
     get: (_t, k) => {
-      if (typeof k === 'symbol') return undefined
+      if (typeof k === 'symbol') return
       if (k in cache) return cache[k]
       let v: any
-      if (/^on[A-Z]/.test(k) || /^(handle|set|toggle|render)[A-Z]/.test(k)) v = jest.fn()
+      if (/^on[A-Z]/.test(k) || /^(handle|set|toggle|render)[A-Z]/.test(k))
+        v = jest.fn()
       else if (k === 't') v = (x: string) => x
       else if (k === 'navigation') v = nav
       else {
@@ -276,7 +397,9 @@ const NO_FIRE = /RelocationFinalReviewScreen/
 const errs: Record<string, number> = {}
 const note = (e: unknown) => {
   const key =
-    String((e as Error)?.message).slice(0, 120).replace(/\n/g, ' ') +
+    String((e as Error)?.message)
+      .slice(0, 120)
+      .replaceAll('\n', ' ') +
     ' @ ' +
     (String((e as Error)?.stack)
       .split('\n')
@@ -289,14 +412,18 @@ const safe = async (fn: () => unknown) => {
   try {
     const r: any = fn()
     if (r && typeof r.then === 'function') await Promise.resolve(r).catch(note)
-  } catch (e) {
-    note(e)
+  } catch (error) {
+    note(error)
   }
 }
 
 /** Panggil semua fungsi pada objek (hasil hook / service / handler map). */
 const exercise = async (obj: any, depth = 0) => {
-  if (!obj || depth > 1 || (typeof obj !== 'object' && typeof obj !== 'function'))
+  if (
+    !obj ||
+    depth > 1 ||
+    (typeof obj !== 'object' && typeof obj !== 'function')
+  )
     return
   const keys = new Set<string>(Object.keys(obj))
   const proto = typeof obj === 'object' ? Object.getPrototypeOf(obj) : null
@@ -313,9 +440,18 @@ const exercise = async (obj: any, depth = 0) => {
     }
     if (typeof v === 'function') {
       for (const args of handlerArgs) {
-        await safe(() => act(async () => { await v.apply(obj, args) }))
+        await safe(() =>
+          act(async () => {
+            await v.apply(obj, args)
+          })
+        )
       }
-    } else if (v && typeof v === 'object' && depth < 1 && !React.isValidElement(v)) {
+    } else if (
+      v &&
+      typeof v === 'object' &&
+      depth < 1 &&
+      !React.isValidElement(v)
+    ) {
       await exercise(v, depth + 1)
     }
   }
@@ -338,8 +474,17 @@ const fireHandlers = async (screen: any) => {
   for (const n of nodes.slice(0, 60)) {
     for (const k of Object.keys(n.props)) {
       if (!/^on[A-Z]/.test(k) || typeof n.props[k] !== 'function') continue
-      for (const args of [[], [item], ['x'], [{ nativeEvent: { text: 'a', layout: { width: 1, height: 1 } } }]] as any[][]) {
-        await safe(() => act(async () => { await n.props[k](...args) }))
+      for (const args of [
+        [],
+        [item],
+        ['x'],
+        [{ nativeEvent: { text: 'a', layout: { width: 1, height: 1 } } }],
+      ] as any[][]) {
+        await safe(() =>
+          act(async () => {
+            await n.props[k](...args)
+          })
+        )
       }
     }
   }
@@ -366,116 +511,132 @@ const inspectResult = async (out: any) => {
 const isComponent = (k: string, v: any) =>
   /^[A-Z]/.test(k) &&
   (typeof v === 'function' || (v && v.$$typeof)) &&
-  !/^[A-Z0-9_]+$/.test(k)
+  !/^[\dA-Z_]+$/.test(k)
 
 afterAll(() => {
   if (process.env.SMOKE_ERRS)
     fs.writeFileSync(process.env.SMOKE_ERRS, JSON.stringify(errs, null, 1))
 })
 
-describe.each([['store kosong', false], ['store terisi', true]])('smoke + fuzz kode aplikasi (%s)', (_label, seeded) => {
+describe.each([
+  ['store kosong', false],
+  ['store terisi', true],
+])('smoke + fuzz kode aplikasi (%s)', (_label, seeded) => {
   beforeAll(() => {
     if (seeded) {
-      seedStore(require('@/services/store').store, require('@/services/api').default)
+      seedStore(
+        require('@/services/store').store,
+        require('@/services/api').default
+      )
     }
   })
 
-  it.each(files.map((f) => [path.relative(srcRoot, f), f]))('%s', async (_rel, file) => {
-    let mod: any
-    try {
-      mod = require(file)
-    } catch {
+  it.each(files.map((f) => [path.relative(srcRoot, f), f]))(
+    '%s',
+    async (_rel, file) => {
+      let mod: any
       try {
-        mod = require(file) // percobaan kedua: modul native kadang gagal sekali saat pertama dimuat
-      } catch (e) {
-        // modul yang butuh native binary (mis. network-logger/FileReader) tidak bisa dimuat di Jest
-        note(e)
-        return
+        mod = require(file)
+      } catch {
+        try {
+          mod = require(file) // percobaan kedua: modul native kadang gagal sekali saat pertama dimuat
+        } catch (error) {
+          // modul yang butuh native binary (mis. network-logger/FileReader) tidak bisa dimuat di Jest
+          note(error)
+          return
+        }
       }
-    }
-    for (const [key, v] of Object.entries<any>(mod)) {
-      if (v == null) continue
-      const k =
-        key === 'default' && typeof v === 'function' && v.name ? v.name : key
-      if (isComponent(k, v)) {
-        for (const m of modes) {
-          setRtkMode(m)
-          await safe(async () => {
-            const screen = render(React.createElement(v, baseProps))
-            await act(async () => {
-              await Promise.resolve()
-            })
-            if (m === 'data' && !NO_FIRE.test(String(_rel))) await fireHandlers(screen)
-          })
-          cleanup()
-        }
-        for (let seed = 0; seed < SEEDS; seed++) {
-          setRtkMode('chaos', seed)
-          const c = chaosItem(seed)
-          await safe(async () => {
-            const screen = render(
-              React.createElement(v, {
-                ...baseProps,
-                item: c,
-                data: c,
-                items: chaosList(seed),
-              })
-            )
-            await act(async () => {
-              await Promise.resolve()
-            })
-            if (seed % 2 === 0 && !NO_FIRE.test(String(_rel)))
-              await fireHandlers(screen)
-          })
-          cleanup()
-        }
-        // Variasi props: tiap nama prop mendapat nilai deterministik berbeda per seed,
-        // sehingga prop selain item/data/items (batch, material, order, ...) ikut bervariasi.
-        const renderFn = typeof v === 'function' ? v : (v.type ?? v.render)
-        if (typeof renderFn === 'function') {
-          for (let seed = 0; seed < PROP_SEEDS; seed++) {
-            setRtkMode(seed % 3 === 0 ? 'empty' : 'chaos', seed)
-            const proxyProps = propsChaos(seed)
-            const Wrapper = () => renderFn(proxyProps, null)
+      for (const [key, v] of Object.entries<any>(mod)) {
+        if (v == null) continue
+        const k =
+          key === 'default' && typeof v === 'function' && v.name ? v.name : key
+        if (isComponent(k, v)) {
+          for (const m of modes) {
+            setRtkMode(m)
             await safe(async () => {
-              render(React.createElement(Wrapper))
+              const screen = render(React.createElement(v, baseProps))
               await act(async () => {
                 await Promise.resolve()
               })
+              if (m === 'data' && !NO_FIRE.test(String(_rel)))
+                await fireHandlers(screen)
             })
             cleanup()
           }
-        }
-      } else if (/^use[A-Z]/.test(k) && typeof v === 'function') {
-        for (const m of ['data', 'empty', 'chaos', 'chaos'] as const) {
-          setRtkMode(m, m === 'chaos' ? (hookSeed += 1) : 0)
-          for (const args of hookArgs) {
+          for (let seed = 0; seed < SEEDS; seed++) {
+            setRtkMode('chaos', seed)
+            const c = chaosItem(seed)
             await safe(async () => {
-              const hook = renderHook(() => v(...args))
+              const screen = render(
+                React.createElement(v, {
+                  ...baseProps,
+                  item: c,
+                  data: c,
+                  items: chaosList(seed),
+                })
+              )
               await act(async () => {
                 await Promise.resolve()
               })
-              await exercise(hook.result.current)
-              hook.unmount()
+              if (seed % 2 === 0 && !NO_FIRE.test(String(_rel)))
+                await fireHandlers(screen)
+            })
+            cleanup()
+          }
+          // Variasi props: tiap nama prop mendapat nilai deterministik berbeda per seed,
+          // sehingga prop selain item/data/items (batch, material, order, ...) ikut bervariasi.
+          const renderFn = typeof v === 'function' ? v : (v.type ?? v.render)
+          if (typeof renderFn === 'function') {
+            for (let seed = 0; seed < PROP_SEEDS; seed++) {
+              setRtkMode(seed % 3 === 0 ? 'empty' : 'chaos', seed)
+              const proxyProps = propsChaos(seed)
+              const Wrapper = () => renderFn(proxyProps, null)
+              await safe(async () => {
+                render(React.createElement(Wrapper))
+                await act(async () => {
+                  await Promise.resolve()
+                })
+              })
+              cleanup()
+            }
+          }
+        } else if (/^use[A-Z]/.test(k) && typeof v === 'function') {
+          for (const m of ['data', 'empty', 'chaos', 'chaos'] as const) {
+            setRtkMode(m, m === 'chaos' ? (hookSeed += 1) : 0)
+            for (const args of hookArgs) {
+              await safe(async () => {
+                const hook = renderHook(() => v(...args))
+                await act(async () => {
+                  await Promise.resolve()
+                })
+                await exercise(hook.result.current)
+                hook.unmount()
+              })
+            }
+          }
+        } else if (typeof v === 'function') {
+          setRtkMode('data')
+          for (const args of argSets) {
+            await safe(async () => {
+              const out = await v(...args)
+              await inspectResult(out)
             })
           }
+        } else if (typeof v === 'object') {
+          await inspectResult(v)
         }
-      } else if (typeof v === 'function') {
-        setRtkMode('data')
-        for (const args of argSets) {
-          await safe(async () => {
-            const out = await v(...args)
-            await inspectResult(out)
-          })
-        }
-      } else if (typeof v === 'object') {
-        await inspectResult(v)
       }
+      cleanup()
+      if (
+        process.env.SMOKE_DBG &&
+        require('@/services/store').store.getState().setting == null
+      ) {
+        require('node:fs').appendFileSync(
+          '/tmp/nullsetting.txt',
+          String(_rel) + '\n'
+        )
+      }
+      expect(Object.keys(mod).length).toBeGreaterThanOrEqual(0)
     }
-    cleanup()
-    if (process.env.SMOKE_DBG && require('@/services/store').store.getState().setting == null) {
-      require('fs').appendFileSync('/tmp/nullsetting.txt', String(_rel) + '\n')
-    }
-    expect(Object.keys(mod).length).toBeGreaterThanOrEqual(0)
-  })
+  )
 })

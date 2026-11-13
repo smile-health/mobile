@@ -4,7 +4,10 @@ const mockMessaging: any = {
 }
 const mockCreate: any = () => mockMessaging
 mockCreate.AuthorizationStatus = { AUTHORIZED: 1, PROVISIONAL: 2 }
-jest.mock('@/services/FirebaseMessaging', () => ({ __esModule: true, default: mockCreate }))
+jest.mock('@/services/FirebaseMessaging', () => ({
+  __esModule: true,
+  default: mockCreate,
+}))
 jest.mock('../Notifee', () => ({
   __esModule: true,
   default: { requestPermission: jest.fn(), getNotificationSettings: jest.fn() },
@@ -16,7 +19,8 @@ const load = (ios: boolean) => {
   jest.isolateModules(() => {
     jest.doMock('@/utils/CommonUtils', () => ({ isIOS: ios }))
     mod = {
-      svc: require('../firebase/NotificationPermissionService').notificationPermissionService,
+      svc: require('../firebase/NotificationPermissionService')
+        .notificationPermissionService,
       notifee: require('../Notifee').default,
     }
   })
@@ -24,7 +28,11 @@ const load = (ios: boolean) => {
 }
 
 describe('NotificationPermissionService iOS', () => {
-  it.each([[1, true], [2, true], [0, false]])('status %s => %s', async (status, expected) => {
+  it.each([
+    [1, true],
+    [2, true],
+    [0, false],
+  ])('status %s => %s', async (status, expected) => {
     const { svc } = load(true)
     mockMessaging.requestPermission.mockResolvedValue(status)
     mockMessaging.hasPermission.mockResolvedValue(status)
@@ -45,7 +53,9 @@ describe('NotificationPermissionService Android', () => {
   it('izin diberikan / ditolak', async () => {
     const { svc, notifee } = load(false)
     notifee.requestPermission.mockResolvedValue({ authorizationStatus: 1 })
-    notifee.getNotificationSettings.mockResolvedValue({ authorizationStatus: 0 })
+    notifee.getNotificationSettings.mockResolvedValue({
+      authorizationStatus: 0,
+    })
     expect(await svc.requestPermission()).toBe(true)
     expect(await svc.checkPermission()).toBe(false)
   })

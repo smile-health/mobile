@@ -6,7 +6,9 @@ const load = (isExpoGo: boolean, target: 'messaging' | 'notifee') => {
       __esModule: true,
       default: () => ({ getToken: jest.fn() }),
     }))
-    out = require(target === 'messaging' ? '../FirebaseMessaging' : '../Notifee')
+    out = require(
+      target === 'messaging' ? '../FirebaseMessaging' : '../Notifee'
+    )
   })
   return out
 }
@@ -40,7 +42,9 @@ describe('Notifee wrapper', () => {
     const mod = load(true, 'notifee')
     const n = mod.default
     expect(await n.requestPermission()).toEqual({ authorizationStatus: 1 })
-    expect(await n.getNotificationSettings()).toEqual({ authorizationStatus: 1 })
+    expect(await n.getNotificationSettings()).toEqual({
+      authorizationStatus: 1,
+    })
     expect(await n.createChannel()).toBe('mock-channel-id')
     await n.displayNotification()
     await n.setBadgeCount()

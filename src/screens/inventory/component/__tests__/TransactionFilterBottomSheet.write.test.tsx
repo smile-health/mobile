@@ -1,7 +1,18 @@
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('@/components/bottomsheet/BottomSheet', () => require('@/test-utils/misc-sheet').bottomSheetModule)
-jest.mock('@/components/filter/DateRangePicker', () => require('@/test-utils/misc-sheet').dateRangeModule)
-jest.mock('@/components/filter/PickerSelect', () => require('@/test-utils/misc-sheet').pickerModule)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  '@/components/bottomsheet/BottomSheet',
+  () => require('@/test-utils/misc-sheet').bottomSheetModule
+)
+jest.mock(
+  '@/components/filter/DateRangePicker',
+  () => require('@/test-utils/misc-sheet').dateRangeModule
+)
+jest.mock(
+  '@/components/filter/PickerSelect',
+  () => require('@/test-utils/misc-sheet').pickerModule
+)
 
 import React from 'react'
 import { act, fireEvent, render, screen } from '@testing-library/react-native'

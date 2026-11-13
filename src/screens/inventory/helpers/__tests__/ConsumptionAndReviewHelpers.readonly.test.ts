@@ -3,12 +3,12 @@ import {
   getTrxStockWithOtherActivityStock,
   setAdditionalFormValue,
 } from '../ConsumptionHelpers'
+import { trxConsumptionToCreateTransaction } from '../ReturnHFHelpers'
 import {
   convertValidationError,
   extractNumbers,
   mergePayloadWithOtherSequence,
 } from '../ReviewTransactionHelpers'
-import { trxConsumptionToCreateTransaction } from '../ReturnHFHelpers'
 
 const material: any = {
   id: 1,
@@ -132,9 +132,9 @@ describe('ReviewTransactionHelpers', () => {
 
   describe('mergePayloadWithOtherSequence', () => {
     it('mengembalikan salinan bila patients kosong atau payload tanpa materials', () => {
-      expect(mergePayloadWithOtherSequence(payload, { patients: [] } as any)).toEqual(
-        payload
-      )
+      expect(
+        mergePayloadWithOtherSequence(payload, { patients: [] } as any)
+      ).toEqual(payload)
       expect(
         mergePayloadWithOtherSequence({} as any, { patients: [{}] } as any)
       ).toEqual({})
@@ -157,7 +157,9 @@ describe('ReviewTransactionHelpers', () => {
           },
         ],
       } as any)
-      expect(res.materials[0].patients![0]).toEqual(payload.materials[0].patients[0])
+      expect(res.materials[0].patients![0]).toEqual(
+        payload.materials[0].patients[0]
+      )
       expect((res.materials[0].patients![1] as any).other_sequences).toEqual([
         { actual_transaction_date: '2025-01-02', vaccine_sequence: 2 },
         { actual_transaction_date: '2025-02-02', vaccine_sequence: 0 },
@@ -166,7 +168,11 @@ describe('ReviewTransactionHelpers', () => {
 
     it('melewati material tanpa pasien terkait atau data bukan array', () => {
       const two = {
-        materials: [{ patients: [{ a: 1 }] }, { patients: undefined }, { patients: [{}] }],
+        materials: [
+          { patients: [{ a: 1 }] },
+          { patients: undefined },
+          { patients: [{}] },
+        ],
       } as any
       const res = mergePayloadWithOtherSequence(two, {
         patients: [
@@ -242,8 +248,12 @@ describe('ReturnHFHelpers.trxConsumptionToCreateTransaction', () => {
     expect(res.vaccine_type_id).toBe(5)
     expect(res.vaccine_method_id).toBe(6)
     expect(res.patients).toEqual([
-      { identity_type: 1, patient_id: '123', phone_number: '08', vaccine_sequence: 4 },
+      {
+        identity_type: 1,
+        patient_id: '123',
+        phone_number: '08',
+        vaccine_sequence: 4,
+      },
     ])
   })
-
 })

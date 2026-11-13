@@ -1,4 +1,7 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
+)
 jest.mock('react-redux', () => require('@/test-utils/misc-store').reduxModule)
 
 const mockInfinite = jest.fn()
@@ -9,7 +12,10 @@ jest.mock('@/services/apis', () => ({
 }))
 jest.mock('@/services/apis/disposal.api', () => ({
   ...jest.requireActual('@/services/apis/disposal.api'),
-  useCreateSelfDisposalMutation: () => [mockCreate, { isLoading: mockCreate.isLoadingFlag }],
+  useCreateSelfDisposalMutation: () => [
+    mockCreate,
+    { isLoading: mockCreate.isLoadingFlag },
+  ],
 }))
 jest.mock('@/utils/NavigationUtils', () => ({
   navigateAndReset: jest.fn(),
@@ -23,7 +29,6 @@ jest.mock('@/utils/CommonUtils', () => ({
 }))
 
 import { act, renderHook } from '@testing-library/react-native'
-import { store } from '@/services/store'
 import {
   setActivity,
   setDisposalMethod,
@@ -32,9 +37,10 @@ import {
   setMaterial,
   saveMaterialDisposal,
 } from '@/services/features'
+import { store } from '@/services/store'
 import { navMock } from '@/test-utils/misc-nav'
-import { navigateAndReset } from '@/utils/NavigationUtils'
 import { showError, showSuccess } from '@/utils/CommonUtils'
+import { navigateAndReset } from '@/utils/NavigationUtils'
 import useAddDisposalForm from '../hooks/useAddDisposalForm'
 import useReviewSelfDisposal from '../hooks/useReviewSelfDisposal'
 import useSelfDisposalList from '../hooks/useSelfDisposalList'
@@ -62,8 +68,12 @@ describe('useAddDisposalForm', () => {
       useAddDisposalForm({ disposalStock: stock, type: 'self' as any })
     )
     expect(result.current.sections).toHaveLength(2)
-    expect(result.current.sections[0].data[0]).toMatchObject({ disposal_qty: 5 })
-    expect(result.current.sections[1].data[0]).toMatchObject({ disposal_qty: 2 })
+    expect(result.current.sections[0].data[0]).toMatchObject({
+      disposal_qty: 5,
+    })
+    expect(result.current.sections[1].data[0]).toMatchObject({
+      disposal_qty: 2,
+    })
     expect(result.current.methods.getValues().discard[0]).toMatchObject({
       max_qty: 5,
       transaction_reason_id: 4,
@@ -74,7 +84,10 @@ describe('useAddDisposalForm', () => {
 
   it('stok tanpa disposals menghasilkan section kosong', () => {
     const { result } = renderHook(() =>
-      useAddDisposalForm({ disposalStock: { id: 1 } as any, type: 'self' as any })
+      useAddDisposalForm({
+        disposalStock: { id: 1 } as any,
+        type: 'self' as any,
+      })
     )
     expect(result.current.sections[0].data).toEqual([])
     expect(result.current.methods.getValues().discard).toEqual([])
@@ -164,14 +177,22 @@ describe('useReviewSelfDisposal', () => {
       setBatchDisposal({
         stockId: 21,
         disposalData: {
-          discard: [{ disposal_stock_id: 1, transaction_reason_id: 2, disposal_qty: 3 }],
-          received: [{ disposal_stock_id: 1, transaction_reason_id: 2, disposal_qty: 1 }],
+          discard: [
+            { disposal_stock_id: 1, transaction_reason_id: 2, disposal_qty: 3 },
+          ],
+          received: [
+            { disposal_stock_id: 1, transaction_reason_id: 2, disposal_qty: 1 },
+          ],
         },
       } as any)
     )
     store.dispatch(saveMaterialDisposal({ selectedActivityStocks: [21] }))
     store.dispatch(
-      setMaterial({ material_id: 2, material: { id: 2 }, details: [{ stocks: [] }] } as any)
+      setMaterial({
+        material_id: 2,
+        material: { id: 2 },
+        details: [{ stocks: [] }],
+      } as any)
     )
     store.dispatch(saveMaterialDisposal({ selectedActivityStocks: [] }))
     mockCreate.mockReturnValue({ unwrap: () => Promise.resolve({}) })
@@ -201,7 +222,9 @@ describe('useReviewSelfDisposal', () => {
   })
 
   it('menampilkan error saat API gagal', async () => {
-    mockCreate.mockReturnValue({ unwrap: () => Promise.reject(new Error('gagal')) })
+    mockCreate.mockReturnValue({
+      unwrap: () => Promise.reject(new Error('gagal')),
+    })
     const { result } = renderHook(() => useReviewSelfDisposal())
     await act(async () => {
       await result.current.submitData('R', 'catatan')

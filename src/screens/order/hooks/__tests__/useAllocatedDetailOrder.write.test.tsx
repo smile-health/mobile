@@ -42,7 +42,10 @@ jest.mock('@/services/store', () => ({
   useAppSelector: (sel: string) =>
     sel === 'workspace'
       ? { selectedWorkspace: mockWorkspace }
-      : { allocatedDraft: [{ id: 'd' }], allocatedOrderItem: mockAllocatedItem },
+      : {
+          allocatedDraft: [{ id: 'd' }],
+          allocatedOrderItem: mockAllocatedItem,
+        },
 }))
 jest.mock('../useAllocatedOrder', () => ({
   useAllocatedOrder: () => ({
@@ -62,7 +65,12 @@ const detail = {
   order_items: [{ material: { id: 7 } }, { material: { id: 8 } }],
 }
 const data = (over: any = {}) => ({
-  material: { id: 7, name: 'Mat', is_managed_in_batch: 1, is_temperature_sensitive: 0 },
+  material: {
+    id: 7,
+    name: 'Mat',
+    is_managed_in_batch: 1,
+    is_temperature_sensitive: 0,
+  },
   qty: 5,
   recommended_stock: 2,
   ...over,
@@ -86,18 +94,33 @@ beforeEach(() => {
   jest.clearAllMocks()
   mockForm = { order_items: [] }
   mockAllocatedItem = {}
-  mockWorkspace = { entity_id: 5, config: { material: { is_hierarchy_enabled: 0 } } }
+  mockWorkspace = {
+    entity_id: 5,
+    config: { material: { is_hierarchy_enabled: 0 } },
+  }
   mockStockDetails = {
     data: [
       { activity: { id: 1 }, stocks: [{ id: 11 }, { id: 12 }] },
-      { activity: { id: 2 }, details: [{ material: { id: 7 } }, { material: { id: 99 } }], stocks: [] },
+      {
+        activity: { id: 2 },
+        details: [{ material: { id: 7 } }, { material: { id: 99 } }],
+        stocks: [],
+      },
     ],
   }
 })
 
 describe('useAllocatedDetailOrder', () => {
   it('memisahkan stok aktivitas sendiri dan aktivitas lain, plus merge draft', () => {
-    const d = data({ orderAllocations: [{ allocations: [{ stock_id: 11, allocated_qty: 4, material_status: 'ok' }] }] })
+    const d = data({
+      orderAllocations: [
+        {
+          allocations: [
+            { stock_id: 11, allocated_qty: 4, material_status: 'ok' },
+          ],
+        },
+      ],
+    })
     const { result } = renderHook(() => useAllocatedDetailOrder(detail, d))
     expect(result.current.uiState.stockListData).toEqual([
       { id: 11, draft_allocated_qty: 4, draft_material_status: 'ok' },
@@ -123,13 +146,18 @@ describe('useAllocatedDetailOrder', () => {
     act(() => result.current.uiState.setIsActivitySheetOpen(true))
     act(() => result.current.actions.handleSelectStockFromOtherActivity(item))
     expect(result.current.datas.additionalStockDetails).toHaveLength(2)
-    expect(result.current.datas.additionalStockDetails[0].activity).toEqual({ id: 2 })
+    expect(result.current.datas.additionalStockDetails[0].activity).toEqual({
+      id: 2,
+    })
     expect(result.current.uiState.activityStockData).toHaveLength(0)
     expect(result.current.uiState.isActivitySheetOpen).toBe(false)
   })
 
   it('hierarki memfilter detail berdasar children', () => {
-    mockWorkspace = { entity_id: 5, config: { material: { is_hierarchy_enabled: 1 } } }
+    mockWorkspace = {
+      entity_id: 5,
+      config: { material: { is_hierarchy_enabled: 1 } },
+    }
     const d = data({ children: [{ material: { id: 7 } }] })
     const { result } = renderHook(() => useAllocatedDetailOrder(detail, d))
     expect(result.current.status.isHierarchy).toBe(true)
@@ -140,7 +168,11 @@ describe('useAllocatedDetailOrder', () => {
 
   it('item tanpa details hanya menutup sheet', () => {
     const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
-    act(() => result.current.actions.handleSelectStockFromOtherActivity({ activity: { id: 2 } }))
+    act(() =>
+      result.current.actions.handleSelectStockFromOtherActivity({
+        activity: { id: 2 },
+      })
+    )
     expect(result.current.datas.additionalStockDetails).toHaveLength(0)
   })
 
@@ -153,10 +185,20 @@ describe('useAllocatedDetailOrder', () => {
 
   it('simpan sukses: dispatch draft dan navigasi', () => {
     mockForm = {
-      order_items: [{ children: [{ allocations: [fullAlloc(3), fullAlloc(2, { stock_id: 12 })] }] }],
+      order_items: [
+        {
+          children: [
+            { allocations: [fullAlloc(3), fullAlloc(2, { stock_id: 12 })] },
+          ],
+        },
+      ],
     }
     mockAllocatedItem = {
-      10: [{ children: [{ allocations: [{ stock_id: 99 }, { stock_id: 11 }, {}] }] }],
+      10: [
+        {
+          children: [{ allocations: [{ stock_id: 99 }, { stock_id: 11 }, {}] }],
+        },
+      ],
     }
     const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
     act(() => result.current.actions.handleSaveAllocateStock())
@@ -165,12 +207,20 @@ describe('useAllocatedDetailOrder', () => {
     expect(draft.total_draft_allocated_qty).toBe(5)
     expect(draft.children[0].total_allocated_qty).toBe(5)
     expect(draft.children[0].stock).toHaveLength(2)
-    expect(mockNavigate).toHaveBeenCalledWith('AllocatedOrder', { data: detail })
+    expect(mockNavigate).toHaveBeenCalledWith('AllocatedOrder', {
+      data: detail,
+    })
   })
 
   it('material sensitif butuh status stok', () => {
-    mockForm = { order_items: [{ children: [{ allocations: [{ draft_allocated_qty: 2 }] }] }] }
-    const d = data({ material: { id: 7, name: 'M', is_temperature_sensitive: 1 } })
+    mockForm = {
+      order_items: [
+        { children: [{ allocations: [{ draft_allocated_qty: 2 }] }] },
+      ],
+    }
+    const d = data({
+      material: { id: 7, name: 'M', is_temperature_sensitive: 1 },
+    })
     const { result } = renderHook(() => useAllocatedDetailOrder(detail, d))
     expect(result.current.status.isMaterialSensitive).toBe(true)
     act(() => result.current.actions.handleSaveAllocateStock())
@@ -178,7 +228,11 @@ describe('useAllocatedDetailOrder', () => {
   })
 
   it('alokasi valid tapi tanpa id lengkap tidak mengubah state', () => {
-    mockForm = { order_items: [{ children: [{ allocations: [{ draft_allocated_qty: 2 }] }] }] }
+    mockForm = {
+      order_items: [
+        { children: [{ allocations: [{ draft_allocated_qty: 2 }] }] },
+      ],
+    }
     const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
     act(() => result.current.actions.handleSaveAllocateStock())
     expect(mockDispatch).not.toHaveBeenCalled()

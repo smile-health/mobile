@@ -240,8 +240,8 @@ export const getValidTransaction = (
   const hasValidQuantity = (stock: CreateTransactionStock): boolean => {
     return Boolean(
       (stock.change_qty && stock.change_qty > 0) ||
-        (stock.open_vial_qty && stock.open_vial_qty > 0) ||
-        (stock.close_vial_qty && stock.close_vial_qty > 0)
+      (stock.open_vial_qty && stock.open_vial_qty > 0) ||
+      (stock.close_vial_qty && stock.close_vial_qty > 0)
     )
   }
 

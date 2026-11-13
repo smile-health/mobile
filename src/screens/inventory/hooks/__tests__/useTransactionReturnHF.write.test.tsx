@@ -9,11 +9,16 @@ const mockState: any = {
     activity: { id: 2 },
     trxMaterial: { material: { id: 8, is_open_vial: 1 } },
     customer: { id: 3, entity_tag: { is_open_vial: 1 } },
-    transactions: [{ material_id: 8, transaction_id: 100, change_qty: 1 }, { material_id: 99, transaction_id: 200 }],
+    transactions: [
+      { material_id: 8, transaction_id: 100, change_qty: 1 },
+      { material_id: 99, transaction_id: 200 },
+    ],
   },
 }
 
-jest.mock('@react-navigation/native', () => ({ useNavigation: () => ({ navigate: mockNavigate }) }))
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({ navigate: mockNavigate }),
+}))
 jest.mock('@/services/store', () => ({
   useAppDispatch: () => mockDispatch,
   useAppSelector: (sel: any) => sel(mockState),
@@ -26,8 +31,12 @@ jest.mock('@/services/apis/transaction.api', () => ({
     return { ...mockQuery, refetch: mockRefetch }
   },
 }))
-jest.mock('@/services/features/transaction.slice', () => ({ setTransaction: (p: any) => ({ type: 'setTransaction', payload: p }) }))
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/services/features/transaction.slice', () => ({
+  setTransaction: (p: any) => ({ type: 'setTransaction', payload: p }),
+}))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('../../helpers/ReturnHFHelpers', () => ({
   trxConsumptionToCreateTransaction: (item: any, open: boolean) => ({
     material_id: 8,
@@ -56,7 +65,11 @@ beforeEach(() => {
 
 describe('useReturnHFTransaction', () => {
   it('state awal mengambil trx material terpilih dan memfilter daftar yang sudah tersimpan', () => {
-    mockQuery.data = { data: [{ id: 100 }, { id: 101 }], page: 1, total_page: 2 }
+    mockQuery.data = {
+      data: [{ id: 100 }, { id: 101 }],
+      page: 1,
+      total_page: 2,
+    }
     const { result } = renderHook(() => useReturnHFTransaction())
     expect(result.current.savedTrxIds).toEqual([100])
     expect(result.current.transactionList).toEqual([{ id: 101 }])
@@ -85,7 +98,12 @@ describe('useReturnHFTransaction', () => {
     const { result } = renderHook(() => useReturnHFTransaction())
     act(() => result.current.handleRefreshList())
     expect(mockRefetch).toHaveBeenCalled()
-    act(() => result.current.handleApplyFilter({ start_date: 'a', end_date: 'b' } as any))
+    act(() =>
+      result.current.handleApplyFilter({
+        start_date: 'a',
+        end_date: 'b',
+      } as any)
+    )
     expect(result.current.filter).toEqual({ start_date: 'a', end_date: 'b' })
     act(() => result.current.handleLoadMore())
     expect(mockQueryArgs.page).toBe(2)
@@ -132,7 +150,7 @@ describe('useReturnHFTransaction', () => {
     act(() => result.current.handleSelectItem({ id: 303 } as any))
     act(() => result.current.handleDeleteItem(303))
     act(() => result.current.handleDeleteItem(100))
-    act(() => result.current.handleDeleteItem(undefined))
+    act(() => result.current.handleDeleteItem())
     expect(result.current.currentTrxIds).toEqual([])
     expect(result.current.savedTrxIds).toEqual([])
   })

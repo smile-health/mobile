@@ -1,5 +1,5 @@
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import { item, listFixture } from './fixtures'
 
 const featuresDir = path.resolve(__dirname, '../services/features')
@@ -13,7 +13,11 @@ const rich = {
     order: { is_enabled: 1 },
     stock: { is_enabled: 1 },
   },
-  program: { id: 1, name: 'P', config: { material: { is_hierarchy_enabled: 1 } } },
+  program: {
+    id: 1,
+    name: 'P',
+    config: { material: { is_hierarchy_enabled: 1 } },
+  },
   entity: { id: 1, name: 'E', type: 1 },
   activities: [{ id: 1, name: 'A' }],
 }

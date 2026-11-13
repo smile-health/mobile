@@ -63,7 +63,9 @@ describe('ReviewTransactionItem', () => {
         transaction_reason: { label: 'Rusak', is_other: false },
       }),
     ])
-    expect(screen.getAllByText('label.vial_qty').length).toBeGreaterThanOrEqual(2)
+    expect(screen.getAllByText('label.vial_qty').length).toBeGreaterThanOrEqual(
+      2
+    )
     expect(screen.getByText('label.discard_reason')).toBeTruthy()
     expect(screen.getAllByText('Rusak')).toHaveLength(2)
   })
@@ -74,7 +76,11 @@ describe('ReviewTransactionItem', () => {
         transaction_reason: { label: 'Lainnya', is_other: true },
         other_reason: 'alasan bebas',
         customer: { name: 'Pelanggan A' },
-        batch: { code: 'B1', expired_date: '2030-01-01', manufacture: { name: 'M' } },
+        batch: {
+          code: 'B1',
+          expired_date: '2030-01-01',
+          manufacture: { name: 'M' },
+        },
         stock_quality: { label: 'VVM A' },
       }),
       stock({ stock_id: 2, batch: null, stock_quality: { label: 'VVM B' } }),
@@ -104,18 +110,29 @@ describe('ReviewTransactionItem', () => {
       }),
     ])
     expect(screen.getByText('label.from')).toBeTruthy()
-    expect(screen.getByText('transaction.helpers.number_of_return 4')).toBeTruthy()
+    expect(
+      screen.getByText('transaction.helpers.number_of_return 4')
+    ).toBeTruthy()
   })
 
   it('cancel discard menampilkan dropdown alasan pembatalan dan akumulasi', () => {
     setup([stock({ transactionTypeId: TRANSACTION_TYPE.CANCEL_DISCARDS })])
-    expect(screen.getAllByText('label.reason_cancellation_of_discards').length).toBeGreaterThan(0)
-    expect(screen.getByText('label.accumulated_discard_cancellation')).toBeTruthy()
+    expect(
+      screen.getAllByText('label.reason_cancellation_of_discards').length
+    ).toBeGreaterThan(0)
+    expect(
+      screen.getByText('label.accumulated_discard_cancellation')
+    ).toBeTruthy()
   })
 
   it('sumber dana tampil bila ada anggaran, tahun, atau harga', () => {
     setup([
-      stock({ budget_source: { label: 'APBN' }, year: 2024, price: 100, change_qty: 5 }),
+      stock({
+        budget_source: { label: 'APBN' },
+        year: 2024,
+        price: 100,
+        change_qty: 5,
+      }),
     ])
     expect(screen.getByText('APBN')).toBeTruthy()
     expect(screen.getByText('2024')).toBeTruthy()
@@ -129,7 +146,11 @@ describe('DefaultChangeQtyInput', () => {
 
   it('menampilkan helper stok akhir untuk reduce stock', () => {
     renderWithForm(
-      <DefaultChangeQtyInput batchType='activeBatch' index={0} type='reduce_stock' />,
+      <DefaultChangeQtyInput
+        batchType='activeBatch'
+        index={0}
+        type='reduce_stock'
+      />,
       form(10, 3)
     )
     expect(screen.getByText('transaction.helpers.stock_amount')).toBeTruthy()
@@ -137,7 +158,11 @@ describe('DefaultChangeQtyInput', () => {
 
   it('tanpa helper bila change_qty 0', () => {
     renderWithForm(
-      <DefaultChangeQtyInput batchType='activeBatch' index={0} type='add_stock' />,
+      <DefaultChangeQtyInput
+        batchType='activeBatch'
+        index={0}
+        type='add_stock'
+      />,
       form(10, 0)
     )
     expect(screen.queryByText('transaction.helpers.stock_amount')).toBeNull()
@@ -146,7 +171,11 @@ describe('DefaultChangeQtyInput', () => {
   it('mengubah nilai memperbarui form; kosong menghapus error', () => {
     let f: any
     renderWithForm(
-      <DefaultChangeQtyInput batchType='activeBatch' index={0} type='add_stock' />,
+      <DefaultChangeQtyInput
+        batchType='activeBatch'
+        index={0}
+        type='add_stock'
+      />,
       form(10, 1),
       (x) => (f = x)
     )

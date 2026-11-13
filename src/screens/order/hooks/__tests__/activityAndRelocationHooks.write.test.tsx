@@ -22,20 +22,36 @@ jest.mock('@/services/store', () => ({
   orderState: (s: any) => s.order,
 }))
 jest.mock('@/services/apis', () => ({
-  useCreateRelocationMutation: () => [mockCreate, { isLoading: mockLoading.value }],
+  useCreateRelocationMutation: () => [
+    mockCreate,
+    { isLoading: mockLoading.value },
+  ],
 }))
 const mockLoading = { value: false }
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
-jest.mock('@/utils/hooks/useProgramId', () => ({ __esModule: true, default: () => mockProgramId.value }))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
+jest.mock('@/utils/hooks/useProgramId', () => ({
+  __esModule: true,
+  default: () => mockProgramId.value,
+}))
 jest.mock('@/utils/CommonUtils', () => ({ showError: jest.fn() }))
-jest.mock('@/utils/helpers/ErrorHelpers', () => ({ getErrorMessage: () => 'pesan error' }))
-jest.mock('@/services/features/relocation.slice', () => ({ clearRelocations: (p: any) => ({ type: 'clearRelocations', payload: p }) }))
-jest.mock('@/services/features/activity.slice', () => ({ setActiveActivity: (p: any) => ({ type: 'setActive', payload: p }) }))
+jest.mock('@/utils/helpers/ErrorHelpers', () => ({
+  getErrorMessage: () => 'pesan error',
+}))
+jest.mock('@/services/features/relocation.slice', () => ({
+  clearRelocations: (p: any) => ({ type: 'clearRelocations', payload: p }),
+}))
+jest.mock('@/services/features/activity.slice', () => ({
+  setActiveActivity: (p: any) => ({ type: 'setActive', payload: p }),
+}))
 jest.mock('@/services/features/order.slice', () => ({
   setOrderActivity: (p: any) => ({ type: 'setOrderActivity', payload: p }),
   setDraft: (p: any) => ({ type: 'setDraft', payload: p }),
 }))
-const mockMissing = { value: { uniqueMissingCompanions: [] as any[], message: '' } }
+const mockMissing = {
+  value: { uniqueMissingCompanions: [] as any[], message: '' },
+}
 jest.mock('../../helpers/OrderHelpers', () => ({
   getMissingCompanionMaterials: () => mockMissing.value,
   showSuccessAndNavigateToDetail: jest.fn(),
@@ -49,9 +65,9 @@ import { act, renderHook, waitFor } from '@testing-library/react-native'
 import { showError } from '@/utils/CommonUtils'
 import { ORDER_KEY } from '@/utils/Constants'
 import * as helpers from '../../helpers/OrderHelpers'
+import useRelocationFinalReview from '../relocation/useRelocationFinalReview'
 import { useActivityDraft } from '../useActivityDraft'
 import { useActivityNavigation } from '../useActivityNavigation'
-import useRelocationFinalReview from '../relocation/useRelocationFinalReview'
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -65,7 +81,13 @@ beforeEach(() => {
     activity: { id: 3 },
     vendor: { id: 4 },
     relocations: [
-      { ordered_qty: '2', material_id: 1, recommended_stock: 7, reason_id: 2, other_reason: 'x' },
+      {
+        ordered_qty: '2',
+        material_id: 1,
+        recommended_stock: 7,
+        reason_id: 2,
+        other_reason: 'x',
+      },
       {
         ordered_qty: 1,
         material_id: 2,
@@ -84,11 +106,30 @@ describe('useRelocationFinalReview', () => {
       await result.current.handleCreateRelocation()
     })
     const payload = (mockCreate.mock.calls[0] as any[])[0]
-    expect(payload).toMatchObject({ customer_id: 9, vendor_id: 4, activity_id: 3, required_date: '2025-02-01' })
-    expect(payload.order_items[0]).toMatchObject({ ordered_qty: 2, recommended_stock: 7, order_reason_id: 2, other_reason: 'x' })
-    expect(payload.order_items[1].children).toEqual([{ material_id: 21, ordered_qty: 3 }])
-    expect(payload.order_items[2]).toMatchObject({ recommended_stock: 0, order_reason_id: 0, other_reason: null })
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'clearRelocations', payload: { programId: 5 } })
+    expect(payload).toMatchObject({
+      customer_id: 9,
+      vendor_id: 4,
+      activity_id: 3,
+      required_date: '2025-02-01',
+    })
+    expect(payload.order_items[0]).toMatchObject({
+      ordered_qty: 2,
+      recommended_stock: 7,
+      order_reason_id: 2,
+      other_reason: 'x',
+    })
+    expect(payload.order_items[1].children).toEqual([
+      { material_id: 21, ordered_qty: 3 },
+    ])
+    expect(payload.order_items[2]).toMatchObject({
+      recommended_stock: 0,
+      order_reason_id: 0,
+      other_reason: null,
+    })
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'clearRelocations',
+      payload: { programId: 5 },
+    })
     expect(helpers.showSuccessAndNavigateToDetail).toHaveBeenCalled()
   })
 
@@ -99,19 +140,28 @@ describe('useRelocationFinalReview', () => {
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
-    expect((mockCreate.mock.calls[0] as any[])[0]).not.toHaveProperty('required_date')
+    expect((mockCreate.mock.calls[0] as any[])[0]).not.toHaveProperty(
+      'required_date'
+    )
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
   it('workspace dan vendor kosong memakai nilai default', async () => {
     mockState.workspace = { selectedWorkspace: undefined }
-    mockState.relocation = { activity: undefined, vendor: undefined, relocations: [] }
+    mockState.relocation = {
+      activity: undefined,
+      vendor: undefined,
+      relocations: [],
+    }
     mockUnwrap.mockResolvedValue(null)
     const { result } = renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
-    expect((mockCreate.mock.calls[0] as any[])[0]).toMatchObject({ customer_id: 0, activity_id: 0 })
+    expect((mockCreate.mock.calls[0] as any[])[0]).toMatchObject({
+      customer_id: 0,
+      activity_id: 0,
+    })
   })
 
   it('bahan pendamping hilang dan setuju: buka dialog, tidak submit', async () => {
@@ -171,7 +221,10 @@ describe('useActivityNavigation', () => {
       await result.current.handleSelectActivity({ id: 1 } as any)
     })
     expect(mockNavigate).toHaveBeenCalledWith(screen)
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'setActive', payload: { id: 1 } })
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'setActive',
+      payload: { id: 1 },
+    })
   })
 
   it('tipe tak dikenal hanya menyimpan aktivitas', async () => {
@@ -192,7 +245,9 @@ describe('useActivityNavigation', () => {
   })
 
   it('draft dari aktivitas lain membuka modal dan bisa ditutup', async () => {
-    const { result } = run(ORDER_KEY.REGULAR, { [ORDER_KEY.REGULAR]: { 5: { id: 99 } } })
+    const { result } = run(ORDER_KEY.REGULAR, {
+      [ORDER_KEY.REGULAR]: { 5: { id: 99 } },
+    })
     await act(async () => {
       await result.current.handleSelectActivity({ id: 1 } as any)
     })
@@ -203,7 +258,9 @@ describe('useActivityNavigation', () => {
   })
 
   it('draft aktivitas sama atau kosong tetap lanjut', async () => {
-    const same = run(ORDER_KEY.REGULAR, { [ORDER_KEY.REGULAR]: { 5: { id: 1 } } })
+    const same = run(ORDER_KEY.REGULAR, {
+      [ORDER_KEY.REGULAR]: { 5: { id: 1 } },
+    })
     await act(async () => {
       await same.result.current.handleSelectActivity({ id: 1 } as any)
     })
@@ -223,17 +280,26 @@ describe('useActivityDraft', () => {
   })
 
   it('reguler memuat aktivitas dan draft lalu dispatch', async () => {
-    ;(helpers.loadExistingRegularActivity as jest.Mock).mockResolvedValue({ id: 1 })
-    ;(helpers.loadExistingOrderDraft as jest.Mock).mockResolvedValue([{ a: 1 }, { a: 2 }])
+    ;(helpers.loadExistingRegularActivity as jest.Mock).mockResolvedValue({
+      id: 1,
+    })
+    ;(helpers.loadExistingOrderDraft as jest.Mock).mockResolvedValue([
+      { a: 1 },
+      { a: 2 },
+    ])
     renderHook(() => useActivityDraft(ORDER_KEY.REGULAR as any))
     await waitFor(() => expect(mockDispatch).toHaveBeenCalledTimes(3))
   })
 
   it('distribusi tanpa aktivitas dan draft bukan array tidak dispatch', async () => {
-    ;(helpers.loadExistingDistributionActivity as jest.Mock).mockResolvedValue(null)
+    ;(helpers.loadExistingDistributionActivity as jest.Mock).mockResolvedValue(
+      null
+    )
     ;(helpers.loadExistingDistributionDraft as jest.Mock).mockResolvedValue({})
     renderHook(() => useActivityDraft(ORDER_KEY.DISTRIBUTION as any))
-    await waitFor(() => expect(helpers.loadExistingDistributionDraft).toHaveBeenCalled())
+    await waitFor(() =>
+      expect(helpers.loadExistingDistributionDraft).toHaveBeenCalled()
+    )
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 })

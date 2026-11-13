@@ -13,10 +13,17 @@ jest.mock('@/services/store', () => ({
   orderState: (s: any) => s.order,
 }))
 jest.mock('@/i18n/useLanguage', () => ({
-  useLanguage: () => ({ t: (k: string, o?: any) => (o?.returnObjects ? [] : o ? `${k}:${o.num}` : k) }),
+  useLanguage: () => ({
+    t: (k: string, o?: any) =>
+      o?.returnObjects ? [] : o ? `${k}:${o.num}` : k,
+  }),
 }))
 jest.mock('../hooks/useOrderMaterialDetail', () => ({
-  useOrderMaterialDetail: () => ({ handleSave: mockHandleSave, toggleDialog: mockToggle, validate: mockValidate }),
+  useOrderMaterialDetail: () => ({
+    handleSave: mockHandleSave,
+    toggleDialog: mockToggle,
+    validate: mockValidate,
+  }),
 }))
 
 import { act, renderHook, waitFor } from '@testing-library/react-native'
@@ -29,15 +36,30 @@ const material = (over: any = {}): any => ({
   consumption_unit_per_distribution_unit: 2,
   total_qty: 5,
   total_available_qty: 33,
-  stocks: [{ activity_id: 1, qty: 3 }, { activity_id: 2, qty: 4 }],
+  stocks: [
+    { activity_id: 1, qty: 3 },
+    { activity_id: 2, qty: 4 },
+  ],
   ...over,
 })
 
-const setup = (data: any = material(), parent?: any, isOrderItem = false, type: any = 'regular') => {
+const setup = (
+  data: any = material(),
+  parent?: any,
+  isOrderItem = false,
+  type: any = 'regular'
+) => {
   const navigation: any = { navigate: jest.fn() }
   const dispatchAction = jest.fn()
   const hook = renderHook(() =>
-    useMaterialDetailForm(data, navigation, dispatchAction, type, parent, isOrderItem)
+    useMaterialDetailForm(
+      data,
+      navigation,
+      dispatchAction,
+      type,
+      parent,
+      isOrderItem
+    )
   )
   return { ...hook, navigation }
 }
@@ -78,7 +100,12 @@ describe('useMaterialDetailForm', () => {
   })
 
   it('unit kosong memakai 1; stok melebihi max menghasilkan 0', () => {
-    const a = setup(material({ consumption_unit_per_distribution_unit: undefined, total_qty: undefined }))
+    const a = setup(
+      material({
+        consumption_unit_per_distribution_unit: undefined,
+        total_qty: undefined,
+      })
+    )
     expect(a.result.current.recommendedStock).toBe(20)
     const b = setup(material({ total_qty: 99 }))
     expect(b.result.current.recommendedStock).toBe(0)
@@ -88,7 +115,9 @@ describe('useMaterialDetailForm', () => {
     const { result } = setup(material({ ordered_qty: 4 }))
     await waitFor(() => expect(result.current.quantity).toBe(4))
     expect(result.current.shouldShowDropdownReason).toBe(true)
-    expect(result.current.getOrderRecommendation).toContain('order.recommended_num')
+    expect(result.current.getOrderRecommendation).toContain(
+      'order.recommended_num'
+    )
     expect(result.current.isSaveDisabled).toBe(true)
   })
 
@@ -100,7 +129,9 @@ describe('useMaterialDetailForm', () => {
   })
 
   it('alasan lainnya tanpa teks menonaktifkan simpan', async () => {
-    const { result } = setup(material({ ordered_qty: 4, reason_id: OTHER_REASON_ID }))
+    const { result } = setup(
+      material({ ordered_qty: 4, reason_id: OTHER_REASON_ID })
+    )
     await waitFor(() => expect(result.current.reason).toBe(OTHER_REASON_ID))
     expect(result.current.isSaveDisabled).toBe(true)
   })
@@ -110,7 +141,12 @@ describe('useMaterialDetailForm', () => {
       regular: {
         5: [
           { material_id: 10, ordered_qty: 6, reason_id: 3, other_reason: 'x' },
-          { material_id: 99, material_hierarchy: [{ material_id: 10, ordered_qty: 7, reason_id: 4 }] },
+          {
+            material_id: 99,
+            material_hierarchy: [
+              { material_id: 10, ordered_qty: 7, reason_id: 4 },
+            ],
+          },
         ],
       },
     }
@@ -141,9 +177,15 @@ describe('useMaterialDetailForm', () => {
   it('navigasi merek dagang: item order vs regular', () => {
     const a = setup(material(), undefined, true)
     act(() => a.result.current.handleTrademark())
-    expect(a.navigation.navigate).toHaveBeenCalledWith('OrderItemTrademarkMaterial', expect.anything())
+    expect(a.navigation.navigate).toHaveBeenCalledWith(
+      'OrderItemTrademarkMaterial',
+      expect.anything()
+    )
     const b = setup()
     act(() => b.result.current.handleTrademark())
-    expect(b.navigation.navigate).toHaveBeenCalledWith('RegularTrademarkMaterialScreen', expect.anything())
+    expect(b.navigation.navigate).toHaveBeenCalledWith(
+      'RegularTrademarkMaterialScreen',
+      expect.anything()
+    )
   })
 })

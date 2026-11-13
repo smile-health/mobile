@@ -22,7 +22,13 @@ const base: any = {
 }
 
 const setup = (over: any = {}, onDelete = jest.fn()) => {
-  render(<ReviewTransferStockItem index={2} item={{ ...base, ...over }} onDelete={onDelete} />)
+  render(
+    <ReviewTransferStockItem
+      index={2}
+      item={{ ...base, ...over }}
+      onDelete={onDelete}
+    />
+  )
   return onDelete
 }
 

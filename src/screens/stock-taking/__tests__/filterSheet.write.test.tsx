@@ -1,6 +1,14 @@
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('@/components/bottomsheet/BottomSheet', () => require('@/test-utils/misc-sheet').bottomSheetModule)
-jest.mock('@/components/filter/DateRangePicker', () => require('@/test-utils/misc-sheet').dateRangeModule)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  '@/components/bottomsheet/BottomSheet',
+  () => require('@/test-utils/misc-sheet').bottomSheetModule
+)
+jest.mock(
+  '@/components/filter/DateRangePicker',
+  () => require('@/test-utils/misc-sheet').dateRangeModule
+)
 
 import React from 'react'
 import { fireEvent, render, screen, act } from '@testing-library/react-native'
@@ -44,12 +52,19 @@ describe('StockTakingFilterBottomSheet', () => {
       fireEvent.press(screen.getByTestId('btn-apply-filter'))
     })
     expect(onApplyFilter).toHaveBeenCalledWith(
-      expect.objectContaining({ expired_start_date: '2025-01-01', expired_end_date: '2025-01-31' })
+      expect.objectContaining({
+        expired_start_date: '2025-01-01',
+        expired_end_date: '2025-01-31',
+      })
     )
   })
 
   it('reset hanya menyisakan only_have_qty', async () => {
-    const { onApplyFilter } = setup({ only_have_qty: 1, created_from: 'a', created_to: 'b' })
+    const { onApplyFilter } = setup({
+      only_have_qty: 1,
+      created_from: 'a',
+      created_to: 'b',
+    })
     await act(async () => {
       fireEvent.press(screen.getByTestId('btn-reset-filter'))
     })

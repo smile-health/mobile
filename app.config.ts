@@ -42,7 +42,6 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
       },
     },
     android: {
-      edgeToEdgeEnabled: true,
       versionCode: 1,
       icon: './src/assets/images/img_smile_logo_rectangle.png',
       package: 'com.smilemonitor',
@@ -89,6 +88,11 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
         {
           ios: {
             useFrameworks: 'static',
+          },
+          android: {
+            // Without this SoLoader fails to load libfbjni.so on Xiaomi/MIUI
+            // devices (see docs/ANDROID-BUILD-PLAYBOOK.md in badr-interactive/multica).
+            useLegacyPackaging: true,
           },
         },
       ],

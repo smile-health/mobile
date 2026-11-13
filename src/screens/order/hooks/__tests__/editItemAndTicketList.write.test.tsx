@@ -1,6 +1,8 @@
 const mockNavigate = jest.fn()
 const mockState: any = {
-  workspace: { selectedWorkspace: { config: { material: { is_hierarchy_enabled: true } } } },
+  workspace: {
+    selectedWorkspace: { config: { material: { is_hierarchy_enabled: true } } },
+  },
   ticket: { ticketList: undefined, isLoading: false },
 }
 jest.mock('@react-navigation/native', () => {
@@ -37,10 +39,13 @@ const base = (over: any = {}): any => ({
 })
 
 describe('useOrderEditItem', () => {
-  const setup = (item: any, type: any = 'confirm', cbs: any = {}, show = true) =>
-    renderHook(() =>
-      useOrderEditItem(item, 0, cbs.q, cbs.r, cbs.o, show, type)
-    )
+  const setup = (
+    item: any,
+    type: any = 'confirm',
+    cbs: any = {},
+    show = true
+  ) =>
+    renderHook(() => useOrderEditItem(item, 0, cbs.q, cbs.r, cbs.o, show, type))
 
   it('tipe confirm memakai stok vendor dan tanpa helper saat qty sama dengan rekomendasi', () => {
     const { result } = setup(base())
@@ -89,7 +94,13 @@ describe('useOrderEditItem', () => {
 
   it('qty kosong dan tanpa stok memakai default', () => {
     const { result } = setup(
-      base({ qty: '', stock_vendor: undefined, material: undefined, children: undefined, recommended_stock: 0 })
+      base({
+        qty: '',
+        stock_vendor: undefined,
+        material: undefined,
+        children: undefined,
+        recommended_stock: 0,
+      })
     )
     expect(result.current.availableQty).toBeNull()
     expect(result.current.min).toBeNull()
@@ -99,7 +110,11 @@ describe('useOrderEditItem', () => {
     mockState.workspace = { selectedWorkspace: undefined }
     const { result } = setup(base())
     expect(result.current.isMaterialHierarchy).toBeUndefined()
-    mockState.workspace = { selectedWorkspace: { config: { material: { is_hierarchy_enabled: true } } } }
+    mockState.workspace = {
+      selectedWorkspace: {
+        config: { material: { is_hierarchy_enabled: true } },
+      },
+    }
   })
 
   it('updateChildrenQty mengubah qty anak terpilih', async () => {
@@ -150,7 +165,9 @@ describe('useTicketList', () => {
     expect(result.current.isFetchingMore).toBe(true)
     mockState.ticket = { ticketList: list(2, 3), isLoading: false }
     rerender({})
-    await waitFor(() => expect(result.current.tickets.length).toBeGreaterThanOrEqual(2))
+    await waitFor(() =>
+      expect(result.current.tickets.length).toBeGreaterThanOrEqual(2)
+    )
     act(() => result.current.handleMomentumScrollBegin())
     act(() => result.current.handleEndReached())
   })

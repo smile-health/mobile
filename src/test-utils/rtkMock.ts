@@ -30,10 +30,39 @@ const refetch = jest.fn()
 const dataFx = listFixture()
 const emptyFx = emptyListFixture()
 const states = {
-  data: { data: dataFx, isLoading: false, isFetching: false, isSuccess: true, isError: false, refetch },
-  empty: { data: emptyFx, isLoading: false, isFetching: false, isSuccess: true, isError: false, refetch },
-  loading: { data: undefined, isLoading: true, isFetching: true, isSuccess: false, isError: false, refetch },
-  error: { data: undefined, error: { status: 500 }, isLoading: false, isFetching: false, isSuccess: false, isError: true, refetch },
+  data: {
+    data: dataFx,
+    isLoading: false,
+    isFetching: false,
+    isSuccess: true,
+    isError: false,
+    refetch,
+  },
+  empty: {
+    data: emptyFx,
+    isLoading: false,
+    isFetching: false,
+    isSuccess: true,
+    isError: false,
+    refetch,
+  },
+  loading: {
+    data: undefined,
+    isLoading: true,
+    isFetching: true,
+    isSuccess: false,
+    isError: false,
+    refetch,
+  },
+  error: {
+    data: undefined,
+    error: { status: 500 },
+    isLoading: false,
+    isFetching: false,
+    isSuccess: false,
+    isError: true,
+    refetch,
+  },
 }
 const queryState = () => (mode === 'chaos' ? chaosState : states[mode])
 

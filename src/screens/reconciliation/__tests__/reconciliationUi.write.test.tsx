@@ -1,11 +1,26 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('@/components/bottomsheet/BottomSheet', () => require('@/test-utils/misc-sheet').bottomSheetModule)
-jest.mock('@/components/filter/DateRangePicker', () => require('@/test-utils/misc-sheet').dateRangeModule)
-jest.mock('@/components/portals/Portal', () => ({ __esModule: true, default: ({ children }: any) => children }))
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
+)
+jest.mock(
+  '@/components/bottomsheet/BottomSheet',
+  () => require('@/test-utils/misc-sheet').bottomSheetModule
+)
+jest.mock(
+  '@/components/filter/DateRangePicker',
+  () => require('@/test-utils/misc-sheet').dateRangeModule
+)
+jest.mock('@/components/portals/Portal', () => ({
+  __esModule: true,
+  default: ({ children }: any) => children,
+}))
 jest.mock('@/utils/NavigationUtils', () => ({
   navigate: jest.fn(),
   navigateAndReset: jest.fn(),
@@ -96,7 +111,9 @@ describe('ReconciliationPeriodBottomSheet', () => {
 
   it('apply nonaktif tanpa tanggal, aktif setelah memilih rentang', async () => {
     const { onSelectDate, toggleSheet } = setup()
-    expect(screen.getByTestId('btn-apply-period').props.accessibilityState?.disabled).toBe(true)
+    expect(
+      screen.getByTestId('btn-apply-period').props.accessibilityState?.disabled
+    ).toBe(true)
     fireEvent.press(screen.getByTestId('daterangepicker-reconciliation-period'))
     await act(async () => {
       fireEvent.press(screen.getByTestId('btn-apply-period'))
@@ -130,7 +147,11 @@ describe('ReconciliationFormItem', () => {
     )
 
   it('belum ada qty aktual menampilkan tombol isi nilai riil', () => {
-    renderItem({ reconciliation_category_label: 'Batch', recorded_qty: 4, actual_qty: null })
+    renderItem({
+      reconciliation_category_label: 'Batch',
+      recorded_qty: 4,
+      actual_qty: null,
+    })
     fireEvent.press(screen.getByTestId('btn-add-enter-real-value'))
     expect(navigate).toHaveBeenCalledWith(
       'AddReconciliationType',
@@ -144,7 +165,12 @@ describe('ReconciliationFormItem', () => {
       recorded_qty: 4,
       actual_qty: 0,
       action_reasons: [
-        { reason_id: 1, action_id: 2, reason_title: 'Hilang', action_title: 'Catat' },
+        {
+          reason_id: 1,
+          action_id: 2,
+          reason_title: 'Hilang',
+          action_title: 'Catat',
+        },
       ],
     })
     expect(screen.getByText('reconciliation.reason_action')).toBeTruthy()
@@ -153,7 +179,12 @@ describe('ReconciliationFormItem', () => {
   })
 
   it('actual_qty terisi tanpa alasan tidak menampilkan blok alasan', () => {
-    renderItem({ reconciliation_category_label: 'B', recorded_qty: 1, actual_qty: 3, action_reasons: [] })
+    renderItem({
+      reconciliation_category_label: 'B',
+      recorded_qty: 1,
+      actual_qty: 3,
+      action_reasons: [],
+    })
     expect(screen.queryByText('reconciliation.reason_action')).toBeNull()
   })
 
@@ -197,7 +228,12 @@ describe('ReviewReconciliationScreen', () => {
     mockReview.mockReturnValue(
       hook({
         reviewItems: [
-          { materialName: 'Vaksin X', createdAt: '2025-01-01', period: 'Jan', items: [] },
+          {
+            materialName: 'Vaksin X',
+            createdAt: '2025-01-01',
+            period: 'Jan',
+            items: [],
+          },
         ],
       })
     )

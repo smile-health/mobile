@@ -3,14 +3,20 @@ const mockShowError = jest.fn()
 const mockShowSuccess = jest.fn()
 const mockNavDetail = jest.fn()
 
-jest.mock('@/storage', () => ({ loadLocalData: (...a: any[]) => mockLoad(...a) }))
+jest.mock('@/storage', () => ({
+  loadLocalData: (...a: any[]) => mockLoad(...a),
+}))
 jest.mock('@/utils/CommonUtils', () => ({
-  numberFormat: (n: number) => String(n),
+  numberFormat: String,
   showError: (...a: any[]) => mockShowError(...a),
   showSuccess: (...a: any[]) => mockShowSuccess(...a),
 }))
-jest.mock('../NavigationHelpers', () => ({ navigateToOrderDetail: (...a: any[]) => mockNavDetail(...a) }))
-jest.mock('i18next', () => ({ t: (k: string, o?: any) => (o ? `${k}:${o.qty}` : k) }))
+jest.mock('../NavigationHelpers', () => ({
+  navigateToOrderDetail: (...a: any[]) => mockNavDetail(...a),
+}))
+jest.mock('i18next', () => ({
+  t: (k: string, o?: any) => (o ? `${k}:${o.qty}` : k),
+}))
 
 import {
   calculateOrderStockCounts,
@@ -76,15 +82,33 @@ describe('isOrderQuantityValid', () => {
   it.each([
     [{ quantity: '' }, 'error.complete_data', false],
     [{ quantity: '0' }, 'error.entry_batch_stock_zero', false],
-    [{ quantity: '4', recommendation: 5, reason: '' }, 'error.complete_data', false],
+    [
+      { quantity: '4', recommendation: 5, reason: '' },
+      'error.complete_data',
+      false,
+    ],
   ])('invalid %j', (p: any, msg, ok) => {
     expect(isOrderQuantityValid({ ...p, t })).toBe(ok)
     expect(mockShowError).toHaveBeenCalledWith(msg)
   })
 
   it('valid: sesuai rekomendasi, ada alasan, atau tanpa rekomendasi', () => {
-    expect(isOrderQuantityValid({ quantity: '5', recommendation: 5, reason: '', t } as any)).toBe(true)
-    expect(isOrderQuantityValid({ quantity: '4', recommendation: 5, reason: 'x', t } as any)).toBe(true)
+    expect(
+      isOrderQuantityValid({
+        quantity: '5',
+        recommendation: 5,
+        reason: '',
+        t,
+      } as any)
+    ).toBe(true)
+    expect(
+      isOrderQuantityValid({
+        quantity: '4',
+        recommendation: 5,
+        reason: 'x',
+        t,
+      } as any)
+    ).toBe(true)
     expect(isOrderQuantityValid({ quantity: '4', t } as any)).toBe(true)
     expect(mockShowError).not.toHaveBeenCalled()
   })
@@ -92,21 +116,37 @@ describe('isOrderQuantityValid', () => {
 
 describe('perhitungan dan format', () => {
   it('calculateOrderStockCounts', () => {
-    expect(calculateOrderStockCounts()).toEqual({ allocateCount: 0, receiveCount: 0 })
-    expect(calculateOrderStockCounts([{ allocated_qty: 2, received_qty: 1 }, {}] as any)).toEqual({ allocateCount: 2, receiveCount: 1 })
-    expect(calculateOrderStockCounts({} as any)).toEqual({ allocateCount: 0, receiveCount: 0 })
+    expect(calculateOrderStockCounts()).toEqual({
+      allocateCount: 0,
+      receiveCount: 0,
+    })
+    expect(
+      calculateOrderStockCounts([
+        { allocated_qty: 2, received_qty: 1 },
+        {},
+      ] as any)
+    ).toEqual({ allocateCount: 2, receiveCount: 1 })
+    expect(calculateOrderStockCounts({} as any)).toEqual({
+      allocateCount: 0,
+      receiveCount: 0,
+    })
   })
 
   it('getMissingCompanionMaterials', () => {
     const data = [
-      { material_name: 'A', material_companion: [{ name: 'B' }, { name: 'A' }] },
+      {
+        material_name: 'A',
+        material_companion: [{ name: 'B' }, { name: 'A' }],
+      },
       { material_name: 'C', material_companion: [{ name: 'B' }] },
       { material_name: 'D' },
     ]
     const tt: any = (k: string, o: any) => `${k}|${o.materials}`
     const r = getMissingCompanionMaterials(data, tt)
     expect(r.uniqueMissingCompanions).toEqual(['B', undefined])
-    expect(getMissingCompanionMaterials([], tt).uniqueMissingCompanions).toEqual([])
+    expect(
+      getMissingCompanionMaterials([], tt).uniqueMissingCompanions
+    ).toEqual([])
   })
 
   it('getSectionedBatchData memisah batch valid dan kedaluwarsa', () => {
@@ -139,12 +179,26 @@ describe('perhitungan dan format', () => {
 })
 
 describe('getValueFromDraftByStockId', () => {
-  const draft = [{ children: [{ stock: [{ stock_id: 1, draft_allocated_qty: 7 }] }, { stock: undefined }] }, { children: undefined }]
+  const draft = [
+    {
+      children: [
+        { stock: [{ stock_id: 1, draft_allocated_qty: 7 }] },
+        { stock: undefined },
+      ],
+    },
+    { children: undefined },
+  ]
   it('mencari nilai, null bila tidak ada atau draft kosong', () => {
-    expect(getValueFromDraftByStockId(draft as any, 1, 'draft_allocated_qty')).toBe(7)
-    expect(getValueFromDraftByStockId(draft as any, 2, 'draft_allocated_qty')).toBeNull()
+    expect(
+      getValueFromDraftByStockId(draft as any, 1, 'draft_allocated_qty')
+    ).toBe(7)
+    expect(
+      getValueFromDraftByStockId(draft as any, 2, 'draft_allocated_qty')
+    ).toBeNull()
     expect(getValueFromDraftByStockId(undefined as any, 1, 'x')).toBeNull()
-    expect(getValueFromDraftByStockId(draft[0] as any, 1, 'draft_allocated_qty')).toBe(7)
+    expect(
+      getValueFromDraftByStockId(draft[0] as any, 1, 'draft_allocated_qty')
+    ).toBe(7)
   })
 })
 

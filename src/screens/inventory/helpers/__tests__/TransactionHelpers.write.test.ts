@@ -70,7 +70,11 @@ describe('createTransactionStock', () => {
     const res = createTransactionStock(stocks, trx, material, undefined, true)
     expect(res).toHaveLength(3)
     expect(res[0].batch).toMatchObject({ code: 'N' })
-    expect(res[1]).toMatchObject({ stock_id: 1, change_qty: 9, max_open_vial_qty: 2 })
+    expect(res[1]).toMatchObject({
+      stock_id: 1,
+      change_qty: 9,
+      max_open_vial_qty: 2,
+    })
     expect(res[2]).toMatchObject({ stock_id: 2, qty: 4, is_open_vial: true })
   })
 
@@ -110,7 +114,9 @@ describe('getTrxStockSection & getDefaultValue', () => {
   })
 
   it('memisahkan batch kedaluwarsa dan aktif', () => {
-    const past = { batch: { expired_date: dayjs().subtract(2, 'day').format() } }
+    const past = {
+      batch: { expired_date: dayjs().subtract(2, 'day').format() },
+    }
     const future = { batch: { expired_date: dayjs().add(2, 'day').format() } }
     const none = { batch: null }
     const res = getDefaultValue([past, future, none] as any)
@@ -152,7 +158,9 @@ describe('findNextMaterial', () => {
   })
   it('undefined untuk item terakhir, tak ditemukan, atau input kosong', () => {
     expect(findNextMaterial(items, items[1])).toBeUndefined()
-    expect(findNextMaterial(items, { material: { id: 9 } } as any)).toBeUndefined()
+    expect(
+      findNextMaterial(items, { material: { id: 9 } } as any)
+    ).toBeUndefined()
     expect(findNextMaterial([], items[0])).toBeUndefined()
     expect(findNextMaterial(items, null)).toBeUndefined()
   })
@@ -169,7 +177,9 @@ describe('getMaterialTrxLabel', () => {
     expect(label).toContain('transaction.transaction_label.add_stock')
   })
   it('undefined bila total <= 0 atau tipe tak dikenal', () => {
-    expect(getMaterialTrxLabel(trx, TRANSACTION_TYPE.ADD_STOCK, 9, t)).toBeUndefined()
+    expect(
+      getMaterialTrxLabel(trx, TRANSACTION_TYPE.ADD_STOCK, 9, t)
+    ).toBeUndefined()
     expect(getMaterialTrxLabel(trx, 9999, 1, t)).toBeUndefined()
   })
 })
@@ -257,19 +267,36 @@ describe('util lain', () => {
       address: '',
     })
     expect(
-      generateTrxBatch({ code: 'c', manufacture: { id: 2, name: 'n', address: 'a' } } as any)
-        ?.manufacture
+      generateTrxBatch({
+        code: 'c',
+        manufacture: { id: 2, name: 'n', address: 'a' },
+      } as any)?.manufacture
     ).toEqual({ id: 2, name: 'n', address: 'a' })
   })
 
   it('checkDraftTransaction & checkTrxDraftFlag', () => {
-    expect(checkDraftTransaction(TRANSACTION_TYPE.ADD_STOCK, TRANSACTION_TYPE.REDUCE_STOCK)).toBe(true)
-    expect(checkDraftTransaction(TRANSACTION_TYPE.VIEW_STOCK, TRANSACTION_TYPE.REDUCE_STOCK)).toBe(false)
-    expect(checkDraftTransaction(TRANSACTION_TYPE.ADD_STOCK, TRANSACTION_TYPE.ADD_STOCK)).toBe(false)
+    expect(
+      checkDraftTransaction(
+        TRANSACTION_TYPE.ADD_STOCK,
+        TRANSACTION_TYPE.REDUCE_STOCK
+      )
+    ).toBe(true)
+    expect(
+      checkDraftTransaction(
+        TRANSACTION_TYPE.VIEW_STOCK,
+        TRANSACTION_TYPE.REDUCE_STOCK
+      )
+    ).toBe(false)
+    expect(
+      checkDraftTransaction(
+        TRANSACTION_TYPE.ADD_STOCK,
+        TRANSACTION_TYPE.ADD_STOCK
+      )
+    ).toBe(false)
     expect(checkDraftTransaction(undefined, 1)).toBe(false)
     expect(checkTrxDraftFlag(1, 1)).toBe(true)
     expect(checkTrxDraftFlag(1, 2)).toBe(false)
-    expect(checkTrxDraftFlag(undefined, undefined)).toBe(false)
+    expect(checkTrxDraftFlag()).toBe(false)
   })
 
   it('getVaccineSequenceName', () => {
@@ -282,16 +309,12 @@ describe('util lain', () => {
 
 describe('AddStockHelpers.createNewBatchTrx', () => {
   it('membuat transaksi batch baru dengan kode huruf besar', () => {
-    const res = createNewBatchTrx(
-      { id: 1, name: 'A' } as any,
-      material,
-      {
-        code: 'abc',
-        expired_date: '2030-01-01',
-        production_date: null,
-        manufacture: { id: 1, name: 'M', address: '' },
-      } as any
-    )
+    const res = createNewBatchTrx({ id: 1, name: 'A' } as any, material, {
+      code: 'abc',
+      expired_date: '2030-01-01',
+      production_date: null,
+      manufacture: { id: 1, name: 'M', address: '' },
+    } as any)
     expect(res.batch?.code).toBe('ABC')
     expect(res).toMatchObject({
       material_id: 1,
@@ -309,7 +332,11 @@ describe('AddStockHelpers.createNewBatchTrx', () => {
       { id: 2 } as any,
       { code: 'x', manufacture: {} } as any
     )
-    expect(res).toMatchObject({ unit: '', piece_per_unit: 1, is_open_vial: false })
+    expect(res).toMatchObject({
+      unit: '',
+      piece_per_unit: 1,
+      is_open_vial: false,
+    })
   })
 })
 
@@ -360,10 +387,15 @@ describe('CancelDiscardHelpers', () => {
       change_qty: 14,
     })
     expect(
-      updateExistingTransaction({ transaction_ids: [1, 7], change_qty: 14 } as any, discard, true)
+      updateExistingTransaction(
+        { transaction_ids: [1, 7], change_qty: 14 } as any,
+        discard,
+        true
+      )
     ).toMatchObject({ transaction_ids: [1], change_qty: 10 })
     expect(
-      updateExistingTransaction({ change_qty: 0 } as any, discard, false).transaction_ids
+      updateExistingTransaction({ change_qty: 0 } as any, discard, false)
+        .transaction_ids
     ).toEqual([7])
   })
 })

@@ -6,7 +6,9 @@ jest.mock('@react-navigation/native', () => {
   const React = require('react')
   return { useFocusEffect: (cb: any) => React.useEffect(cb, [cb]) }
 })
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('@/services/features/ticketReason.slice', () => ({
   getReasons: 'reasons',
   setIgnoreConfirm: (v: boolean) => ({ type: 'ignore', payload: v }),
@@ -18,26 +20,41 @@ jest.mock('@/services/store', () => ({
 jest.mock('@/components/buttons', () => {
   const { Pressable, Text } = require('react-native')
   return {
-    Button: ({ text, onPress, disabled }: any) => <Pressable onPress={disabled ? undefined : onPress}><Text>{`${text}${disabled ? ':disabled' : ''}`}</Text></Pressable>,
+    Button: ({ text, onPress, disabled }: any) => (
+      <Pressable onPress={disabled ? undefined : onPress}>
+        <Text>{`${text}${disabled ? ':disabled' : ''}`}</Text>
+      </Pressable>
+    ),
     RadioButtonGroup: () => <Text>radio</Text>,
   }
 })
 jest.mock('@/components/forms/TextField', () => ({ TextField: () => null }))
-jest.mock('@/screens/shared/component/BaseForm', () => ({ BaseForm: (p: any) => { mockBaseForm = p; return null } }))
+jest.mock('@/screens/shared/component/BaseForm', () => ({
+  BaseForm: (p: any) => {
+    mockBaseForm = p
+    return null
+  },
+}))
 jest.mock('../../component/BatchItemCard', () => {
   const { Pressable, Text } = require('react-native')
   return {
     __esModule: true,
     default: ({ batch, onEdit, onDelete }: any) => (
       <>
-        <Pressable onPress={onEdit}><Text>edit-{batch.batch_code}</Text></Pressable>
-        <Pressable onPress={onDelete}><Text>del-{batch.batch_code}</Text></Pressable>
+        <Pressable onPress={onEdit}>
+          <Text>edit-{batch.batch_code}</Text>
+        </Pressable>
+        <Pressable onPress={onDelete}>
+          <Text>del-{batch.batch_code}</Text>
+        </Pressable>
       </>
     ),
   }
 })
 jest.mock('../../helpers/TicketHelpers', () => ({ getRadioOptions: () => [] }))
-jest.mock('../../hooks/useTicketingAddMaterials', () => ({ useTicketingAddMaterials: () => mockHook }))
+jest.mock('../../hooks/useTicketingAddMaterials', () => ({
+  useTicketingAddMaterials: () => mockHook,
+}))
 
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react-native'
@@ -49,7 +66,9 @@ const makeHook = (over: any = {}) => ({
   isButtonValid: true,
   isBatch: 0,
   detailReasonOptions: [{ value: 'd' }],
-  currentMaterial: { batches: [{ batch_code: 'A', isSubmitted: 0 }, { batch_code: 'B' }] },
+  currentMaterial: {
+    batches: [{ batch_code: 'A', isSubmitted: 0 }, { batch_code: 'B' }],
+  },
   handleSave: jest.fn(),
   handleAddBatch: jest.fn(),
   handleEditBatch: jest.fn(),
@@ -58,9 +77,17 @@ const makeHook = (over: any = {}) => ({
   ...over,
 })
 const renderScreen = (params: any = {}) =>
-  render(<TicketingAddMaterialScreen route={{ params } as any} navigation={{} as any} />)
+  render(
+    <TicketingAddMaterialScreen
+      route={{ params } as any}
+      navigation={{} as any}
+    />
+  )
 
-beforeEach(() => { jest.clearAllMocks(); mockHook = makeHook() })
+beforeEach(() => {
+  jest.clearAllMocks()
+  mockHook = makeHook()
+})
 
 describe('TicketingAddMaterialScreen', () => {
   it('non-batch: BaseForm dengan opsi alasan dan radio batch ditampilkan tanpa material', () => {
@@ -68,7 +95,10 @@ describe('TicketingAddMaterialScreen', () => {
     getByText('radio')
     expect(mockBaseForm.reasonField.data).toEqual([{ value: 'r' }])
     expect(mockBaseForm.detailReasonField.data).toEqual([{ value: 'd' }])
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'ignore', payload: false })
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'ignore',
+      payload: false,
+    })
   })
 
   it('radio disembunyikan saat mengedit material yang ada', () => {
@@ -77,7 +107,9 @@ describe('TicketingAddMaterialScreen', () => {
   })
 
   it('route tanpa params aman', () => {
-    const { queryByText } = render(<TicketingAddMaterialScreen route={{} as any} navigation={{} as any} />)
+    const { queryByText } = render(
+      <TicketingAddMaterialScreen route={{} as any} navigation={{} as any} />
+    )
     expect(queryByText('radio')).not.toBeNull()
   })
 
@@ -86,7 +118,12 @@ describe('TicketingAddMaterialScreen', () => {
     fireEvent.press(getByText('button.save'))
     expect(mockHook.handleSave).toHaveBeenCalledWith({ ok: 1 })
     mockHook = makeHook({ isButtonValid: false })
-    rerender(<TicketingAddMaterialScreen route={{ params: {} } as any} navigation={{} as any} />)
+    rerender(
+      <TicketingAddMaterialScreen
+        route={{ params: {} } as any}
+        navigation={{} as any}
+      />
+    )
     getByText('button.save:disabled')
   })
 
@@ -96,8 +133,12 @@ describe('TicketingAddMaterialScreen', () => {
     fireEvent.press(getByText('edit-A'))
     fireEvent.press(getByText('del-B'))
     fireEvent.press(getByText('+ ticket.add_batch'))
-    expect(mockHook.handleEditBatch).toHaveBeenCalledWith(expect.objectContaining({ batch_code: 'A' }))
-    expect(mockHook.handleDeleteBatch).toHaveBeenCalledWith(expect.objectContaining({ batch_code: 'B' }))
+    expect(mockHook.handleEditBatch).toHaveBeenCalledWith(
+      expect.objectContaining({ batch_code: 'A' })
+    )
+    expect(mockHook.handleDeleteBatch).toHaveBeenCalledWith(
+      expect.objectContaining({ batch_code: 'B' })
+    )
     expect(mockHook.handleAddBatch).toHaveBeenCalled()
   })
 })

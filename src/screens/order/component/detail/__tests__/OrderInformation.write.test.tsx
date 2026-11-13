@@ -1,12 +1,19 @@
 let mockHistoryProps: any
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('@/components/list/FieldValue', () => {
   const { Text } = require('react-native')
-  return { FieldValue: ({ label, value }: any) => <Text>{`${label}=${value}`}</Text> }
+  return {
+    FieldValue: ({ label, value }: any) => <Text>{`${label}=${value}`}</Text>,
+  }
 })
 jest.mock('../BadgeIntegrationOrder', () => {
   const { Text } = require('react-native')
-  return { __esModule: true, default: ({ type }: any) => <Text>badge-{type}</Text> }
+  return {
+    __esModule: true,
+    default: ({ type }: any) => <Text>badge-{type}</Text>,
+  }
 })
 jest.mock('../OrderHistorySection', () => {
   const { Text } = require('react-native')
@@ -60,7 +67,9 @@ describe('OrderInformation', () => {
   })
 
   it('badge integrasi tampil bila client_key ada', () => {
-    const { getByText } = render(<OrderInformation order={{ ...base, metadata: { client_key: 'sap' } }} />)
+    const { getByText } = render(
+      <OrderInformation order={{ ...base, metadata: { client_key: 'sap' } }} />
+    )
     getByText('badge-sap')
   })
 

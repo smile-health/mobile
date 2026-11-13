@@ -7,7 +7,14 @@ describe('disposal.slice', () => {
   const material: any = {
     material_id: 5,
     material: { id: 5, name: 'M' },
-    details: [{ stocks: [{ id: 1, activity: { id: 1 }, batch: { code: 'A' } }, { id: 2, activity: { id: 1 }, batch: { code: 'B' } }] }],
+    details: [
+      {
+        stocks: [
+          { id: 1, activity: { id: 1 }, batch: { code: 'A' } },
+          { id: 2, activity: { id: 1 }, batch: { code: 'B' } },
+        ],
+      },
+    ],
   }
 
   it('setter sederhana', () => {
@@ -25,10 +32,20 @@ describe('disposal.slice', () => {
     let s = r(init(), d.setMaterial(material))
     expect(s.materialDetail).toBe(s.material.details[0])
     expect(s.batchDisposalData).toEqual({})
-    s = r(s, d.setBatchDisposal({ stockId: 1, disposalData: { discard: 2, received: 1 } as any }))
+    s = r(
+      s,
+      d.setBatchDisposal({
+        stockId: 1,
+        disposalData: { discard: 2, received: 1 } as any,
+      })
+    )
     s = r(s, d.saveMaterialDisposal({ selectedActivityStocks: [1] }))
     expect(s.disposal[5].disposal).toHaveLength(1)
-    expect(s.disposal[5].disposal[0]).toMatchObject({ stock_id: 1, discard: 2, received: 1 })
+    expect(s.disposal[5].disposal[0]).toMatchObject({
+      stock_id: 1,
+      discard: 2,
+      received: 1,
+    })
     expect(s.batchDisposalData).toEqual({})
     s = r(s, d.setMaterial(material))
     expect(s.batchDisposalData[1]).toEqual({ discard: 2, received: 1 })

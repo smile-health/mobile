@@ -1,19 +1,26 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
+)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
 import { FormWrapper } from '@/test-utils/misc-form'
+import SelfDisposalListItem, {
+  getUserNameString,
+} from '../components/SelfDisposalListItem'
+import DisposalShipmentStockItem from '../components/shipment-list/DisposalShipmentStockItem'
+import ReceiveShipmentStockItem from '../components/shipment-list/ReceiveShipmentStockItem'
+import { DISPOSAL_STATUS } from '../disposal-constant'
 import {
   createReceivePayload,
   getReceiveShipmentItems,
   getReceiverShipmentStocks,
   getStatusQtyList,
 } from '../helper/DisposalShipmentListHelper'
-import DisposalShipmentStockItem from '../components/shipment-list/DisposalShipmentStockItem'
-import ReceiveShipmentStockItem from '../components/shipment-list/ReceiveShipmentStockItem'
-import SelfDisposalListItem, { getUserNameString } from '../components/SelfDisposalListItem'
-import { DISPOSAL_STATUS } from '../disposal-constant'
 
 const t: any = (k: string) => k
 
@@ -35,7 +42,11 @@ describe('DisposalShipmentListHelper', () => {
       disposal_received_qty: 0,
       transaction_reasons: { id: 7, title: 'Rusak' },
       stock: {
-        batch: { code: 'B', manufacture_name: 'Bio', expired_date: '2030-01-01' },
+        batch: {
+          code: 'B',
+          manufacture_name: 'Bio',
+          expired_date: '2030-01-01',
+        },
         activity: { name: 'Rutin' },
       },
     },
@@ -66,7 +77,12 @@ describe('DisposalShipmentListHelper', () => {
       discard: [{ qty: 2, reason_id: 7, reason_title: 'Rusak' }],
       received: [{ qty: 3, reason_id: 8, reason_title: 'Kadaluarsa' }],
     })
-    expect(r[1]).toMatchObject({ qty: 0, discard: [], received: [], manufacture: undefined })
+    expect(r[1]).toMatchObject({
+      qty: 0,
+      discard: [],
+      received: [],
+      manufacture: undefined,
+    })
   })
 
   it('getReceiveShipmentItems memetakan material', () => {
@@ -97,7 +113,11 @@ describe('DisposalShipmentListHelper', () => {
           confirmed_qty: 2,
           disposal_shipment_item_id: 3,
           stocks: [
-            { disposal_shipment_stock_id: 4, received_qty: null, shipped_qty: 2 },
+            {
+              disposal_shipment_stock_id: 4,
+              received_qty: null,
+              shipped_qty: 2,
+            },
             { disposal_shipment_stock_id: 5, received_qty: 2, shipped_qty: 2 },
           ],
         },
@@ -108,7 +128,9 @@ describe('DisposalShipmentListHelper', () => {
       { disposal_shipment_stock_id: 4, received_qty: 0 },
       { disposal_shipment_stock_id: 5, received_qty: 2 },
     ])
-    expect(createReceivePayload({ id: 1, comment: 'c', items: [] } as any).comment).toBe('c')
+    expect(
+      createReceivePayload({ id: 1, comment: 'c', items: [] } as any).comment
+    ).toBe('c')
   })
 })
 
@@ -117,7 +139,11 @@ const shipStock: any = {
   disposal_discard_qty: 3,
   transaction_reasons: { title: 'Rusak' },
   stock: {
-    batch: { code: 'B1', expired_date: '2030-01-01', manufacture: { name: 'Bio' } },
+    batch: {
+      code: 'B1',
+      expired_date: '2030-01-01',
+      manufacture: { name: 'Bio' },
+    },
     activity: { name: 'Rutin' },
   },
 }
@@ -127,7 +153,9 @@ describe('DisposalShipmentStockItem', () => {
     [DISPOSAL_STATUS.CANCELLED, 'disposal.cancelled_qty'],
     [DISPOSAL_STATUS.RECEIVED, 'disposal.received_qty'],
   ])('status %s menampilkan label qty terkait', (status, label) => {
-    render(<DisposalShipmentStockItem item={shipStock} status={status as number} />)
+    render(
+      <DisposalShipmentStockItem item={shipStock} status={status as number} />
+    )
     expect(screen.getByText(label)).toBeTruthy()
     expect(screen.getByText('B1')).toBeTruthy()
   })
@@ -150,7 +178,13 @@ describe('DisposalShipmentStockItem', () => {
   it('manufaktur kosong memakai tanda strip', () => {
     render(
       <DisposalShipmentStockItem
-        item={{ ...shipStock, stock: { ...shipStock.stock, batch: { code: 'B', manufacture: null } } }}
+        item={{
+          ...shipStock,
+          stock: {
+            ...shipStock.stock,
+            batch: { code: 'B', manufacture: null },
+          },
+        }}
         status={0}
       />
     )
@@ -189,7 +223,13 @@ describe('ReceiveShipmentStockItem', () => {
   })
 
   it('tanpa batch dan tanpa alasan menyembunyikan blok terkait', () => {
-    wrap({ ...item, batch_code: undefined, discard: [], received: [], manufacture: undefined })
+    wrap({
+      ...item,
+      batch_code: undefined,
+      discard: [],
+      received: [],
+      manufacture: undefined,
+    })
     expect(screen.queryByText('label.expired_date')).toBeNull()
     expect(screen.queryAllByText('disposal.reason_qty')).toHaveLength(0)
   })
@@ -217,7 +257,12 @@ describe('SelfDisposalListItem', () => {
     opening_qty: 10,
     closing_qty: -5,
     disposal_stock: {
-      batch: { code: 'BT', expired_date: '2030-01-01', production_date: '2029-01-01', manufacture: { name: 'Bio' } },
+      batch: {
+        code: 'BT',
+        expired_date: '2030-01-01',
+        production_date: '2029-01-01',
+        manufacture: { name: 'Bio' },
+      },
       activity: { name: 'Rutin' },
       transaction_reason: { title: 'Alasan Stok' },
     },

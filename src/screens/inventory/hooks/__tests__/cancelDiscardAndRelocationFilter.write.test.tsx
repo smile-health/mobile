@@ -16,7 +16,9 @@ const mockState: any = {
   order: { filter: {} },
 }
 
-jest.mock('@react-navigation/native', () => ({ useNavigation: () => ({ navigate: mockNavigate }) }))
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: () => ({ navigate: mockNavigate }),
+}))
 jest.mock('@/services/store', () => ({
   useAppDispatch: () => mockDispatch,
   useAppSelector: (sel: any) => sel(mockState),
@@ -30,12 +32,22 @@ jest.mock('@/services/apis/transaction.api', () => ({
     return { ...mockQuery, refetch: mockRefetch }
   },
 }))
-jest.mock('@/services/features/transaction.slice', () => ({ setTransaction: (p: any) => ({ type: 'setTransaction', payload: p }) }))
-jest.mock('@/services/features/order.slice', () => ({ setOrderFilter: (p: any) => ({ type: 'setOrderFilter', payload: p }) }))
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/services/features/transaction.slice', () => ({
+  setTransaction: (p: any) => ({ type: 'setTransaction', payload: p }),
+}))
+jest.mock('@/services/features/order.slice', () => ({
+  setOrderFilter: (p: any) => ({ type: 'setOrderFilter', payload: p }),
+}))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('@/utils/CommonUtils', () => ({ showError: jest.fn() }))
 jest.mock('../../helpers/CancelDiscardHelpers', () => ({
-  trxDiscardToCreateTransaction: (i: any) => ({ material_id: 8, stock_id: i.stock_id, transaction_ids: [i.id] }),
+  trxDiscardToCreateTransaction: (i: any) => ({
+    material_id: 8,
+    stock_id: i.stock_id,
+    transaction_ids: [i.id],
+  }),
   updateExistingTransaction: (e: any, i: any, has: boolean) => ({
     ...e,
     transaction_ids: has
@@ -43,14 +55,16 @@ jest.mock('../../helpers/CancelDiscardHelpers', () => ({
       : [...(e.transaction_ids ?? []), i.id],
   }),
   updateSelectedTransactions: (list: any[], u: any, empty: boolean) =>
-    empty ? list.filter((x) => x.stock_id !== u.stock_id) : list.map((x) => (x.stock_id === u.stock_id ? u : x)),
+    empty
+      ? list.filter((x) => x.stock_id !== u.stock_id)
+      : list.map((x) => (x.stock_id === u.stock_id ? u : x)),
 }))
 
 import { act, renderHook } from '@testing-library/react-native'
 import { showError } from '@/utils/CommonUtils'
 import { ORDER_TYPE } from '@/utils/Constants'
-import useCancelDiscardTransaction from '../transactionCreate/useCancelDiscardTransaction'
 import { useRelocationFilter } from '../../../order/hooks/relocation/useRelocationFilter'
+import useCancelDiscardTransaction from '../transactionCreate/useCancelDiscardTransaction'
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -106,12 +120,20 @@ describe('useCancelDiscardTransaction', () => {
   it('memilih item baru, item yang sama, dan membatalkan pilihan', () => {
     const { result } = renderHook(() => useCancelDiscardTransaction())
     act(() => result.current.handleSelectItem({ id: 20, stock_id: 3 } as any))
-    expect(result.current.checkIsSelected({ id: 20, stock_id: 3 } as any)).toBe(true)
+    expect(result.current.checkIsSelected({ id: 20, stock_id: 3 } as any)).toBe(
+      true
+    )
     act(() => result.current.handleSelectItem({ id: 21, stock_id: 1 } as any))
-    expect(result.current.checkIsSelected({ id: 21, stock_id: 1 } as any)).toBe(true)
+    expect(result.current.checkIsSelected({ id: 21, stock_id: 1 } as any)).toBe(
+      true
+    )
     act(() => result.current.handleSelectItem({ id: 10, stock_id: 1 } as any))
-    expect(result.current.checkIsSelected({ id: 10, stock_id: 1 } as any)).toBe(false)
-    expect(result.current.checkIsSelected({ id: 1, stock_id: 404 } as any)).toBe(false)
+    expect(result.current.checkIsSelected({ id: 10, stock_id: 1 } as any)).toBe(
+      false
+    )
+    expect(
+      result.current.checkIsSelected({ id: 1, stock_id: 404 } as any)
+    ).toBe(false)
     act(() => result.current.handleSelectItem({ id: 20, stock_id: 3 } as any))
   })
 
@@ -135,14 +157,18 @@ describe('useRelocationFilter', () => {
   const setup = (filter: any = {}) => {
     mockState.order = { filter }
     const toggleSheet = jest.fn()
-    const hook = renderHook(() => useRelocationFilter({ vendor, customer, toggleSheet }))
+    const hook = renderHook(() =>
+      useRelocationFilter({ vendor, customer, toggleSheet })
+    )
     return { ...hook, toggleSheet }
   }
 
   it('mode non-sales memakai vendor', () => {
     const { result } = setup({})
     expect(result.current.entityConfig.name).toBe('vendor_id')
-    expect(result.current.entityConfig.list).toEqual([{ label: 'V1', value: 1 }])
+    expect(result.current.entityConfig.list).toEqual([
+      { label: 'V1', value: 1 },
+    ])
     expect(result.current.data.ORDER_TYPE_LIST.length).toBeGreaterThan(0)
     expect(result.current.data.ORDER_INTEGRATION_LIST.length).toBeGreaterThan(0)
   })
@@ -157,24 +183,41 @@ describe('useRelocationFilter', () => {
   it('memilih entitas vendor, tipe, integrasi, aktivitas, dan tanggal', () => {
     const { result } = setup({})
     act(() => result.current.actions.handleSelectEntity({ value: 1 } as any))
-    act(() => result.current.actions.handleSelectOrderType({ value: ORDER_TYPE.RELOCATION } as any))
-    act(() => result.current.actions.handleSelectOrderIntegration({ value: 'x' } as any))
+    act(() =>
+      result.current.actions.handleSelectOrderType({
+        value: ORDER_TYPE.RELOCATION,
+      } as any)
+    )
+    act(() =>
+      result.current.actions.handleSelectOrderIntegration({ value: 'x' } as any)
+    )
     act(() => result.current.actions.handleSelectActivity({ value: 3 } as any))
-    act(() => result.current.actions.handleApplyDateRange('2025-01-01', '2025-01-31'))
+    act(() =>
+      result.current.actions.handleApplyDateRange('2025-01-01', '2025-01-31')
+    )
     expect(result.current.form.vendor_id).toBe('1')
     expect(result.current.form.activity_id).toBe(3)
     expect(result.current.flags.isRelocationDisabled).toBe(true)
   })
 
   it('apply dengan rentang valid dispatch dan menutup sheet', () => {
-    const { result, toggleSheet } = setup({ from_date: '2025-01-01', to_date: '2025-01-31' })
+    const { result, toggleSheet } = setup({
+      from_date: '2025-01-01',
+      to_date: '2025-01-31',
+    })
     act(() => result.current.actions.onPressApply({ a: 1 } as any))
-    expect(mockDispatch).toHaveBeenCalledWith({ type: 'setOrderFilter', payload: { a: 1 } })
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'setOrderFilter',
+      payload: { a: 1 },
+    })
     expect(toggleSheet).toHaveBeenCalled()
   })
 
   it('apply dengan rentang terbalik menampilkan error', () => {
-    const { result, toggleSheet } = setup({ from_date: '2025-02-01', to_date: '2025-01-01' })
+    const { result, toggleSheet } = setup({
+      from_date: '2025-02-01',
+      to_date: '2025-01-01',
+    })
     act(() => result.current.actions.onPressApply({} as any))
     expect(showError).toHaveBeenCalled()
     expect(toggleSheet).not.toHaveBeenCalled()

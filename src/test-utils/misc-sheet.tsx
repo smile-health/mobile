@@ -10,7 +10,9 @@ export const bottomSheetModule = {
 export const dateRangeModule = {
   __esModule: true,
   default: ({ onApply, testID, startDate, endDate }: any) => (
-    <Pressable testID={testID} onPress={() => onApply('2025-01-01', '2025-01-31')}>
+    <Pressable
+      testID={testID}
+      onPress={() => onApply('2025-01-01', '2025-01-31')}>
       <Text>{`${startDate ?? ''}|${endDate ?? ''}`}</Text>
     </Pressable>
   ),

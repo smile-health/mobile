@@ -1,7 +1,8 @@
 const mockHook: { value: any } = { value: {} }
 jest.mock('@/i18n/useLanguage', () => ({
   useLanguage: () => ({
-    t: (k: string) => (k === 'order.order_reasons' ? [{ value: 'r', reason_id: 1 }] : k),
+    t: (k: string) =>
+      k === 'order.order_reasons' ? [{ value: 'r', reason_id: 1 }] : k,
   }),
 }))
 jest.mock('../../hooks/useOrderEditItem', () => ({
@@ -17,11 +18,16 @@ jest.mock('@/components/forms', () => {
 })
 jest.mock('../pending/ChildMaterialItem', () => {
   const { Text } = require('react-native')
-  return { ChildMaterialItem: ({ child }: any) => <Text>{`child:${child.id}`}</Text> }
+  return {
+    ChildMaterialItem: ({ child }: any) => <Text>{`child:${child.id}`}</Text>,
+  }
 })
 jest.mock('../confirm/StockRange', () => {
   const { Text } = require('react-native')
-  return { __esModule: true, default: ({ min, max }: any) => <Text>{`range:${min}:${max}`}</Text> }
+  return {
+    __esModule: true,
+    default: ({ min, max }: any) => <Text>{`range:${min}:${max}`}</Text>,
+  }
 })
 
 import React from 'react'
@@ -104,12 +110,18 @@ describe('OrderEditItem', () => {
   })
 
   it('tanpa dropdown alasan dan alasan item kosong', () => {
-    setup({ shouldShowReasonDropdown: false, qty: 0 }, { reason: undefined, stock_vendor: undefined })
+    setup(
+      { shouldShowReasonDropdown: false, qty: 0 },
+      { reason: undefined, stock_vendor: undefined }
+    )
     expect(screen.queryByText('dropdown')).toBeNull()
   })
 
   it('stok null diganti tanda -', () => {
-    setup({}, { stock_vendor: { total_available_qty: null }, ordered_qty: null })
+    setup(
+      {},
+      { stock_vendor: { total_available_qty: null }, ordered_qty: null }
+    )
     expect(screen.getByText('field:qty')).toBeTruthy()
   })
 

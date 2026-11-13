@@ -29,8 +29,10 @@ export interface TextFieldAccessoryProps {
   name: string
 }
 
-export interface TextFieldProps
-  extends Omit<TextInputProps, 'ref' | 'className'> {
+export interface TextFieldProps extends Omit<
+  TextInputProps,
+  'ref' | 'className'
+> {
   name: string
   preset?: keyof typeof textFieldPreset
   control?: Control<any>

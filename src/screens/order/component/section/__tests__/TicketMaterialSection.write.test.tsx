@@ -36,11 +36,16 @@ jest.mock('../../ticket/TicketMaterialItem', () => {
   return {
     __esModule: true,
     default: ({ item, handlePress }: any) => (
-      <Pressable onPress={handlePress}><Text>row-{item.id}</Text></Pressable>
+      <Pressable onPress={handlePress}>
+        <Text>row-{item.id}</Text>
+      </Pressable>
     ),
   }
 })
-jest.mock('../../detail/WarningBox', () => ({ __esModule: true, default: () => null }))
+jest.mock('../../detail/WarningBox', () => ({
+  __esModule: true,
+  default: () => null,
+}))
 jest.mock('@/components/EmptyState', () => {
   const { Text } = require('react-native')
   return { __esModule: true, default: () => <Text>empty</Text> }
@@ -61,32 +66,49 @@ beforeEach(() => {
 
 describe('TicketMaterialSection', () => {
   it('kosong: tampil empty state dan tombol tambah di header', () => {
-    const { getByText } = render(<TicketMaterialSection t={t} materials={materials} />)
+    const { getByText } = render(
+      <TicketMaterialSection t={t} materials={materials} />
+    )
     getByText('empty')
     getByText('ticket.add_material(s)')
   })
 
   it('membuka picker dan memilih material baru (value 0)', () => {
-    const { getByText, queryByText } = render(<TicketMaterialSection t={t} materials={materials} />)
+    const { getByText, queryByText } = render(
+      <TicketMaterialSection t={t} materials={materials} />
+    )
     fireEvent.press(getByText('ticket.add_material(s)'))
     expect(mockPickerProps.isOpen).toBe(true)
     expect(mockPickerProps.data).toHaveLength(2)
-    act(() => mockPickerProps.onSelect({ value: 0, label: 'n', isBatch: false }))
+    act(() =>
+      mockPickerProps.onSelect({ value: 0, label: 'n', isBatch: false })
+    )
     expect(mockNavigate).toHaveBeenCalledWith('TicketingAddNewMaterial')
     expect(queryByText('picker-open')).toBeNull()
   })
 
   it('memilih material existing menuju detail', () => {
-    const { getByText } = render(<TicketMaterialSection t={t} materials={materials} />)
+    const { getByText } = render(
+      <TicketMaterialSection t={t} materials={materials} />
+    )
     fireEvent.press(getByText('ticket.add_material(s)'))
-    act(() => mockPickerProps.onSelect({ value: 5, label: 'Mat', isBatch: true }))
+    act(() =>
+      mockPickerProps.onSelect({ value: 5, label: 'Mat', isBatch: true })
+    )
     expect(mockNavigate).toHaveBeenCalledWith('TicketMaterialDetail', {
-      material: { id: 5, name: 'Mat', is_managed_in_batch: true, isSubmitted: 0 },
+      material: {
+        id: 5,
+        name: 'Mat',
+        is_managed_in_batch: true,
+        isSubmitted: 0,
+      },
     })
   })
 
   it('toggleSheet menutup picker', () => {
-    const { getByText, queryByText } = render(<TicketMaterialSection t={t} materials={materials} />)
+    const { getByText, queryByText } = render(
+      <TicketMaterialSection t={t} materials={materials} />
+    )
     fireEvent.press(getByText('ticket.add_material(s)'))
     act(() => mockPickerProps.toggleSheet())
     expect(queryByText('picker-open')).toBeNull()
@@ -97,11 +119,19 @@ describe('TicketMaterialSection', () => {
       { id: 'new1', name: 'A', qty: 1, is_managed_in_batch: false },
       { id: 7, name: 'B', qty: 1, is_managed_in_batch: true, batches: [{}] },
     ]
-    const { getByText } = render(<TicketMaterialSection t={t} materials={materials} />)
+    const { getByText } = render(
+      <TicketMaterialSection t={t} materials={materials} />
+    )
     fireEvent.press(getByText('row-new1'))
-    expect(mockNavigate).toHaveBeenLastCalledWith('TicketingAddNewMaterial', expect.objectContaining({ mode: 'non-batch', isEdit: true }))
+    expect(mockNavigate).toHaveBeenLastCalledWith(
+      'TicketingAddNewMaterial',
+      expect.objectContaining({ mode: 'non-batch', isEdit: true })
+    )
     fireEvent.press(getByText('row-7'))
-    expect(mockNavigate).toHaveBeenLastCalledWith('TicketMaterialDetail', expect.objectContaining({ mode: 'batch', isEdit: true }))
+    expect(mockNavigate).toHaveBeenLastCalledWith(
+      'TicketMaterialDetail',
+      expect.objectContaining({ mode: 'batch', isEdit: true })
+    )
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 

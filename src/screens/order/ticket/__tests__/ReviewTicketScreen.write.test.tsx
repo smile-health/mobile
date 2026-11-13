@@ -3,40 +3,72 @@ let mockSel: any
 let mockControllerValue = false
 const mockOnChange = jest.fn()
 
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('@/services/features/ticketReason.slice', () => ({
   getTicketMaterials: 'materials',
   getTicketFormData: 'formData',
   getReasons: 'reasons',
 }))
-jest.mock('@/services/store', () => ({ useAppSelector: (s: string) => mockSel[s] }))
-jest.mock('../../hooks/useReviewTicket', () => ({ useReviewTicket: () => mockHook }))
+jest.mock('@/services/store', () => ({
+  useAppSelector: (s: string) => mockSel[s],
+}))
+jest.mock('../../hooks/useReviewTicket', () => ({
+  useReviewTicket: () => mockHook,
+}))
 jest.mock('react-hook-form', () => ({
-  Controller: ({ render }: any) => render({ field: { onChange: mockOnChange, value: mockControllerValue } }),
+  Controller: ({ render }: any) =>
+    render({ field: { onChange: mockOnChange, value: mockControllerValue } }),
 }))
 jest.mock('@/components/buttons', () => {
   const { Pressable, Text } = require('react-native')
   return {
-    Button: ({ text, onPress }: any) => <Pressable onPress={onPress}><Text>{text}</Text></Pressable>,
-    CheckBox: ({ text, onPress }: any) => <Pressable onPress={onPress}><Text>{text}</Text></Pressable>,
+    Button: ({ text, onPress }: any) => (
+      <Pressable onPress={onPress}>
+        <Text>{text}</Text>
+      </Pressable>
+    ),
+    CheckBox: ({ text, onPress }: any) => (
+      <Pressable onPress={onPress}>
+        <Text>{text}</Text>
+      </Pressable>
+    ),
   }
 })
 jest.mock('@/components/dialog/ConfirmationDialog', () => {
   const { Pressable, Text } = require('react-native')
   return {
-    ConfirmationDialog: ({ modalVisible, title, onConfirm, onCancel, dismissDialog }: any) =>
+    ConfirmationDialog: ({
+      modalVisible,
+      title,
+      onConfirm,
+      onCancel,
+      dismissDialog,
+    }: any) =>
       modalVisible ? (
         <>
-          <Pressable onPress={onConfirm}><Text>{`ok:${title}`}</Text></Pressable>
-          <Pressable onPress={onCancel}><Text>{`cancel:${title}`}</Text></Pressable>
-          <Pressable onPress={dismissDialog}><Text>{`dismiss:${title}`}</Text></Pressable>
+          <Pressable onPress={onConfirm}>
+            <Text>{`ok:${title}`}</Text>
+          </Pressable>
+          <Pressable onPress={onCancel}>
+            <Text>{`cancel:${title}`}</Text>
+          </Pressable>
+          <Pressable onPress={dismissDialog}>
+            <Text>{`dismiss:${title}`}</Text>
+          </Pressable>
         </>
       ) : null,
   }
 })
 jest.mock('@/components/LoadingDialog', () => {
   const { Text } = require('react-native')
-  return { __esModule: true, default: ({ modalVisible }: any) => <Text>loading:{String(modalVisible)}</Text> }
+  return {
+    __esModule: true,
+    default: ({ modalVisible }: any) => (
+      <Text>loading:{String(modalVisible)}</Text>
+    ),
+  }
 })
 jest.mock('../../component/section/OrderCommentSection', () => {
   const { Text } = require('react-native')
@@ -48,7 +80,14 @@ jest.mock('../../component/ticket/ReviewTicketHeader', () => {
 })
 jest.mock('../../component/ticket/ReviewTicketItem', () => {
   const { Pressable, Text } = require('react-native')
-  return { __esModule: true, default: ({ item, handleDelete }: any) => <Pressable onPress={() => handleDelete(item)}><Text>item-{item.id}</Text></Pressable> }
+  return {
+    __esModule: true,
+    default: ({ item, handleDelete }: any) => (
+      <Pressable onPress={() => handleDelete(item)}>
+        <Text>item-{item.id}</Text>
+      </Pressable>
+    ),
+  }
 })
 
 import React from 'react'
@@ -74,7 +113,11 @@ const makeHook = (over: any = {}) => ({
 beforeEach(() => {
   jest.clearAllMocks()
   mockControllerValue = false
-  mockSel = { materials: [{ id: 1 }, { id: 2 }], formData: { isSubmitted: 0 }, reasons: [] }
+  mockSel = {
+    materials: [{ id: 1 }, { id: 2 }],
+    formData: { isSubmitted: 0 },
+    reasons: [],
+  }
   mockHook = makeHook()
 })
 

@@ -1,17 +1,38 @@
 jest.mock('@/components/bottomsheet/BottomSheet', () => ({
-  BottomSheet: ({ children }: any) => require('react').createElement(require('react-native').View, null, children),
+  BottomSheet: ({ children }: any) =>
+    require('react').createElement(
+      require('react-native').View,
+      null,
+      children
+    ),
 }))
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string, o?: any) => (o ? `${k}:${JSON.stringify(o)}` : k) }) }))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({
+    t: (k: string, o?: any) => (o ? `${k}:${JSON.stringify(o)}` : k),
+  }),
+}))
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
 import ChangeHistoryBottomSheet from '../component/ChangeHistoryBottomSheet'
 
-const history = (nv: any): any => ({ id: 1, new_value: nv, updated_at: '2025-01-01T00:00:00Z', updated_by: 'admin' })
+const history = (nv: any): any => ({
+  id: 1,
+  new_value: nv,
+  updated_at: '2025-01-01T00:00:00Z',
+  updated_by: 'admin',
+})
 
 describe('ChangeHistoryBottomSheet', () => {
   it('tanpa data tidak merender apa pun', () => {
-    const { toJSON } = render(<ChangeHistoryBottomSheet toggleSheet={jest.fn()} isOpen data={undefined} {...({} as any)} />)
+    const { toJSON } = render(
+      <ChangeHistoryBottomSheet
+        toggleSheet={jest.fn()}
+        isOpen
+        data={undefined}
+        {...({} as any)}
+      />
+    )
     expect(toJSON()).toBeNull()
   })
 
@@ -20,7 +41,14 @@ describe('ChangeHistoryBottomSheet', () => {
     render(
       <ChangeHistoryBottomSheet
         {...({ toggleSheet: toggle, isOpen: true } as any)}
-        data={history({ firstname: 'Ann', lastname: '', gender: 2, mobile_phone: '081', email: 'a@b.c', password: 1 })}
+        data={history({
+          firstname: 'Ann',
+          lastname: '',
+          gender: 2,
+          mobile_phone: '081',
+          email: 'a@b.c',
+          password: 1,
+        })}
       />
     )
     expect(screen.getByText('label.firstname')).toBeTruthy()

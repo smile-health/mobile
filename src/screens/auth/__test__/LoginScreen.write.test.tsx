@@ -71,13 +71,20 @@ jest.mock('@/services/apis', () => {
   }
 })
 
-jest.mock('@/assets/icons', () => ({
-  Icons: {
-    IcVisibilityOff: () => 'IcVisibilityOff',
-    IcVisibilityOn: () => 'IcVisibilityOn',
-    IcExpandMore: () => 'IcExpandMore',
-  },
-}))
+// RNTL 14's renderer rejects bare strings outside <Text>, so the icon
+// stand-ins render their name inside a Text element.
+jest.mock('@/assets/icons', () => {
+  const { createElement } = jest.requireActual('react')
+  const { Text } = jest.requireActual('react-native')
+  const icon = (name: string) => () => createElement(Text, null, name)
+  return {
+    Icons: {
+      IcVisibilityOff: icon('IcVisibilityOff'),
+      IcVisibilityOn: icon('IcVisibilityOn'),
+      IcExpandMore: icon('IcExpandMore'),
+    },
+  }
+})
 
 jest.mock('@/assets/images', () => ({
   Images: {
@@ -132,8 +139,9 @@ describe('LoginScreen', () => {
     )
   })
 
-  it('should render screen correctly with all required elements', () => {
-    const { getByTestId, getByText, getByPlaceholderText } = renderLoginScreen()
+  it('should render screen correctly with all required elements', async () => {
+    const { getByTestId, getByText, getByPlaceholderText } =
+      await renderLoginScreen()
 
     // Test header elements
     expect(getByTestId('btn-openlanguage')).toBeTruthy()
@@ -174,16 +182,16 @@ describe('LoginScreen', () => {
 
 describe('When password visibility eye-icon pressed', () => {
   it('toggles password visibility', async () => {
-    const { getByPlaceholderText, getByTestId } = renderLoginScreen()
+    const { getByPlaceholderText, getByTestId } = await renderLoginScreen()
     const passwordInput = getByPlaceholderText('common.password')
     expect(passwordInput.props.secureTextEntry).toBe(true)
 
-    fireEvent.press(getByTestId('pressable-secure-password'))
+    await fireEvent.press(getByTestId('pressable-secure-password'))
     await waitFor(() => {
       expect(passwordInput.props.secureTextEntry).toBe(false)
     })
 
-    fireEvent.press(getByTestId('pressable-secure-password'))
+    await fireEvent.press(getByTestId('pressable-secure-password'))
     await waitFor(() => {
       expect(passwordInput.props.secureTextEntry).toBe(true)
     })
@@ -210,15 +218,15 @@ describe('When valid username and password are provided', () => {
       { isLoading: true },
     ])
 
-    const { getByTestId } = renderLoginScreen()
+    const { getByTestId } = await renderLoginScreen()
 
     // Fill in form fields and wait for state updates
     const usernameInput = getByTestId('textfield-username')
     const passwordInput = getByTestId('textfield-password')
 
     await act(async () => {
-      fireEvent.changeText(usernameInput, 'validuser')
-      fireEvent.changeText(passwordInput, 'password123*')
+      await fireEvent.changeText(usernameInput, 'validuser')
+      await fireEvent.changeText(passwordInput, 'password123*')
     })
 
     // Verify form values are set correctly
@@ -227,7 +235,7 @@ describe('When valid username and password are provided', () => {
 
     // Submit form
     await act(async () => {
-      fireEvent.press(getByTestId('btn-login'))
+      await fireEvent.press(getByTestId('btn-login'))
     })
 
     // Wait for async operations to complete with increased timeout
@@ -242,7 +250,7 @@ describe('When valid username and password are provided', () => {
 
 describe('When username and password are blank', () => {
   it('disables the login button and does not allow submission', async () => {
-    const { getByTestId } = renderLoginScreen()
+    const { getByTestId } = await renderLoginScreen()
 
     expect(getByTestId('textfield-username').props.value).toBe('')
     expect(getByTestId('textfield-password').props.value).toBe('')
@@ -250,7 +258,7 @@ describe('When username and password are blank', () => {
     const loginButton = getByTestId('btn-login')
     expect(loginButton.props.onPress).toBeUndefined()
 
-    fireEvent.press(loginButton)
+    await fireEvent.press(loginButton)
 
     await waitFor(() => {
       expect(getByTestId('textfield-username').props.value).toBe('')
@@ -290,14 +298,14 @@ describe('When simulating API login response', () => {
       { isLoading: false },
     ])
 
-    const { getByTestId } = renderLoginScreen()
+    const { getByTestId } = await renderLoginScreen()
 
     // Fill in form fields
     const usernameInput = getByTestId('textfield-username')
     const passwordInput = getByTestId('textfield-password')
 
-    fireEvent.changeText(usernameInput, 'validuser')
-    fireEvent.changeText(passwordInput, 'password123*')
+    await fireEvent.changeText(usernameInput, 'validuser')
+    await fireEvent.changeText(passwordInput, 'password123*')
 
     // Verify form values
     expect(usernameInput.props.value).toBe('validuser')
@@ -305,7 +313,7 @@ describe('When simulating API login response', () => {
 
     // Submit form
     await act(async () => {
-      fireEvent.press(getByTestId('btn-login'))
+      await fireEvent.press(getByTestId('btn-login'))
     })
 
     // Wait for async operations to complete

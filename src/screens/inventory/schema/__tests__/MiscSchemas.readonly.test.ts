@@ -8,8 +8,8 @@ const errs = async (schema: any, v: any) => {
   try {
     await schema.validate(v, { abortEarly: false })
     return [] as string[]
-  } catch (e: any) {
-    return e.errors as string[]
+  } catch (error: any) {
+    return error.errors as string[]
   }
 }
 
@@ -87,7 +87,9 @@ describe('CompletedSequenceSchema', () => {
   })
   it('valid', async () => {
     expect(
-      await errs(CompletedSequenceSchema(), { patients: [patient('2025-01-01')] })
+      await errs(CompletedSequenceSchema(), {
+        patients: [patient('2025-01-01')],
+      })
     ).toEqual([])
   })
   it('tanggal transaksi wajib', async () => {

@@ -82,7 +82,11 @@ describe('DisposalShipmentHelpers', () => {
 
 describe('ReceiveDisposalShipmentSchema', () => {
   it('received_qty harus sama dengan shipped_qty', () => {
-    const ok = { shipped_qty: 3, disposal_shipment_stock_id: 1, received_qty: 3 }
+    const ok = {
+      shipped_qty: 3,
+      disposal_shipment_stock_id: 1,
+      received_qty: 3,
+    }
     expect(ReceiveShipmentStockSchema.isValidSync(ok)).toBe(true)
     expect(
       ReceiveShipmentStockSchema.isValidSync({ ...ok, received_qty: 2 })
@@ -119,7 +123,12 @@ describe('ReceiveDisposalShipmentSchema', () => {
           id: 4,
           shipped_qty: 8,
           disposal_shipment_stocks: [
-            { id: 1, stock_id: 10, disposal_discard_qty: 2, disposal_received_qty: 3 },
+            {
+              id: 1,
+              stock_id: 10,
+              disposal_discard_qty: 2,
+              disposal_received_qty: 3,
+            },
             { id: 2, stock_id: 10, disposal_discard_qty: 1 },
             { id: 3, stock_id: 11 },
           ],
@@ -134,8 +143,16 @@ describe('ReceiveDisposalShipmentSchema', () => {
           disposal_shipment_item_id: 4,
           confirmed_qty: 8,
           stocks: [
-            { disposal_shipment_stock_id: 1, received_qty: null, shipped_qty: 6 },
-            { disposal_shipment_stock_id: 3, received_qty: null, shipped_qty: 0 },
+            {
+              disposal_shipment_stock_id: 1,
+              received_qty: null,
+              shipped_qty: 6,
+            },
+            {
+              disposal_shipment_stock_id: 3,
+              received_qty: null,
+              shipped_qty: 0,
+            },
           ],
         },
       ],

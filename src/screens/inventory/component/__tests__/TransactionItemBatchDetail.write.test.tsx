@@ -77,7 +77,12 @@ describe('TransactionItemBatchDetail', () => {
 
   it('pembelian menampilkan sumber dana, tahun, harga total dan satuan', () => {
     setup({
-      purchase: { id: 1, year: 2025, price: 1000, budget_source: { name: 'APBN' } },
+      purchase: {
+        id: 1,
+        year: 2025,
+        price: 1000,
+        budget_source: { name: 'APBN' },
+      },
       changeQty: -3,
     })
     expect(screen.getByText('APBN')).toBeTruthy()

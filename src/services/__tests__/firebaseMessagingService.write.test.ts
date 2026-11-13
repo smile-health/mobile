@@ -5,23 +5,37 @@ const mockMsg: any = {
   getInitialNotification: jest.fn(),
   onTokenRefresh: jest.fn(),
 }
-jest.mock('@/services/FirebaseMessaging', () => ({ __esModule: true, default: () => mockMsg }))
+jest.mock('@/services/FirebaseMessaging', () => ({
+  __esModule: true,
+  default: () => mockMsg,
+}))
 jest.mock('@/utils/NavigationUtils', () => ({ navigate: jest.fn() }))
 jest.mock('../firebase/NotificationPermissionService', () => ({
-  notificationPermissionService: { requestPermission: jest.fn(), checkPermission: jest.fn() },
+  notificationPermissionService: {
+    requestPermission: jest.fn(),
+    checkPermission: jest.fn(),
+  },
 }))
 jest.mock('../push-notification', () => ({
-  notificationChannelManager: { createChannels: jest.fn().mockResolvedValue(undefined) },
-  notificationDisplayManager: { displayNotification: jest.fn().mockResolvedValue(undefined) },
+  notificationChannelManager: {
+    createChannels: jest.fn().mockResolvedValue(),
+  },
+  notificationDisplayManager: {
+    displayNotification: jest.fn().mockResolvedValue(),
+  },
 }))
 import { navigate } from '@/utils/NavigationUtils'
 import { notificationPermissionService as perm } from '../firebase/NotificationPermissionService'
-import { notificationChannelManager, notificationDisplayManager } from '../push-notification'
+import {
+  notificationChannelManager,
+  notificationDisplayManager,
+} from '../push-notification'
 
 const fresh = () => {
   let svc: any
   jest.isolateModules(() => {
-    svc = require('../firebase/FirebaseMessagingService').firebaseMessagingService
+    svc =
+      require('../firebase/FirebaseMessagingService').firebaseMessagingService
   })
   return svc
 }
@@ -82,7 +96,9 @@ describe('FirebaseMessagingService', () => {
     mockMsg.getInitialNotification.mockResolvedValue({ id: 1 })
     svc.setupMessageHandlers()
     await mockMsg.onMessage.mock.calls[0][0]({ m: 1 })
-    expect(notificationDisplayManager.displayNotification).toHaveBeenCalledWith({ m: 1 })
+    expect(notificationDisplayManager.displayNotification).toHaveBeenCalledWith(
+      { m: 1 }
+    )
     mockMsg.onNotificationOpenedApp.mock.calls[0][0]()
     expect(navigate).toHaveBeenCalledWith('Notification')
     await Promise.resolve()

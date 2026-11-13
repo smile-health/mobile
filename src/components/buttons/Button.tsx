@@ -8,8 +8,10 @@ import {
   BaseButtonProps,
 } from './BaseButton'
 
-export interface ButtonProps
-  extends Omit<BaseButtonProps, 'LeftAccessory' | 'RightAccessory'> {
+export interface ButtonProps extends Omit<
+  BaseButtonProps,
+  'LeftAccessory' | 'RightAccessory'
+> {
   LeftIcon?: ComponentType<SvgProps>
   RightIcon?: ComponentType<SvgProps>
   leftIconColor?: ColorValue

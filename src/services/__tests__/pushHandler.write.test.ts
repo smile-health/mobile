@@ -13,29 +13,33 @@ jest.mock('../Notifee', () => ({
   EventType: { PRESS: 1 },
 }))
 jest.mock('../push-notification/NotificationChannelManager', () => ({
-  notificationChannelManager: { createChannels: jest.fn().mockResolvedValue(undefined) },
+  notificationChannelManager: {
+    createChannels: jest.fn().mockResolvedValue(),
+  },
 }))
 jest.mock('../push-notification/NotificationDisplayManager', () => ({
-  notificationDisplayManager: { displayTestNotification: jest.fn().mockResolvedValue(undefined) },
+  notificationDisplayManager: {
+    displayTestNotification: jest.fn().mockResolvedValue(),
+  },
 }))
 jest.mock('../push-notification/NotificationStorageManager', () => ({
   notificationStorageManager: {
-    storeTestNotification: jest.fn().mockResolvedValue(undefined),
-    incrementBadgeCount: jest.fn().mockResolvedValue(undefined),
+    storeTestNotification: jest.fn().mockResolvedValue(),
+    incrementBadgeCount: jest.fn().mockResolvedValue(),
   },
 }))
 jest.mock('../push-notification/NotificationEventHandlers', () => ({
   notificationEventHandlers: {
     onForegroundMessage: jest.fn(),
     onNotificationOpened: jest.fn(),
-    onNotificationPress: jest.fn().mockResolvedValue(undefined),
+    onNotificationPress: jest.fn().mockResolvedValue(),
   },
 }))
 import notifee from '../Notifee'
 import { notificationChannelManager } from '../push-notification/NotificationChannelManager'
 import { notificationDisplayManager } from '../push-notification/NotificationDisplayManager'
-import { notificationStorageManager } from '../push-notification/NotificationStorageManager'
 import { notificationEventHandlers as eh } from '../push-notification/NotificationEventHandlers'
+import { notificationStorageManager } from '../push-notification/NotificationStorageManager'
 import {
   notificationTestingService,
   pushNotificationHandlerService as svc,
@@ -51,10 +55,14 @@ describe('PushNotificationHandlerService', () => {
   it('sendTestNotification menjalankan tiga langkah', async () => {
     await notificationTestingService.sendTestNotification()
     expect(notificationStorageManager.storeTestNotification).toHaveBeenCalled()
-    expect(notificationDisplayManager.displayTestNotification).toHaveBeenCalled()
+    expect(
+      notificationDisplayManager.displayTestNotification
+    ).toHaveBeenCalled()
     expect(notificationStorageManager.incrementBadgeCount).toHaveBeenCalled()
     svc.sendTestNotification()
-    expect(notificationStorageManager.storeTestNotification).toHaveBeenCalledTimes(2)
+    expect(
+      notificationStorageManager.storeTestNotification
+    ).toHaveBeenCalledTimes(2)
   })
 
   it('initialize memasang handler firebase & notifee, hanya sekali', async () => {
@@ -95,7 +103,9 @@ describe('PushNotificationHandlerService error & tanpa initial notification', ()
     jest.resetModules()
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
     jest.doMock('../push-notification/NotificationChannelManager', () => ({
-      notificationChannelManager: { createChannels: jest.fn().mockRejectedValue(new Error('x')) },
+      notificationChannelManager: {
+        createChannels: jest.fn().mockRejectedValue(new Error('x')),
+      },
     }))
     const mod = require('../push-notification/PushNotificationHandlerService')
     await mod.pushNotificationHandlerService.initialize()
@@ -111,6 +121,8 @@ describe('PushNotificationHandlerService error & tanpa initial notification', ()
     const mod = require('../push-notification/PushNotificationHandlerService')
     await mod.pushNotificationHandlerService.initialize()
     await Promise.resolve()
-    expect(handlers.notificationEventHandlers.onNotificationOpened).not.toHaveBeenCalled()
+    expect(
+      handlers.notificationEventHandlers.onNotificationOpened
+    ).not.toHaveBeenCalled()
   })
 })

@@ -1,19 +1,39 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('@/components/bottomsheet/BottomSheet', () => require('@/test-utils/misc-sheet').bottomSheetModule)
-jest.mock('@/components/filter/DateRangePicker', () => require('@/test-utils/misc-sheet').dateRangeModule)
-jest.mock('@/components/filter/PickerSelect', () => require('@/test-utils/misc-sheet').pickerModule)
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
+)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  '@/components/bottomsheet/BottomSheet',
+  () => require('@/test-utils/misc-sheet').bottomSheetModule
+)
+jest.mock(
+  '@/components/filter/DateRangePicker',
+  () => require('@/test-utils/misc-sheet').dateRangeModule
+)
+jest.mock(
+  '@/components/filter/PickerSelect',
+  () => require('@/test-utils/misc-sheet').pickerModule
+)
 jest.mock('@/utils/NavigationUtils', () => ({
   navigate: jest.fn(),
   navigationRef: { isReady: () => false },
 }))
 
 import React from 'react'
-import { act, fireEvent, render, screen, renderHook } from '@testing-library/react-native'
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  renderHook,
+} from '@testing-library/react-native'
 import { navigate } from '@/utils/NavigationUtils'
+import SelfDisposalListFilterBottomSheet from '../components/SelfDisposalListFilterBottomSheet'
 import DisposalShipmentFilterBottomSheet from '../components/shipment-list/DisposalShipmentFilterBottomsheet'
 import DisposalShipmentList from '../components/shipment-list/DisposalShipmentList'
-import SelfDisposalListFilterBottomSheet from '../components/SelfDisposalListFilterBottomSheet'
 import useDisposalShipmentFilterForm from '../hooks/useDisposalShipmentFilterForm'
 
 describe('SelfDisposalListFilterBottomSheet', () => {
@@ -64,7 +84,12 @@ describe('SelfDisposalListFilterBottomSheet', () => {
   it('daftar opsi default kosong dan tombol tutup', () => {
     const toggleSheet = jest.fn()
     render(
-      <SelfDisposalListFilterBottomSheet isOpen filter={{}} onApply={jest.fn()} toggleSheet={toggleSheet} />
+      <SelfDisposalListFilterBottomSheet
+        isOpen
+        filter={{}}
+        onApply={jest.fn()}
+        toggleSheet={toggleSheet}
+      />
     )
     fireEvent.press(screen.getByText('label.all_filter'))
     expect(screen.getByTestId('pickerselect-activity')).toBeTruthy()
@@ -92,7 +117,9 @@ describe('DisposalShipmentFilterBottomSheet', () => {
 
   it('pengirim memilih penerima (customer_id)', async () => {
     const { onApply, toggleSheet } = setup(true)
-    fireEvent.press(screen.getByTestId('daterangepicker-disposal-shipment-filter'))
+    fireEvent.press(
+      screen.getByTestId('daterangepicker-disposal-shipment-filter')
+    )
     fireEvent.press(screen.getByTestId('pickerselect-entity'))
     fireEvent.press(screen.getByTestId('pickerselect-activity'))
     await act(async () => {
@@ -114,7 +141,10 @@ describe('DisposalShipmentFilterBottomSheet', () => {
     await act(async () => {
       fireEvent.press(screen.getByTestId('btn-apply-disposal-shipment-filter'))
     })
-    expect(onApply.mock.calls[0][0]).toMatchObject({ vendor_id: 22, customer_id: undefined })
+    expect(onApply.mock.calls[0][0]).toMatchObject({
+      vendor_id: 22,
+      customer_id: undefined,
+    })
   })
 
   it('reset dan tutup', async () => {
@@ -134,11 +164,17 @@ describe('DisposalShipmentFilterBottomSheet', () => {
 describe('useDisposalShipmentFilterForm', () => {
   it('mereset form ke filter saat sheet dibuka', () => {
     const { result, rerender } = renderHook(
-      ({ isOpen, filter }: any) => useDisposalShipmentFilterForm({ filter, isOpen }),
+      ({ isOpen, filter }: any) =>
+        useDisposalShipmentFilterForm({ filter, isOpen }),
       { initialProps: { isOpen: false, filter: { from_date: 'a' } } }
     )
     expect(result.current.form.from_date).toBe('a')
-    act(() => result.current.handleSelect('activity_id')({ value: 4, label: 'x' } as any))
+    act(() =>
+      result.current.handleSelect('activity_id')({
+        value: 4,
+        label: 'x',
+      } as any)
+    )
     expect(result.current.form.activity_id).toBe(4)
     rerender({ isOpen: true, filter: { from_date: 'b' } })
     expect(result.current.form.from_date).toBe('b')
@@ -160,25 +196,58 @@ describe('DisposalShipmentList', () => {
   ]
 
   it('menekan item menavigasi ke detail dengan isSender', () => {
-    render(<DisposalShipmentList data={data} isSender isLoadMore={false} onEndReached={jest.fn()} />)
+    render(
+      <DisposalShipmentList
+        data={data}
+        isSender
+        isLoadMore={false}
+        onEndReached={jest.fn()}
+      />
+    )
     fireEvent.press(screen.getByTestId('disposal-KPM-4'))
-    expect(navigate).toHaveBeenCalledWith('DisposalShipmentDetail', { id: 4, isSender: true })
+    expect(navigate).toHaveBeenCalledWith('DisposalShipmentDetail', {
+      id: 4,
+      isSender: true,
+    })
   })
 
   it('kosong menampilkan empty state saat tidak memuat', () => {
-    render(<DisposalShipmentList data={[]} isSender={false} isLoadMore={false} onEndReached={jest.fn()} />)
+    render(
+      <DisposalShipmentList
+        data={[]}
+        isSender={false}
+        isLoadMore={false}
+        onEndReached={jest.fn()}
+      />
+    )
     expect(screen.getByTestId('empty-state-disposal-shipment')).toBeTruthy()
   })
 
   it('sedang memuat menyembunyikan empty state dan menampilkan loader', () => {
-    render(<DisposalShipmentList data={[]} isSender={false} isLoadMore onEndReached={jest.fn()} />)
+    render(
+      <DisposalShipmentList
+        data={[]}
+        isSender={false}
+        isLoadMore
+        onEndReached={jest.fn()}
+      />
+    )
     expect(screen.queryByTestId('empty-state-disposal-shipment')).toBeNull()
   })
 
   it('memicu onEndReached', () => {
     const onEnd = jest.fn()
-    render(<DisposalShipmentList data={data} isSender isLoadMore={false} onEndReached={onEnd} />)
-    screen.UNSAFE_getByProps({ onEndReachedThreshold: 0.5 }).props.onEndReached()
+    render(
+      <DisposalShipmentList
+        data={data}
+        isSender
+        isLoadMore={false}
+        onEndReached={onEnd}
+      />
+    )
+    screen
+      .UNSAFE_getByProps({ onEndReachedThreshold: 0.5 })
+      .props.onEndReached()
     expect(onEnd).toHaveBeenCalled()
   })
 })

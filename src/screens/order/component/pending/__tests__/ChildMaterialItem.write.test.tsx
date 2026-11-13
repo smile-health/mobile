@@ -1,11 +1,24 @@
 const mockInputs: any[] = []
-jest.mock('@/components/forms', () => ({ InputNumber: (p: any) => { mockInputs.push(p); return null } }))
+jest.mock('@/components/forms', () => ({
+  InputNumber: (p: any) => {
+    mockInputs.push(p)
+    return null
+  },
+}))
 jest.mock('@/components/list/InfoRow', () => {
   const { Text } = require('react-native')
-  return { InfoRow: ({ label, value }: any) => <Text>{`${label}=${value}`}</Text> }
+  return {
+    InfoRow: ({ label, value }: any) => <Text>{`${label}=${value}`}</Text>,
+  }
 })
-jest.mock('@/components/separator/Separator', () => ({ __esModule: true, default: () => null }))
-jest.mock('../../confirm/StockRange', () => ({ __esModule: true, default: () => null }))
+jest.mock('@/components/separator/Separator', () => ({
+  __esModule: true,
+  default: () => null,
+}))
+jest.mock('../../confirm/StockRange', () => ({
+  __esModule: true,
+  default: () => null,
+}))
 
 import React from 'react'
 import { render } from '@testing-library/react-native'
@@ -40,7 +53,9 @@ const setup = (type: any, over: any = {}, qty: any = 5) => {
   return { updateChildQuantity, updateChildrenQty, watch, ...utils }
 }
 
-beforeEach(() => { mockInputs.length = 0 })
+beforeEach(() => {
+  mockInputs.length = 0
+})
 
 describe('ChildMaterialItem', () => {
   it('mode edit: stok vendor dan input tanpa error', () => {
@@ -72,7 +87,11 @@ describe('ChildMaterialItem', () => {
   })
 
   it('data stok kosong memakai strip', () => {
-    const { getByText } = setup('confirm', { stock_vendor: undefined, stock_customer: undefined, ordered_qty: undefined })
+    const { getByText } = setup('confirm', {
+      stock_vendor: undefined,
+      stock_customer: undefined,
+      ordered_qty: undefined,
+    })
     getByText('label.available_stock=-')
     getByText('label.ordered_qty=-')
   })

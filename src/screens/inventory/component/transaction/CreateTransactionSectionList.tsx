@@ -10,8 +10,9 @@ import { BATCH_TYPE } from '../../constant/transaction.constant'
 import { getMaterialCardProps } from '../../helpers/TransactionHelpers'
 import MaterialCard from '../MaterialCard'
 
-export interface CreateTransactionSectionListProps<T>
-  extends SectionListProps<T> {
+export interface CreateTransactionSectionListProps<
+  T,
+> extends SectionListProps<T> {
   materialData: StockItem
   showMinMax?: boolean
 }

@@ -33,8 +33,10 @@ describe('MaterialItem', () => {
     showQuantity: true,
   }
 
-  it('renders with default props and shows correct name, date, and stock', () => {
-    const { getByText, getByTestId } = render(<MaterialItem {...baseProps} />)
+  it('renders with default props and shows correct name, date, and stock', async () => {
+    const { getByText, getByTestId } = await render(
+      <MaterialItem {...baseProps} />
+    )
     expect(getByText('Material A')).toBeTruthy()
     expect(getByTestId('material-list-Material A')).toBeTruthy()
     // The label will be "label.updated_at 01/06/2024 19:00"
@@ -43,78 +45,82 @@ describe('MaterialItem', () => {
     expect(getByText('#10')).toBeTruthy()
   })
 
-  it('hide available_stock label when showQuantity is false', () => {
-    const { queryByText } = render(
+  it('hide available_stock label when showQuantity is false', async () => {
+    const { queryByText } = await render(
       <MaterialItem {...baseProps} showQuantity={false} />
     )
     expect(queryByText(/available_stock/)).toBeNull()
   })
 
-  it('applies bg-softPink for qty === 0 (out of stock)', () => {
-    const { toJSON } = render(<MaterialItem {...baseProps} qty={0} />)
+  it('applies bg-softPink for qty === 0 (out of stock)', async () => {
+    const { toJSON } = await render(<MaterialItem {...baseProps} qty={0} />)
     expect(toJSON()).toMatchSnapshot()
   })
 
-  it('applies bg-softIvory for qty < min (low stock)', () => {
-    const { toJSON } = render(<MaterialItem {...baseProps} qty={2} min={5} />)
+  it('applies bg-softIvory for qty < min (low stock)', async () => {
+    const { toJSON } = await render(
+      <MaterialItem {...baseProps} qty={2} min={5} />
+    )
     expect(toJSON()).toMatchSnapshot()
   })
 
-  it('applies bg-mintGreen for qty >= min && qty <= max (normal stock)', () => {
-    const { toJSON } = render(
+  it('applies bg-mintGreen for qty >= min && qty <= max (normal stock)', async () => {
+    const { toJSON } = await render(
       <MaterialItem {...baseProps} qty={10} min={5} max={20} />
     )
     expect(toJSON()).toMatchSnapshot()
   })
 
-  it('applies bg-aliceBlue for qty > max (overstock)', () => {
-    const { toJSON } = render(
+  it('applies bg-aliceBlue for qty > max (overstock)', async () => {
+    const { toJSON } = await render(
       <MaterialItem {...baseProps} qty={25} min={5} max={20} />
     )
     expect(toJSON()).toMatchSnapshot()
   })
 
-  it('applies bg-white for showQuantity is false', () => {
-    const { toJSON } = render(
+  it('applies bg-white for showQuantity is false', async () => {
+    const { toJSON } = await render(
       <MaterialItem {...baseProps} showQuantity={false} />
     )
     expect(toJSON()).toMatchSnapshot()
   })
 
-  it('renders TransactionLabel when transactionLabel is provided', () => {
-    const { getByText } = render(
+  it('renders TransactionLabel when transactionLabel is provided', async () => {
+    const { getByText } = await render(
       <MaterialItem {...baseProps} transactionLabel='Transaction X' />
     )
     expect(getByText('Transaction X')).toBeTruthy()
   })
 
-  it('does not render TransactionLabel when transactionLabel is not provided', () => {
-    const { queryByText } = render(<MaterialItem {...baseProps} />)
+  it('does not render TransactionLabel when transactionLabel is not provided', async () => {
+    const { queryByText } = await render(<MaterialItem {...baseProps} />)
     expect(queryByText('Transaction X')).toBeNull()
   })
 
-  it('calls onPress when pressed', () => {
+  it('calls onPress when pressed', async () => {
     const onPress = jest.fn()
-    const { getByTestId } = render(
+    const { getByTestId } = await render(
       <MaterialItem {...baseProps} onPress={onPress} />
     )
-    fireEvent.press(getByTestId('material-list-Material A'))
+    await fireEvent.press(getByTestId('material-list-Material A'))
     expect(onPress).toHaveBeenCalled()
   })
 
-  it('does not call onPress when not provided', () => {
-    const { getByTestId } = render(<MaterialItem {...baseProps} />)
+  it('does not call onPress when not provided', async () => {
+    const { getByTestId } = await render(<MaterialItem {...baseProps} />)
     // Should not throw error when pressed
-    fireEvent.press(getByTestId('material-list-Material A'))
+    await fireEvent.press(getByTestId('material-list-Material A'))
   })
 
-  it('shows empty date when updatedAt is missing', () => {
-    const { getByText } = render(<MaterialItem {...baseProps} updatedAt={''} />)
+  it('shows empty date when updatedAt is missing', async () => {
+    const { getByText } = await render(
+      <MaterialItem {...baseProps} updatedAt={''} />
+    )
     expect(getByText(/updated_at -/)).toBeTruthy()
   })
 
-  it('does not show update label if withUpdateLabel is false', () => {
-    const { queryByText } = render(
+  it('does not show update label if withUpdateLabel is false', async () => {
+    const { queryByText } = await render(
       <MaterialItem {...baseProps} withUpdateLabel={false} />
     )
     expect(queryByText(/updated_at/)).toBeNull()

@@ -62,10 +62,11 @@ export const chaosItem = (seed: number, depth = 0): any => {
   return new Proxy({ ...item } as Record<string, any>, {
     get: (t, k) => {
       if (typeof k === 'symbol') return (t as any)[k]
-      if (k === 'toJSON') return undefined
+      if (k === 'toJSON') return
       if (k in cache) return cache[k]
       const base = t[k]
-      const child = () => (depth < 2 ? chaosItem(seed + 1, depth + 1) : { id: 1 })
+      const child = () =>
+        depth < 2 ? chaosItem(seed + 1, depth + 1) : { id: 1 }
       const opts = [
         base,
         base,

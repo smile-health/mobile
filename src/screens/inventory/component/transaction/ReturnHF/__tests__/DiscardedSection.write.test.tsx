@@ -3,15 +3,22 @@ jest.mock('@/services/store', () => ({
   useAppSelector: () => mockReasons,
   useAppDispatch: () => jest.fn(),
 }))
-jest.mock('@/theme/colors', () => ({ __esModule: true, default: { main: () => '#000' } }))
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string) => k }) }))
+jest.mock('@/theme/colors', () => ({
+  __esModule: true,
+  default: { main: () => '#000' },
+}))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({ t: (k: string) => k }),
+}))
 jest.mock('@/services/features', () => ({ getTrxReasons: () => mockReasons }))
 jest.mock('@/components/dropdown/Dropdown', () => {
   const { Pressable, Text } = require('react-native')
   return {
     __esModule: true,
     default: ({ name, onChangeValue }: any) => (
-      <Pressable testID="dd-reason" onPress={() => onChangeValue({ id: 1, is_other: true })}>
+      <Pressable
+        testID='dd-reason'
+        onPress={() => onChangeValue({ id: 1, is_other: true })}>
         <Text>{`dd:${name}`}</Text>
       </Pressable>
     ),
@@ -21,7 +28,10 @@ jest.mock('@/components/forms', () => {
   const { Pressable, Text } = require('react-native')
   return {
     InputNumber: ({ name, onChangeText, errors }: any) => (
-      <Pressable testID={`in:${name}`} onPress={() => onChangeText('3')} onLongPress={() => onChangeText('')}>
+      <Pressable
+        testID={`in:${name}`}
+        onPress={() => onChangeText('3')}
+        onLongPress={() => onChangeText('')}>
         <Text>{`in:${name}|${errors ?? ''}`}</Text>
       </Pressable>
     ),
@@ -99,13 +109,22 @@ describe('DiscardedSection', () => {
       broken_close_vial: 2,
     })
     expect(screen.getByTestId('in:selectedTrx.0.broken_open_vial')).toBeTruthy()
-    expect(screen.getByTestId('in:selectedTrx.0.broken_close_vial')).toBeTruthy()
+    expect(
+      screen.getByTestId('in:selectedTrx.0.broken_close_vial')
+    ).toBeTruthy()
     expect(screen.getByText(/7/)).toBeTruthy()
   })
 
   it('open vial tanpa nilai memakai nol', () => {
-    setup({ is_any_discard: true, is_open_vial: true, open_vial_qty: undefined, close_vial_qty: undefined })
-    expect(screen.getByText(/transaction.helpers.number_of_return/)).toBeTruthy()
+    setup({
+      is_any_discard: true,
+      is_open_vial: true,
+      open_vial_qty: undefined,
+      close_vial_qty: undefined,
+    })
+    expect(
+      screen.getByText(/transaction.helpers.number_of_return/)
+    ).toBeTruthy()
   })
 
   it('memilih alasan lainnya menampilkan field teks', async () => {
@@ -113,7 +132,9 @@ describe('DiscardedSection', () => {
     await act(async () => {
       fireEvent.press(screen.getByTestId('dd-reason'))
     })
-    expect(m().getValues('selectedTrx.0.transaction_reason')).toMatchObject({ is_other: true })
+    expect(m().getValues('selectedTrx.0.transaction_reason')).toMatchObject({
+      is_other: true,
+    })
     expect(screen.getByText('tf:selectedTrx.0.other_reason')).toBeTruthy()
   })
 })

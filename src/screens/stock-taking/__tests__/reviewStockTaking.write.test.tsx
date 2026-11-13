@@ -1,9 +1,18 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
-jest.mock('react-native-safe-area-context', () =>
-  require('react-native-safe-area-context/jest/mock').default
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('@/components/portals/Portal', () => ({ __esModule: true, default: ({ children }: any) => children }))
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
+)
+jest.mock('@/components/portals/Portal', () => ({
+  __esModule: true,
+  default: ({ children }: any) => children,
+}))
 const mockReview = jest.fn()
 jest.mock('../hooks/useReviewStockTaking', () => ({
   __esModule: true,
@@ -61,16 +70,25 @@ describe('ReviewStockTakingScreen', () => {
     periodName: 'Q1',
     isLoading: false,
     reviewItems: [
-      { materialId: 5, materialName: 'M', createdAt: 'c', totalActualQty: 1, items: [{ id: 9 }] },
+      {
+        materialId: 5,
+        materialName: 'M',
+        createdAt: 'c',
+        totalActualQty: 1,
+        items: [{ id: 9 }],
+      },
       { materialName: 'N', createdAt: 'c', totalActualQty: 1, items: [] },
     ],
-    handleSubmitStockTaking: jest.fn().mockResolvedValue(undefined),
+    handleSubmitStockTaking: jest.fn().mockResolvedValue(),
     ...over,
   })
   const renderScreen = () =>
     render(
       <ReviewStockTakingScreen
-        {...({ route: { params: { data: { items: [] }, createdAt: 'x' } }, navigation: nav } as any)}
+        {...({
+          route: { params: { data: { items: [] }, createdAt: 'x' } },
+          navigation: nav,
+        } as any)}
       />
     )
   beforeEach(() => jest.clearAllMocks())
@@ -117,6 +135,8 @@ describe('ReviewStockTakingScreen', () => {
     renderScreen()
     fireEvent.press(screen.getByTestId('btn-delete-all-stock-taking'))
     fireEvent.press(screen.getByText('button.yes'))
-    expect(nav.navigate).toHaveBeenCalledWith('CreateStockTaking', { deleteAll: true })
+    expect(nav.navigate).toHaveBeenCalledWith('CreateStockTaking', {
+      deleteAll: true,
+    })
   })
 })

@@ -1,5 +1,10 @@
-jest.mock('@react-navigation/native', () => require('@/test-utils/misc-nav').navModule)
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
+jest.mock(
+  '@react-navigation/native',
+  () => require('@/test-utils/misc-nav').navModule
+)
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock')
+)
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
@@ -15,15 +20,20 @@ const mat = (id: number, name: string, extra: any = {}) => ({
 describe('TransferStockMaterialList', () => {
   it('menampilkan material, label transaksi dan memilih material', () => {
     const onSelect = jest.fn()
-    const materials: any = [mat(1, 'Alpha'), mat(2, 'Beta', { aggregate: undefined })]
+    const materials: any = [
+      mat(1, 'Alpha'),
+      mat(2, 'Beta', { aggregate: undefined }),
+    ]
     render(
       <TransferStockMaterialList
         materials={materials}
-        transactions={[
-          { material_id: 1, change_qty: 2 },
-          { material_id: 1, change_qty: null },
-          { material_id: 1, change_qty: 3 },
-        ] as any}
+        transactions={
+          [
+            { material_id: 1, change_qty: 2 },
+            { material_id: 1, change_qty: null },
+            { material_id: 1, change_qty: 3 },
+          ] as any
+        }
         isLoading={false}
         onSelectMaterial={onSelect}
       />
@@ -33,19 +43,32 @@ describe('TransferStockMaterialList', () => {
     expect(onSelect).toHaveBeenCalledWith(materials[0])
     fireEvent.press(screen.getByText('Beta'))
     expect(onSelect).toHaveBeenCalledWith(materials[1])
-    expect(screen.getAllByText('transaction.transaction_label.transfer_stock').length).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText('transaction.transaction_label.transfer_stock').length
+    ).toBeGreaterThan(0)
   })
 
   it('sedang memuat awal hanya menampilkan loader jika isLoadMore', () => {
     const { toJSON } = render(
-      <TransferStockMaterialList materials={[]} transactions={[]} isLoading isLoadMore onSelectMaterial={jest.fn()} />
+      <TransferStockMaterialList
+        materials={[]}
+        transactions={[]}
+        isLoading
+        isLoadMore
+        onSelectMaterial={jest.fn()}
+      />
     )
     expect(toJSON()).toBeTruthy()
   })
 
   it('memuat tanpa isLoadMore tidak merender apa pun', () => {
     const { toJSON } = render(
-      <TransferStockMaterialList materials={[]} transactions={[]} isLoading onSelectMaterial={jest.fn()} />
+      <TransferStockMaterialList
+        materials={[]}
+        transactions={[]}
+        isLoading
+        onSelectMaterial={jest.fn()}
+      />
     )
     expect(toJSON()).toBeNull()
   })

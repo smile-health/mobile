@@ -10,16 +10,37 @@ jest.mock('@react-navigation/native', () => {
     StackActions: {},
   }
 })
-jest.mock('@/i18n/useLanguage', () => ({ useLanguage: () => ({ t: (k: string, o?: any) => (o ? `${k}:${o.count}` : k) }) }))
-jest.mock('@/components/toolbar/hooks/useToolbar', () => ({ useToolbar: (p: any) => { mockToolbar = p } }))
-jest.mock('@/components/toolbar/actions/RefreshHomeAction', () => ({ RefreshHomeAction: () => null }))
+jest.mock('@/i18n/useLanguage', () => ({
+  useLanguage: () => ({
+    t: (k: string, o?: any) => (o ? `${k}:${o.count}` : k),
+  }),
+}))
+jest.mock('@/components/toolbar/hooks/useToolbar', () => ({
+  useToolbar: (p: any) => {
+    mockToolbar = p
+  },
+}))
+jest.mock('@/components/toolbar/actions/RefreshHomeAction', () => ({
+  RefreshHomeAction: () => null,
+}))
 jest.mock('@/components/LoadingDialog', () => {
   const { Text } = require('react-native')
-  return { __esModule: true, default: ({ modalVisible }: any) => <Text>loading:{String(modalVisible)}</Text> }
+  return {
+    __esModule: true,
+    default: ({ modalVisible }: any) => (
+      <Text>loading:{String(modalVisible)}</Text>
+    ),
+  }
 })
 jest.mock('@/components/buttons', () => {
   const { Pressable, Text } = require('react-native')
-  return { Button: ({ text, onPress }: any) => <Pressable onPress={onPress}><Text>{text}</Text></Pressable> }
+  return {
+    Button: ({ text, onPress }: any) => (
+      <Pressable onPress={onPress}>
+        <Text>{text}</Text>
+      </Pressable>
+    ),
+  }
 })
 jest.mock('../hooks/useOrderDetail', () => ({ useOrderDetail: () => mockHook }))
 jest.mock('../component/detail/WarningBox', () => {
@@ -31,7 +52,11 @@ jest.mock('../component/detail', () => {
   return {
     OrderInformation: () => <Text>info</Text>,
     OrderCommentItem: ({ data }: any) => <Text>comment-{data.id}</Text>,
-    OrderDetailItem: ({ data, onPress }: any) => <Pressable onPress={() => onPress(data)}><Text>item-{data.id}</Text></Pressable>,
+    OrderDetailItem: ({ data, onPress }: any) => (
+      <Pressable onPress={() => onPress(data)}>
+        <Text>item-{data.id}</Text>
+      </Pressable>
+    ),
   }
 })
 
@@ -52,7 +77,11 @@ const makeHook = (over: any = {}) => ({
   shouldShowAddItemButton: true,
   isVendor: true,
   isCustomer: false,
-  orderDetailData: { status: 1, activity: { name: 'Act' }, updated_at: '2025-01-01T00:00:00Z' },
+  orderDetailData: {
+    status: 1,
+    activity: { name: 'Act' },
+    updated_at: '2025-01-01T00:00:00Z',
+  },
   refetchOrderDetail: jest.fn(),
   FooterActionButtons: null,
   shouldShowLoading: false,
@@ -60,9 +89,16 @@ const makeHook = (over: any = {}) => ({
   ...over,
 })
 const renderScreen = (type: any = 1) =>
-  render(<OrderDetailScreen route={{ params: { id: 4, type } } as any} navigation={{} as any} />)
+  render(
+    <OrderDetailScreen
+      route={{ params: { id: 4, type } } as any}
+      navigation={{} as any}
+    />
+  )
 
-beforeEach(() => { mockHook = makeHook() })
+beforeEach(() => {
+  mockHook = makeHook()
+})
 
 describe('OrderDetailScreen', () => {
   it('render header, item, komentar, tombol tambah item; refetch saat fokus', () => {
@@ -95,14 +131,21 @@ describe('OrderDetailScreen', () => {
   })
 
   it('tanpa data order: header kosong dan section kosong aman', () => {
-    mockHook = makeHook({ orderDetailData: undefined, SECTION_DATA: undefined, shouldShowLoading: true })
+    mockHook = makeHook({
+      orderDetailData: undefined,
+      SECTION_DATA: undefined,
+      shouldShowLoading: true,
+    })
     const { queryByText, getByText } = renderScreen()
     expect(queryByText('info')).toBeNull()
     getByText('loading:true')
   })
 
   it('footer peringatan untuk customer saat order shipped', () => {
-    mockHook = makeHook({ isCustomer: true, orderDetailData: { status: 4, activity: {}, updated_at: null } })
+    mockHook = makeHook({
+      isCustomer: true,
+      orderDetailData: { status: 4, activity: {}, updated_at: null },
+    })
     const { getByText } = renderScreen()
     getByText('order.accept_warning_title')
   })

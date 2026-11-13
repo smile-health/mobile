@@ -12,8 +12,10 @@ export interface ReviewTransaction {
   stocks: ReviewTransactionStock[]
 }
 
-export interface ReviewTransactionStock
-  extends Omit<CreateTransaction, 'patients'> {
+export interface ReviewTransactionStock extends Omit<
+  CreateTransaction,
+  'patients'
+> {
   transactionTypeId: number
   customer?: BaseEntity
   vaccineTypeName?: string

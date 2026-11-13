@@ -2,8 +2,8 @@ import '@/test-utils/inventory-mocks'
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
 import { ORDER_STATUS, ORDER_TYPE } from '@/utils/Constants'
-import { OrderDetailItem } from '../OrderDetailItem'
 import { OrderReviewItem } from '../../OrderReviewItem'
+import { OrderDetailItem } from '../OrderDetailItem'
 
 const data = (over: any = {}): any => ({
   id: 1,
@@ -19,7 +19,14 @@ const data = (over: any = {}): any => ({
 
 const setup = (status: number, over: any = {}, props: any = {}) => {
   const onPress = jest.fn()
-  render(<OrderDetailItem data={data(over)} orderStatus={status} onPress={onPress} {...props} />)
+  render(
+    <OrderDetailItem
+      data={data(over)}
+      orderStatus={status}
+      onPress={onPress}
+      {...props}
+    />
+  )
   return onPress
 }
 
@@ -47,7 +54,14 @@ describe('OrderDetailItem', () => {
     [{ fulfilled_qty: 0, allocated_qty: 6 }],
     [{ fulfilled_qty: null, allocated_qty: 0, confirmed_qty: 8 }],
     [{ fulfilled_qty: 0, allocated_qty: 0, confirmed_qty: 0 }],
-    [{ fulfilled_qty: undefined, allocated_qty: null, confirmed_qty: undefined, qty: 0 }],
+    [
+      {
+        fulfilled_qty: undefined,
+        allocated_qty: null,
+        confirmed_qty: undefined,
+        qty: 0,
+      },
+    ],
   ])('dibatalkan memilih qty pertama yang terisi %#', (over) => {
     setup(ORDER_STATUS.CANCELLED, over)
     expect(screen.getByText('Vaksin')).toBeTruthy()
@@ -60,13 +74,23 @@ describe('OrderDetailItem', () => {
   })
 
   it('tanpa onPress dan tanpa detail tidak error', () => {
-    render(<OrderDetailItem data={data()} orderStatus={ORDER_STATUS.PENDING} withDetail={false} />)
+    render(
+      <OrderDetailItem
+        data={data()}
+        orderStatus={ORDER_STATUS.PENDING}
+        withDetail={false}
+      />
+    )
     fireEvent.press(screen.getByTestId('order_item_1'))
     expect(screen.queryByText('order.detail')).toBeNull()
   })
 
   it('bahan aktif hierarki menampilkan label bahan aktif', () => {
-    setup(ORDER_STATUS.PENDING, {}, { isHierarchy: true, type: ORDER_TYPE.REQUEST })
+    setup(
+      ORDER_STATUS.PENDING,
+      {},
+      { isHierarchy: true, type: ORDER_TYPE.REQUEST }
+    )
     expect(screen.getByText('label.active_ingredient_material')).toBeTruthy()
   })
 
@@ -79,7 +103,12 @@ describe('OrderDetailItem', () => {
   )
 
   it('menampilkan anak merek dagang', () => {
-    setup(ORDER_STATUS.PENDING, { children: [{ id: 2, material: { name: 'Merek A' }, qty: 3 }, { id: 3, qty: 1 }] })
+    setup(ORDER_STATUS.PENDING, {
+      children: [
+        { id: 2, material: { name: 'Merek A' }, qty: 3 },
+        { id: 3, qty: 1 },
+      ],
+    })
     expect(screen.getByText('label.trademark_material')).toBeTruthy()
   })
 })
@@ -95,22 +124,45 @@ describe('OrderReviewItem', () => {
   })
 
   it('hierarki menampilkan label bahan aktif', () => {
-    render(<OrderReviewItem item={{ ...base, material_name: undefined }} isHierarchy />)
+    render(
+      <OrderReviewItem
+        item={{ ...base, material_name: undefined }}
+        isHierarchy
+      />
+    )
     expect(screen.getByText('label.active_ingredient_material')).toBeTruthy()
   })
 
   it('alasan dari daftar', () => {
-    render(<OrderReviewItem item={{ ...base, reason_id: 2 }} isReason dataReason={reasons} />)
+    render(
+      <OrderReviewItem
+        item={{ ...base, reason_id: 2 }}
+        isReason
+        dataReason={reasons}
+      />
+    )
     expect(screen.getByText('Stok habis')).toBeTruthy()
   })
 
   it('alasan lainnya memakai teks bebas', () => {
-    render(<OrderReviewItem item={{ ...base, reason_id: 9, other_reason: 'Rusak' }} isReason dataReason={reasons} />)
+    render(
+      <OrderReviewItem
+        item={{ ...base, reason_id: 9, other_reason: 'Rusak' }}
+        isReason
+        dataReason={reasons}
+      />
+    )
     expect(screen.getByText('Rusak')).toBeTruthy()
   })
 
   it('alasan dari order_reason_id dan tidak ketemu', () => {
-    render(<OrderReviewItem item={{ ...base, order_reason_id: '77' }} isReason dataReason={reasons} />)
+    render(
+      <OrderReviewItem
+        item={{ ...base, order_reason_id: '77' }}
+        isReason
+        dataReason={reasons}
+      />
+    )
     expect(screen.getByText('label.reason')).toBeTruthy()
   })
 
@@ -124,7 +176,14 @@ describe('OrderReviewItem', () => {
       <OrderReviewItem
         item={{
           ...base,
-          material_hierarchy: [{ material_id: 1, material_name: 'H1', ordered_qty: 2, reason_id: 2 }],
+          material_hierarchy: [
+            {
+              material_id: 1,
+              material_name: 'H1',
+              ordered_qty: 2,
+              reason_id: 2,
+            },
+          ],
           children: [{ id: 5, ordered_qty: 3, material_name: 'C1' }],
         }}
         isReason
@@ -135,7 +194,14 @@ describe('OrderReviewItem', () => {
   })
 
   it('hanya anak tanpa hierarki', () => {
-    render(<OrderReviewItem item={{ ...base, children: [{ id: 5, ordered_qty: 3, material_name: 'C1' }] }} />)
+    render(
+      <OrderReviewItem
+        item={{
+          ...base,
+          children: [{ id: 5, ordered_qty: 3, material_name: 'C1' }],
+        }}
+      />
+    )
     expect(screen.getByText('label.trademark_material')).toBeTruthy()
   })
 
