@@ -11,13 +11,13 @@ const stub = (name: string, render?: (p: any) => any) => {
   const { Pressable, Text } = require('react-native')
   return {
     __esModule: true,
-    default: async (p: any) => {
+    default: (p: any) => {
       captured[name] = p
-      return render ? await render(p) : <Text>{name}</Text>
+      return render ? render(p) : <Text>{name}</Text>
     },
-    [name]: async (p: any) => {
+    [name]: (p: any) => {
       captured[name] = p
-      return render ? await render(p) : <Text>{name}</Text>
+      return render ? render(p) : <Text>{name}</Text>
     },
   }
 }

@@ -18,8 +18,8 @@ jest.mock('../../hooks/useReviewTicket', () => ({
   useReviewTicket: () => mockHook,
 }))
 jest.mock('react-hook-form', () => ({
-  Controller: async ({ render }: any) =>
-    await render({
+  Controller: ({ render }: any) =>
+    render({
       field: { onChange: mockOnChange, value: mockControllerValue },
     }),
 }))
