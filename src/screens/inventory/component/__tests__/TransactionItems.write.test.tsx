@@ -30,8 +30,8 @@ const item = (stocks: any[]): any => ({
 describe('ReviewTransactionItem', () => {
   const onDelete = jest.fn()
   const onPressDetailPatient = jest.fn()
-  const setup = (stocks: any[]) =>
-    render(
+  const setup = async (stocks: any[]) =>
+    await render(
       <ReviewTransactionItem
         item={item(stocks)}
         testID='rti'
@@ -42,17 +42,17 @@ describe('ReviewTransactionItem', () => {
 
   beforeEach(() => jest.clearAllMocks())
 
-  it('menampilkan header dan memanggil onDelete dengan stok terkait', () => {
+  it('menampilkan header dan memanggil onDelete dengan stok terkait', async () => {
     const s = stock()
-    setup([s])
+    await setup([s])
     expect(screen.getByText('Vaksin')).toBeTruthy()
     expect(screen.getByText('Penerimaan')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-delete-transaction-item-0'))
+    await fireEvent.press(screen.getByTestId('btn-delete-transaction-item-0'))
     expect(onDelete).toHaveBeenCalledWith(s)
   })
 
-  it('open vial menampilkan label vial dan info discard + alasan', () => {
-    setup([
+  it('open vial menampilkan label vial dan info discard + alasan', async () => {
+    await setup([
       stock({
         is_open_vial: true,
         open_vial_qty: 2,
@@ -70,8 +70,8 @@ describe('ReviewTransactionItem', () => {
     expect(screen.getAllByText('Rusak')).toHaveLength(2)
   })
 
-  it('alasan lainnya memakai other_reason, pelanggan, batch, status non-batch', () => {
-    setup([
+  it('alasan lainnya memakai other_reason, pelanggan, batch, status non-batch', async () => {
+    await setup([
       stock({
         transaction_reason: { label: 'Lainnya', is_other: true },
         other_reason: 'alasan bebas',
@@ -90,18 +90,18 @@ describe('ReviewTransactionItem', () => {
     expect(screen.getByText('VVM B')).toBeTruthy()
   })
 
-  it('vaksin sequence menampilkan tombol detail pasien', () => {
-    setup([stock({ vaccineTypeName: 'BCG', vaccineMethodName: 'Intra' })])
+  it('vaksin sequence menampilkan tombol detail pasien', async () => {
+    await setup([stock({ vaccineTypeName: 'BCG', vaccineMethodName: 'Intra' })])
     expect(screen.getByText('BCG')).toBeTruthy()
     expect(screen.getByText('Intra')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-detail-patient-0'))
+    await fireEvent.press(screen.getByTestId('btn-detail-patient-0'))
     expect(onPressDetailPatient).toHaveBeenCalledWith(
       expect.objectContaining({ materialName: 'Vaksin', activityName: 'Act' })
     )
   })
 
-  it('return menampilkan asal entitas dan akumulasi', () => {
-    setup([
+  it('return menampilkan asal entitas dan akumulasi', async () => {
+    await setup([
       stock({
         transactionTypeId: TRANSACTION_TYPE.RETURN,
         is_any_discard: true,
@@ -115,8 +115,10 @@ describe('ReviewTransactionItem', () => {
     ).toBeTruthy()
   })
 
-  it('cancel discard menampilkan dropdown alasan pembatalan dan akumulasi', () => {
-    setup([stock({ transactionTypeId: TRANSACTION_TYPE.CANCEL_DISCARDS })])
+  it('cancel discard menampilkan dropdown alasan pembatalan dan akumulasi', async () => {
+    await setup([
+      stock({ transactionTypeId: TRANSACTION_TYPE.CANCEL_DISCARDS }),
+    ])
     expect(
       screen.getAllByText('label.reason_cancellation_of_discards').length
     ).toBeGreaterThan(0)
@@ -125,8 +127,8 @@ describe('ReviewTransactionItem', () => {
     ).toBeTruthy()
   })
 
-  it('sumber dana tampil bila ada anggaran, tahun, atau harga', () => {
-    setup([
+  it('sumber dana tampil bila ada anggaran, tahun, atau harga', async () => {
+    await setup([
       stock({
         budget_source: { label: 'APBN' },
         year: 2024,
@@ -168,7 +170,7 @@ describe('DefaultChangeQtyInput', () => {
     expect(screen.queryByText('transaction.helpers.stock_amount')).toBeNull()
   })
 
-  it('mengubah nilai memperbarui form; kosong menghapus error', () => {
+  it('mengubah nilai memperbarui form; kosong menghapus error', async () => {
     let f: any
     renderWithForm(
       <DefaultChangeQtyInput
@@ -180,9 +182,9 @@ describe('DefaultChangeQtyInput', () => {
       (x) => (f = x)
     )
     const input = screen.getByTestId('textfield-add_stock-qty')
-    fireEvent.changeText(input, '7')
+    await fireEvent.changeText(input, '7')
     expect(f.getValues('activeBatch.0.change_qty')).toBe(7)
-    fireEvent.changeText(input, '')
+    await fireEvent.changeText(input, '')
     expect(f.getValues('activeBatch.0.change_qty')).toBe(0)
   })
 })

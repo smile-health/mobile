@@ -35,8 +35,8 @@ const base: any = {
 }
 
 describe('TicketDetailHeader', () => {
-  it('DO number bila tidak ada order; riwayat status dan jumlah item', () => {
-    const { getByText, getAllByText, queryByText } = render(
+  it('DO number bila tidak ada order; riwayat status dan jumlah item', async () => {
+    const { getByText, getAllByText, queryByText } = await render(
       <TicketDetailHeader
         ticketDetail={{ ...base, do_number: 'DO-9' }}
         t={t}
@@ -55,10 +55,10 @@ describe('TicketDetailHeader', () => {
     expect(queryByText('ticket.view_packing_slip_link')).toBeNull()
   })
 
-  it('dengan order dan slip: tombol aktif dan baris cancel inquiry', () => {
+  it('dengan order dan slip: tombol aktif dan baris cancel inquiry', async () => {
     const onOrder = jest.fn()
     const onSlip = jest.fn()
-    const { getByText } = render(
+    const { getByText } = await render(
       <TicketDetailHeader
         ticketDetail={{
           ...base,
@@ -74,15 +74,15 @@ describe('TicketDetailHeader', () => {
     getByText('ticket.order_number')
     getByText('77')
     getByText('ticket.cancel_inquiry')
-    fireEvent.press(getByText('ticket.view_order_detail'))
-    fireEvent.press(getByText('ticket.view_packing_slip_link'))
+    await fireEvent.press(getByText('ticket.view_order_detail'))
+    await fireEvent.press(getByText('ticket.view_packing_slip_link'))
     expect(onOrder).toHaveBeenCalled()
     expect(onSlip).toHaveBeenCalled()
     getByText('-')
   })
 
-  it('status label jatuh ke string kosong bila riwayat tidak memuat status; tanpa items', () => {
-    const { getByText } = render(
+  it('status label jatuh ke string kosong bila riwayat tidak memuat status; tanpa items', async () => {
+    const { getByText } = await render(
       <TicketDetailHeader
         ticketDetail={{
           ...base,

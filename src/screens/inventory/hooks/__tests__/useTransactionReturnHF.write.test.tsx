@@ -64,13 +64,13 @@ beforeEach(() => {
 })
 
 describe('useReturnHFTransaction', () => {
-  it('state awal mengambil trx material terpilih dan memfilter daftar yang sudah tersimpan', () => {
+  it('state awal mengambil trx material terpilih dan memfilter daftar yang sudah tersimpan', async () => {
     mockQuery.data = {
       data: [{ id: 100 }, { id: 101 }],
       page: 1,
       total_page: 2,
     }
-    const { result } = renderHook(() => useReturnHFTransaction())
+    const { result } = await renderHook(() => useReturnHFTransaction())
     expect(result.current.savedTrxIds).toEqual([100])
     expect(result.current.transactionList).toEqual([{ id: 101 }])
     expect(mockQueryArgs.customer_id).toBe(3)
@@ -79,93 +79,93 @@ describe('useReturnHFTransaction', () => {
     expect(result.current.isDisableSave).toBe(false)
   })
 
-  it('tanpa data dan tanpa customer', () => {
+  it('tanpa data dan tanpa customer', async () => {
     mockState.trx.customer = undefined
-    const { result } = renderHook(() => useReturnHFTransaction())
+    const { result } = await renderHook(() => useReturnHFTransaction())
     expect(result.current.transactionList).toEqual([])
     expect(mockQueryArgs.customer_id).toBeUndefined()
     expect(result.current.shouldShowLoading).toBe(false)
   })
 
-  it('loading atau fetching menampilkan loading', () => {
+  it('loading atau fetching menampilkan loading', async () => {
     mockQuery.isFetching = true
-    const { result } = renderHook(() => useReturnHFTransaction())
+    const { result } = await renderHook(() => useReturnHFTransaction())
     expect(result.current.shouldShowLoading).toBe(true)
   })
 
-  it('refresh, apply filter, dan load more bersyarat', () => {
+  it('refresh, apply filter, dan load more bersyarat', async () => {
     mockQuery.data = { data: [], page: 1, total_page: 3 }
-    const { result } = renderHook(() => useReturnHFTransaction())
-    act(() => result.current.handleRefreshList())
+    const { result } = await renderHook(() => useReturnHFTransaction())
+    await act(() => result.current.handleRefreshList())
     expect(mockRefetch).toHaveBeenCalled()
-    act(() =>
+    await act(() =>
       result.current.handleApplyFilter({
         start_date: 'a',
         end_date: 'b',
       } as any)
     )
     expect(result.current.filter).toEqual({ start_date: 'a', end_date: 'b' })
-    act(() => result.current.handleLoadMore())
+    await act(() => result.current.handleLoadMore())
     expect(mockQueryArgs.page).toBe(2)
     mockQuery.isFetching = true
-    const fetching = renderHook(() => useReturnHFTransaction())
-    act(() => fetching.result.current.handleLoadMore())
+    const fetching = await renderHook(() => useReturnHFTransaction())
+    await act(() => fetching.result.current.handleLoadMore())
     mockQuery.isFetching = false
     mockQuery.data = { data: [], page: 3, total_page: 3 }
-    const last = renderHook(() => useReturnHFTransaction())
-    act(() => last.result.current.handleLoadMore())
+    const last = await renderHook(() => useReturnHFTransaction())
+    await act(() => last.result.current.handleLoadMore())
     mockQuery.data = undefined
-    const none = renderHook(() => useReturnHFTransaction())
-    act(() => none.result.current.handleLoadMore())
+    const none = await renderHook(() => useReturnHFTransaction())
+    await act(() => none.result.current.handleLoadMore())
   })
 
-  it('memilih item baru lalu membatalkannya', () => {
-    const { result } = renderHook(() => useReturnHFTransaction())
-    act(() => result.current.handleSelectItem({ id: 300 } as any))
+  it('memilih item baru lalu membatalkannya', async () => {
+    const { result } = await renderHook(() => useReturnHFTransaction())
+    await act(() => result.current.handleSelectItem({ id: 300 } as any))
     expect(result.current.currentTrxIds).toEqual([300])
     expect(result.current.checkIsSelected(300)).toBe(true)
-    act(() => result.current.handleSelectItem({ id: 300 } as any))
+    await act(() => result.current.handleSelectItem({ id: 300 } as any))
     expect(result.current.currentTrxIds).toEqual([])
     expect(result.current.checkIsSelected(300)).toBe(false)
   })
 
-  it('memilih ulang item tersimpan melepasnya; customer non open vial', () => {
+  it('memilih ulang item tersimpan melepasnya; customer non open vial', async () => {
     mockState.trx.customer = { id: 3, entity_tag: { is_open_vial: 0 } }
-    const { result } = renderHook(() => useReturnHFTransaction())
-    act(() => result.current.handleSelectItem({ id: 100 } as any))
+    const { result } = await renderHook(() => useReturnHFTransaction())
+    await act(() => result.current.handleSelectItem({ id: 100 } as any))
     expect(result.current.savedTrxIds).toEqual([])
-    act(() => result.current.handleSelectItem({ id: 301 } as any))
+    await act(() => result.current.handleSelectItem({ id: 301 } as any))
     expect(result.current.checkIsSelected(301)).toBe(true)
   })
 
-  it('material tidak open vial', () => {
+  it('material tidak open vial', async () => {
     mockState.trx.trxMaterial = { material: { id: 8, is_open_vial: 0 } }
-    const { result } = renderHook(() => useReturnHFTransaction())
-    act(() => result.current.handleSelectItem({ id: 302 } as any))
+    const { result } = await renderHook(() => useReturnHFTransaction())
+    await act(() => result.current.handleSelectItem({ id: 302 } as any))
     expect(result.current.checkIsSelected(302)).toBe(true)
   })
 
-  it('menghapus item menghapus dari semua daftar', () => {
-    const { result } = renderHook(() => useReturnHFTransaction())
-    act(() => result.current.handleSelectItem({ id: 303 } as any))
-    act(() => result.current.handleDeleteItem(303))
-    act(() => result.current.handleDeleteItem(100))
-    act(() => result.current.handleDeleteItem())
+  it('menghapus item menghapus dari semua daftar', async () => {
+    const { result } = await renderHook(() => useReturnHFTransaction())
+    await act(() => result.current.handleSelectItem({ id: 303 } as any))
+    await act(() => result.current.handleDeleteItem(303))
+    await act(() => result.current.handleDeleteItem(100))
+    await act(() => result.current.handleDeleteItem())
     expect(result.current.currentTrxIds).toEqual([])
     expect(result.current.savedTrxIds).toEqual([])
   })
 
-  it('submit menyimpan transaksi dan navigasi; tanpa workspace diabaikan', () => {
-    const { result } = renderHook(() => useReturnHFTransaction())
-    act(() => result.current.handleSubmit())
+  it('submit menyimpan transaksi dan navigasi; tanpa workspace diabaikan', async () => {
+    const { result } = await renderHook(() => useReturnHFTransaction())
+    await act(() => result.current.handleSubmit())
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'setTransaction' })
     )
     expect(mockNavigate).toHaveBeenCalledWith('TransactionMaterialSelect')
     mockDispatch.mockClear()
     mockState.workspace = { selectedWorkspace: undefined }
-    const none = renderHook(() => useReturnHFTransaction())
-    act(() => none.result.current.handleSubmit())
+    const none = await renderHook(() => useReturnHFTransaction())
+    await act(() => none.result.current.handleSubmit())
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 })

@@ -43,7 +43,7 @@ const material = (over: any = {}): any => ({
   ...over,
 })
 
-const setup = (
+const setup = async (
   data: any = material(),
   parent?: any,
   isOrderItem = false,
@@ -51,7 +51,7 @@ const setup = (
 ) => {
   const navigation: any = { navigate: jest.fn() }
   const dispatchAction = jest.fn()
-  const hook = renderHook(() =>
+  const hook = await renderHook(() =>
     useMaterialDetailForm(
       data,
       navigation,
@@ -73,7 +73,7 @@ beforeEach(() => {
 
 describe('useMaterialDetailForm', () => {
   it('menghitung rekomendasi dan memilih stok aktivitas aktif', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     // (20 - 5) / 2 -> 8 -> 16
     expect(result.current.recommendedStock).toBe(16)
     expect(result.current.currentMinMax).toMatchObject({ max: 20 })
@@ -85,34 +85,34 @@ describe('useMaterialDetailForm', () => {
     expect(result.current.getOrderRecommendation).toBe('')
   })
 
-  it('tanpa min max rekomendasi nol dan simpan langsung', () => {
-    const { result } = setup(material({ activityMinMax: [] }))
+  it('tanpa min max rekomendasi nol dan simpan langsung', async () => {
+    const { result } = await setup(material({ activityMinMax: [] }))
     expect(result.current.recommendedStock).toBe(0)
-    act(() => result.current.handleSubmit())
+    await act(() => result.current.handleSubmit())
     expect(mockHandleSave).toHaveBeenCalled()
     expect(mockValidate).not.toHaveBeenCalled()
   })
 
-  it('ada rekomendasi memanggil validate', () => {
-    const { result } = setup()
-    act(() => result.current.handleSubmit())
+  it('ada rekomendasi memanggil validate', async () => {
+    const { result } = await setup()
+    await act(() => result.current.handleSubmit())
     expect(mockValidate).toHaveBeenCalled()
   })
 
-  it('unit kosong memakai 1; stok melebihi max menghasilkan 0', () => {
-    const a = setup(
+  it('unit kosong memakai 1; stok melebihi max menghasilkan 0', async () => {
+    const a = await setup(
       material({
         consumption_unit_per_distribution_unit: undefined,
         total_qty: undefined,
       })
     )
     expect(a.result.current.recommendedStock).toBe(20)
-    const b = setup(material({ total_qty: 99 }))
+    const b = await setup(material({ total_qty: 99 }))
     expect(b.result.current.recommendedStock).toBe(0)
   })
 
   it('qty berbeda dari rekomendasi menampilkan dropdown alasan dan teks rekomendasi', async () => {
-    const { result } = setup(material({ ordered_qty: 4 }))
+    const { result } = await setup(material({ ordered_qty: 4 }))
     await waitFor(() => expect(result.current.quantity).toBe(4))
     expect(result.current.shouldShowDropdownReason).toBe(true)
     expect(result.current.getOrderRecommendation).toContain(
@@ -122,14 +122,14 @@ describe('useMaterialDetailForm', () => {
   })
 
   it('induk material menyembunyikan dropdown dan tidak mewajibkan alasan', async () => {
-    const { result } = setup(material({ ordered_qty: 4 }), { id: 99 })
+    const { result } = await setup(material({ ordered_qty: 4 }), { id: 99 })
     await waitFor(() => expect(result.current.quantity).toBe(4))
     expect(result.current.shouldShowDropdownReason).toBe(false)
     expect(result.current.isSaveDisabled).toBe(false)
   })
 
   it('alasan lainnya tanpa teks menonaktifkan simpan', async () => {
-    const { result } = setup(
+    const { result } = await setup(
       material({ ordered_qty: 4, reason_id: OTHER_REASON_ID })
     )
     await waitFor(() => expect(result.current.reason).toBe(OTHER_REASON_ID))
@@ -150,39 +150,39 @@ describe('useMaterialDetailForm', () => {
         ],
       },
     }
-    const plain = setup()
+    const plain = await setup()
     await waitFor(() => expect(plain.result.current.quantity).toBe(6))
     expect(plain.result.current.reason).toBe(3)
-    const child = setup(material(), { id: 99 })
+    const child = await setup(material(), { id: 99 })
     await waitFor(() => expect(child.result.current.quantity).toBe(7))
   })
 
   it('draft tanpa qty memakai rekomendasi; tanpa workspace tidak ada draft', async () => {
     mockState.order.drafts = { regular: { 5: [{ material_id: 10 }] } }
-    const a = setup()
+    const a = await setup()
     await waitFor(() => expect(a.result.current.quantity).toBe(16))
     mockState.workspace = { selectedWorkspace: undefined }
-    const b = setup()
+    const b = await setup()
     expect(b.result.current.recommendedStock).toBe(16)
   })
 
-  it('tanpa aktivitas aktif tidak ada min max maupun stok', () => {
+  it('tanpa aktivitas aktif tidak ada min max maupun stok', async () => {
     mockState.activity = { activeActivity: undefined }
-    const { result } = setup()
+    const { result } = await setup()
     expect(result.current.currentMinMax).toBeUndefined()
     expect(result.current.recommendedStock).toBe(0)
     expect(result.current.filteredStocks).toBeUndefined()
   })
 
-  it('navigasi merek dagang: item order vs regular', () => {
-    const a = setup(material(), undefined, true)
-    act(() => a.result.current.handleTrademark())
+  it('navigasi merek dagang: item order vs regular', async () => {
+    const a = await setup(material(), undefined, true)
+    await act(() => a.result.current.handleTrademark())
     expect(a.navigation.navigate).toHaveBeenCalledWith(
       'OrderItemTrademarkMaterial',
       expect.anything()
     )
-    const b = setup()
-    act(() => b.result.current.handleTrademark())
+    const b = await setup()
+    await act(() => b.result.current.handleTrademark())
     expect(b.navigation.navigate).toHaveBeenCalledWith(
       'RegularTrademarkMaterialScreen',
       expect.anything()

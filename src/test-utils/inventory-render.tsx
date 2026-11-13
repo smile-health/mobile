@@ -3,7 +3,7 @@ import { render } from '@testing-library/react-native'
 import { FormProvider, useForm } from 'react-hook-form'
 
 /** Render komponen yang memakai useFormContext dengan nilai default form. */
-export const renderWithForm = (
+export const renderWithForm = async (
   ui: React.ReactElement,
   defaultValues: any = {},
   capture?: (form: any) => void
@@ -13,7 +13,7 @@ export const renderWithForm = (
     capture?.(form)
     return <FormProvider {...form}>{children}</FormProvider>
   }
-  return render(ui, { wrapper: Wrapper })
+  return await render(ui, { wrapper: Wrapper })
 }
 
 export const nav = () => require('@react-navigation/native').__nav

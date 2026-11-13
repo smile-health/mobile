@@ -65,34 +65,34 @@ beforeEach(() => {
 })
 
 describe('TicketMaterialSection', () => {
-  it('kosong: tampil empty state dan tombol tambah di header', () => {
-    const { getByText } = render(
+  it('kosong: tampil empty state dan tombol tambah di header', async () => {
+    const { getByText } = await render(
       <TicketMaterialSection t={t} materials={materials} />
     )
     getByText('empty')
     getByText('ticket.add_material(s)')
   })
 
-  it('membuka picker dan memilih material baru (value 0)', () => {
-    const { getByText, queryByText } = render(
+  it('membuka picker dan memilih material baru (value 0)', async () => {
+    const { getByText, queryByText } = await render(
       <TicketMaterialSection t={t} materials={materials} />
     )
-    fireEvent.press(getByText('ticket.add_material(s)'))
+    await fireEvent.press(getByText('ticket.add_material(s)'))
     expect(mockPickerProps.isOpen).toBe(true)
     expect(mockPickerProps.data).toHaveLength(2)
-    act(() =>
+    await act(() =>
       mockPickerProps.onSelect({ value: 0, label: 'n', isBatch: false })
     )
     expect(mockNavigate).toHaveBeenCalledWith('TicketingAddNewMaterial')
     expect(queryByText('picker-open')).toBeNull()
   })
 
-  it('memilih material existing menuju detail', () => {
-    const { getByText } = render(
+  it('memilih material existing menuju detail', async () => {
+    const { getByText } = await render(
       <TicketMaterialSection t={t} materials={materials} />
     )
-    fireEvent.press(getByText('ticket.add_material(s)'))
-    act(() =>
+    await fireEvent.press(getByText('ticket.add_material(s)'))
+    await act(() =>
       mockPickerProps.onSelect({ value: 5, label: 'Mat', isBatch: true })
     )
     expect(mockNavigate).toHaveBeenCalledWith('TicketMaterialDetail', {
@@ -105,29 +105,29 @@ describe('TicketMaterialSection', () => {
     })
   })
 
-  it('toggleSheet menutup picker', () => {
-    const { getByText, queryByText } = render(
+  it('toggleSheet menutup picker', async () => {
+    const { getByText, queryByText } = await render(
       <TicketMaterialSection t={t} materials={materials} />
     )
-    fireEvent.press(getByText('ticket.add_material(s)'))
-    act(() => mockPickerProps.toggleSheet())
+    await fireEvent.press(getByText('ticket.add_material(s)'))
+    await act(() => mockPickerProps.toggleSheet())
     expect(queryByText('picker-open')).toBeNull()
   })
 
-  it('menekan baris: material baru vs existing, batch vs non-batch', () => {
+  it('menekan baris: material baru vs existing, batch vs non-batch', async () => {
     mockTicketMaterials = [
       { id: 'new1', name: 'A', qty: 1, is_managed_in_batch: false },
       { id: 7, name: 'B', qty: 1, is_managed_in_batch: true, batches: [{}] },
     ]
-    const { getByText } = render(
+    const { getByText } = await render(
       <TicketMaterialSection t={t} materials={materials} />
     )
-    fireEvent.press(getByText('row-new1'))
+    await fireEvent.press(getByText('row-new1'))
     expect(mockNavigate).toHaveBeenLastCalledWith(
       'TicketingAddNewMaterial',
       expect.objectContaining({ mode: 'non-batch', isEdit: true })
     )
-    fireEvent.press(getByText('row-7'))
+    await fireEvent.press(getByText('row-7'))
     expect(mockNavigate).toHaveBeenLastCalledWith(
       'TicketMaterialDetail',
       expect.objectContaining({ mode: 'batch', isEdit: true })
@@ -135,14 +135,14 @@ describe('TicketMaterialSection', () => {
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
-  it('membersihkan material tidak lengkap saat fokus', () => {
+  it('membersihkan material tidak lengkap saat fokus', async () => {
     mockTicketMaterials = [
       { id: 1, is_managed_in_batch: true, batches: [] },
       { id: 2, is_managed_in_batch: false, name: '  ', qty: 3 },
       { id: 3, is_managed_in_batch: false, name: 'ok', qty: 0 },
       { id: 4, is_managed_in_batch: false, name: 'ok', qty: 2 },
     ]
-    render(<TicketMaterialSection t={t} materials={materials} />)
+    await render(<TicketMaterialSection t={t} materials={materials} />)
     expect(mockDispatch.mock.calls.map((c) => c[0].payload)).toEqual([1, 2, 3])
   })
 })

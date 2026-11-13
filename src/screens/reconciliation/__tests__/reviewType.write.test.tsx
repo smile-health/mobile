@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react-native'
 import ReviewReconciliationTypeItem from '../components/ReviewReconciliationTypeItem'
 
 describe('ReviewReconciliationTypeItem', () => {
-  it('menampilkan alasan dan aksi', () => {
-    render(
+  it('menampilkan alasan dan aksi', async () => {
+    await render(
       <ReviewReconciliationTypeItem
         item={
           {
@@ -27,8 +27,8 @@ describe('ReviewReconciliationTypeItem', () => {
     expect(screen.getByText('reconciliation.reason_action')).toBeTruthy()
   })
 
-  it('memakai default saat qty dan alasan tidak ada', () => {
-    render(
+  it('memakai default saat qty dan alasan tidak ada', async () => {
+    await render(
       <ReviewReconciliationTypeItem
         item={{ recorded_qty: 5, reconciliation_category_label: 'B' } as any}
       />
@@ -37,8 +37,8 @@ describe('ReviewReconciliationTypeItem', () => {
     expect(screen.getByText('0')).toBeTruthy()
   })
 
-  it('daftar alasan kosong tidak menampilkan blok alasan', () => {
-    render(
+  it('daftar alasan kosong tidak menampilkan blok alasan', async () => {
+    await render(
       <ReviewReconciliationTypeItem
         item={
           {

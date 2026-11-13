@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
@@ -152,16 +149,16 @@ describe('DisposalShipmentStockItem', () => {
   it.each([
     [DISPOSAL_STATUS.CANCELLED, 'disposal.cancelled_qty'],
     [DISPOSAL_STATUS.RECEIVED, 'disposal.received_qty'],
-  ])('status %s menampilkan label qty terkait', (status, label) => {
-    render(
+  ])('status %s menampilkan label qty terkait', async (status, label) => {
+    await render(
       <DisposalShipmentStockItem item={shipStock} status={status as number} />
     )
     expect(screen.getByText(label)).toBeTruthy()
     expect(screen.getByText('B1')).toBeTruthy()
   })
 
-  it('tanpa batch dan qty undefined', () => {
-    render(
+  it('tanpa batch dan qty undefined', async () => {
+    await render(
       <DisposalShipmentStockItem
         item={{
           ...shipStock,
@@ -175,8 +172,8 @@ describe('DisposalShipmentStockItem', () => {
     expect(screen.queryByText('label.manufacturer')).toBeNull()
   })
 
-  it('manufaktur kosong memakai tanda strip', () => {
-    render(
+  it('manufaktur kosong memakai tanda strip', async () => {
+    await render(
       <DisposalShipmentStockItem
         item={{
           ...shipStock,
@@ -203,8 +200,8 @@ describe('ReceiveShipmentStockItem', () => {
     discard: [{ reason_id: 1, reason_title: 'Rusak', qty: 2 }],
     received: [{ reason_id: 2, reason_title: 'Exp', qty: 3 }],
   }
-  const wrap = (it: any, onForm?: any) =>
-    render(
+  const wrap = async (it: any, onForm?: any) =>
+    await render(
       <FormWrapper
         defaultValues={{ items: [{ stocks: [{ received_qty: null }] }] }}
         onForm={onForm}>
@@ -212,18 +209,24 @@ describe('ReceiveShipmentStockItem', () => {
       </FormWrapper>
     )
 
-  it('menampilkan section discard/received dan mengubah qty form', () => {
+  it('menampilkan section discard/received dan mengubah qty form', async () => {
     let methods: any
-    wrap(item, (m: any) => (methods = m))
+    await wrap(item, (m: any) => (methods = m))
     expect(screen.getAllByText('disposal.reason_qty').length).toBe(2)
-    fireEvent.changeText(screen.getByTestId('textfield-9-received-qty'), '5')
+    await fireEvent.changeText(
+      screen.getByTestId('textfield-9-received-qty'),
+      '5'
+    )
     expect(methods.getValues('items.0.stocks.0.received_qty')).toBe(5)
-    fireEvent.changeText(screen.getByTestId('textfield-9-received-qty'), '')
+    await fireEvent.changeText(
+      screen.getByTestId('textfield-9-received-qty'),
+      ''
+    )
     expect(methods.getValues('items.0.stocks.0.received_qty')).toBeNull()
   })
 
-  it('tanpa batch dan tanpa alasan menyembunyikan blok terkait', () => {
-    wrap({
+  it('tanpa batch dan tanpa alasan menyembunyikan blok terkait', async () => {
+    await wrap({
       ...item,
       batch_code: undefined,
       discard: [],
@@ -234,8 +237,8 @@ describe('ReceiveShipmentStockItem', () => {
     expect(screen.queryAllByText('disposal.reason_qty')).toHaveLength(0)
   })
 
-  it('manufaktur kosong menampilkan strip', () => {
-    wrap({ ...item, manufacture: undefined })
+  it('manufaktur kosong menampilkan strip', async () => {
+    await wrap({ ...item, manufacture: undefined })
     expect(screen.getByText('-')).toBeTruthy()
   })
 })
@@ -268,8 +271,8 @@ describe('SelfDisposalListItem', () => {
     },
   }
 
-  it('menampilkan data lengkap dengan batch', () => {
-    render(<SelfDisposalListItem item={record} />)
+  it('menampilkan data lengkap dengan batch', async () => {
+    await render(<SelfDisposalListItem item={record} />)
     expect(screen.getByText('Mat')).toBeTruthy()
     expect(screen.getByText('PMM-3')).toBeTruthy()
     expect(screen.getByText('Budi S')).toBeTruthy()
@@ -277,8 +280,8 @@ describe('SelfDisposalListItem', () => {
     expect(screen.getByText('BT')).toBeTruthy()
   })
 
-  it('tanpa batch, tanpa komentar, alasan jatuh ke alasan stok', () => {
-    render(
+  it('tanpa batch, tanpa komentar, alasan jatuh ke alasan stok', async () => {
+    await render(
       <SelfDisposalListItem
         item={{
           ...record,
@@ -296,8 +299,8 @@ describe('SelfDisposalListItem', () => {
     expect(screen.queryByText('label.created_by')).toBeNull()
   })
 
-  it('komentar null tetap ditampilkan dengan strip', () => {
-    render(<SelfDisposalListItem item={{ ...record, comment: null }} />)
+  it('komentar null tetap ditampilkan dengan strip', async () => {
+    await render(<SelfDisposalListItem item={{ ...record, comment: null }} />)
     expect(screen.getByText('label.comment')).toBeTruthy()
   })
 

@@ -33,11 +33,11 @@ const child: any = {
   stock_customer: { total_available_qty: 7 },
 }
 
-const setup = (type: any, over: any = {}, qty: any = 5) => {
+const setup = async (type: any, over: any = {}, qty: any = 5) => {
   const updateChildQuantity = jest.fn()
   const updateChildrenQty = jest.fn()
   const watch = jest.fn(() => qty)
-  const utils = render(
+  const utils = await render(
     <ChildMaterialItem
       child={{ ...child, ...over }}
       childIndex={1}
@@ -58,36 +58,36 @@ beforeEach(() => {
 })
 
 describe('ChildMaterialItem', () => {
-  it('mode edit: stok vendor dan input tanpa error', () => {
-    const { getByText } = setup('edit')
+  it('mode edit: stok vendor dan input tanpa error', async () => {
+    const { getByText } = await setup('edit')
     getByText('Anak')
     getByText('label.available_stock=20')
     expect(mockInputs[0].errors).toBeUndefined()
     expect(mockInputs[0].value).toBe('5')
   })
 
-  it('mode edit: onChangeText memperbarui qty parent dan form', () => {
-    const { updateChildQuantity, updateChildrenQty } = setup('edit')
+  it('mode edit: onChangeText memperbarui qty parent dan form', async () => {
+    const { updateChildQuantity, updateChildrenQty } = await setup('edit')
     mockInputs[0].onChangeText('9')
     expect(updateChildQuantity).toHaveBeenCalledWith(2, 4, '9')
     expect(updateChildrenQty).toHaveBeenCalledWith(1, '9')
   })
 
-  it('mode confirm: tampil ordered qty dan error bila melebihi stok vendor', () => {
-    const { getByText } = setup('confirm', {}, 50)
+  it('mode confirm: tampil ordered qty dan error bila melebihi stok vendor', async () => {
+    const { getByText } = await setup('confirm', {}, 50)
     getByText('label.ordered_qty=12')
     getByText('label.available_stock=20')
     expect(mockInputs[0].errors).toBe('transaction.validation.max_qty')
   })
 
-  it('mode validate memakai stok customer', () => {
-    const { getByText } = setup('validate', {}, 1)
+  it('mode validate memakai stok customer', async () => {
+    const { getByText } = await setup('validate', {}, 1)
     getByText('label.available_stock=7')
     expect(mockInputs[0].errors).toBe('')
   })
 
-  it('data stok kosong memakai strip', () => {
-    const { getByText } = setup('confirm', {
+  it('data stok kosong memakai strip', async () => {
+    const { getByText } = await setup('confirm', {
       stock_vendor: undefined,
       stock_customer: undefined,
       ordered_qty: undefined,
@@ -96,8 +96,8 @@ describe('ChildMaterialItem', () => {
     getByText('label.ordered_qty=-')
   })
 
-  it('validate tanpa stok customer memakai strip', () => {
-    const { getByText } = setup('validate', { stock_customer: undefined })
+  it('validate tanpa stok customer memakai strip', async () => {
+    const { getByText } = await setup('validate', { stock_customer: undefined })
     getByText('label.available_stock=-')
   })
 })

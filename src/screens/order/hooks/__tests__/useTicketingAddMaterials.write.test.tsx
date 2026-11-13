@@ -53,7 +53,7 @@ describe('useTicketingAddMaterials', () => {
       is_managed_in_batch: false,
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.materialName).toBe('Mat'))
     expect(result.current.detailReasonOptions).toEqual([
       { value: 'd1', label: 'Pecah' },
@@ -70,7 +70,7 @@ describe('useTicketingAddMaterials', () => {
       batches: [{ batch_code: 'B', qty: 4 }],
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.isBatch).toBe(1))
     expect(result.current.isButtonValid).toBeTruthy()
   })
@@ -83,15 +83,15 @@ describe('useTicketingAddMaterials', () => {
       batches: [],
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.isBatch).toBe(1))
     expect(result.current.isButtonValid).toBeFalsy()
   })
 
   it('tanpa initial: currentMaterial sementara; tambah batch menyimpan material sementara lalu navigasi', async () => {
-    const { result } = renderHook(() => useTicketingAddMaterials())
+    const { result } = await renderHook(() => useTicketingAddMaterials())
     expect(result.current.currentMaterial.name).toBe('')
-    act(() => result.current.handleAddBatch())
+    await act(() => result.current.handleAddBatch())
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'add' })
     )
@@ -105,9 +105,9 @@ describe('useTicketingAddMaterials', () => {
     const existing: any = { id: 5, name: 'Dup', batches: [] }
     mockMaterials = [existing]
     const initial: any = { id: 5, name: 'Dup' }
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.materialName).toBe('Dup'))
-    act(() => result.current.handleAddBatch())
+    await act(() => result.current.handleAddBatch())
     expect(mockDispatch).not.toHaveBeenCalled()
     expect(mockNavigate).toHaveBeenCalledWith(
       'AddMaterialOrBatchScreen',
@@ -115,16 +115,16 @@ describe('useTicketingAddMaterials', () => {
     )
   })
 
-  it('material sementara sudah ada di store: tidak dispatch ulang', () => {
+  it('material sementara sudah ada di store: tidak dispatch ulang', async () => {
     const temp: any = {
       id: TEMP_ID,
       name: '',
       batches: [{ batch_code: 'x', qty: 1 }],
     }
     mockMaterials = [temp]
-    const { result } = renderHook(() => useTicketingAddMaterials())
+    const { result } = await renderHook(() => useTicketingAddMaterials())
     expect(result.current.currentMaterial.id).toBe(TEMP_ID)
-    act(() => result.current.handleAddBatch())
+    await act(() => result.current.handleAddBatch())
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
@@ -136,15 +136,17 @@ describe('useTicketingAddMaterials', () => {
       batches: [{ batch_code: 'A', qty: 1 }],
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.isBatch).toBe(1))
-    act(() => result.current.handleEditBatch({ batch_code: 'A' } as any))
+    await act(() => result.current.handleEditBatch({ batch_code: 'A' } as any))
     expect(mockNavigate).toHaveBeenCalledWith(
       'AddMaterialOrBatchScreen',
       expect.objectContaining({ isEdit: true, batch: { batch_code: 'A' } })
     )
-    act(() => result.current.handleDeleteBatch({ batch_code: 'A' } as any))
-    act(() => result.current.handleDeleteBatch({} as any))
+    await act(() =>
+      result.current.handleDeleteBatch({ batch_code: 'A' } as any)
+    )
+    await act(() => result.current.handleDeleteBatch({} as any))
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'removeBatch',
       payload: { materialId: 3, batchCode: 'A' },
@@ -166,9 +168,9 @@ describe('useTicketingAddMaterials', () => {
       batches: [],
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.materialName).toBe('Mat'))
-    act(() =>
+    await act(() =>
       result.current.handleSave({
         materialName: 'Mat2',
         isBatch: 0,
@@ -200,9 +202,9 @@ describe('useTicketingAddMaterials', () => {
       batches: [{ batch_code: 'A', qty: 2 }, { batch_code: 'B' }],
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.isBatch).toBe(1))
-    act(() =>
+    await act(() =>
       result.current.handleSave({ materialName: 'Mat', isBatch: 1 } as any)
     )
     const saved = mockDispatch.mock.calls.at(-1)[0].payload
@@ -211,9 +213,9 @@ describe('useTicketingAddMaterials', () => {
     expect(saved.batches).toHaveLength(2)
   })
 
-  it('simpan material baru (tanpa yang cocok): non-batch dan batch', () => {
-    const { result } = renderHook(() => useTicketingAddMaterials())
-    act(() =>
+  it('simpan material baru (tanpa yang cocok): non-batch dan batch', async () => {
+    const { result } = await renderHook(() => useTicketingAddMaterials())
+    await act(() =>
       result.current.handleSave({
         materialName: 'Baru',
         isBatch: 0,
@@ -230,7 +232,7 @@ describe('useTicketingAddMaterials', () => {
       batches: [],
       isSubmitted: 0,
     })
-    act(() =>
+    await act(() =>
       result.current.handleSave({ materialName: 'Baru', isBatch: 1 } as any)
     )
     saved = mockDispatch.mock.calls.at(-1)[0].payload
@@ -246,14 +248,14 @@ describe('useTicketingAddMaterials', () => {
       batches: [],
     }
     mockMaterials = [initial]
-    const batchHook = renderHook(() => useTicketingAddMaterials(initial))
+    const batchHook = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(batchHook.result.current.isBatch).toBe(1))
-    act(() => mockBeforeRemove())
+    await act(() => mockBeforeRemove())
     expect(mockDispatch).toHaveBeenCalledWith({ type: 'remove', payload: 8 })
 
     jest.clearAllMocks()
-    const empty = renderHook(() => useTicketingAddMaterials())
-    act(() => mockBeforeRemove())
+    const empty = await renderHook(() => useTicketingAddMaterials())
+    await act(() => mockBeforeRemove())
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'remove' })
     )
@@ -268,9 +270,9 @@ describe('useTicketingAddMaterials', () => {
       batches: [{ batch_code: 'A', qty: 1 }],
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.isBatch).toBe(1))
-    act(() => mockBeforeRemove())
+    await act(() => mockBeforeRemove())
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
@@ -282,17 +284,17 @@ describe('useTicketingAddMaterials', () => {
       is_managed_in_batch: false,
     }
     mockMaterials = [initial]
-    const { result } = renderHook(() => useTicketingAddMaterials(initial))
+    const { result } = await renderHook(() => useTicketingAddMaterials(initial))
     await waitFor(() => expect(result.current.materialName).toBe('Ok'))
-    act(() => mockBeforeRemove())
+    await act(() => mockBeforeRemove())
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
-  it('material sementara tanpa nama memakai ulang id tersimpan dan mengikuti isBatch', () => {
+  it('material sementara tanpa nama memakai ulang id tersimpan dan mengikuti isBatch', async () => {
     mockMaterials = [
       { id: TEMP_ID, name: '', batches: [{ batch_code: 'Z', qty: 1 }] } as any,
     ]
-    const { result } = renderHook(() => useTicketingAddMaterials())
+    const { result } = await renderHook(() => useTicketingAddMaterials())
     expect(result.current.currentMaterial.batches).toHaveLength(1)
   })
 })

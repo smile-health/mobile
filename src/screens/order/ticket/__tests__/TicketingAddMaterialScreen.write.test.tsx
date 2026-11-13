@@ -76,8 +76,8 @@ const makeHook = (over: any = {}) => ({
   handleSubmit: jest.fn((fn: any) => () => fn({ ok: 1 })),
   ...over,
 })
-const renderScreen = (params: any = {}) =>
-  render(
+const renderScreen = async (params: any = {}) =>
+  await render(
     <TicketingAddMaterialScreen
       route={{ params } as any}
       navigation={{} as any}
@@ -90,8 +90,8 @@ beforeEach(() => {
 })
 
 describe('TicketingAddMaterialScreen', () => {
-  it('non-batch: BaseForm dengan opsi alasan dan radio batch ditampilkan tanpa material', () => {
-    const { getByText } = renderScreen()
+  it('non-batch: BaseForm dengan opsi alasan dan radio batch ditampilkan tanpa material', async () => {
+    const { getByText } = await renderScreen()
     getByText('radio')
     expect(mockBaseForm.reasonField.data).toEqual([{ value: 'r' }])
     expect(mockBaseForm.detailReasonField.data).toEqual([{ value: 'd' }])
@@ -101,24 +101,24 @@ describe('TicketingAddMaterialScreen', () => {
     })
   })
 
-  it('radio disembunyikan saat mengedit material yang ada', () => {
-    const { queryByText } = renderScreen({ material: { id: 1 } })
+  it('radio disembunyikan saat mengedit material yang ada', async () => {
+    const { queryByText } = await renderScreen({ material: { id: 1 } })
     expect(queryByText('radio')).toBeNull()
   })
 
-  it('route tanpa params aman', () => {
-    const { queryByText } = render(
+  it('route tanpa params aman', async () => {
+    const { queryByText } = await render(
       <TicketingAddMaterialScreen route={{} as any} navigation={{} as any} />
     )
     expect(queryByText('radio')).not.toBeNull()
   })
 
-  it('simpan memanggil handleSubmit(handleSave); tombol nonaktif bila tidak valid', () => {
-    const { getByText, rerender } = renderScreen()
-    fireEvent.press(getByText('button.save'))
+  it('simpan memanggil handleSubmit(handleSave); tombol nonaktif bila tidak valid', async () => {
+    const { getByText, rerender } = await renderScreen()
+    await fireEvent.press(getByText('button.save'))
     expect(mockHook.handleSave).toHaveBeenCalledWith({ ok: 1 })
     mockHook = makeHook({ isButtonValid: false })
-    rerender(
+    await rerender(
       <TicketingAddMaterialScreen
         route={{ params: {} } as any}
         navigation={{} as any}
@@ -127,12 +127,12 @@ describe('TicketingAddMaterialScreen', () => {
     getByText('button.save:disabled')
   })
 
-  it('batch: daftar batch, edit, hapus, tambah batch', () => {
+  it('batch: daftar batch, edit, hapus, tambah batch', async () => {
     mockHook = makeHook({ isBatch: 1 })
-    const { getByText } = renderScreen()
-    fireEvent.press(getByText('edit-A'))
-    fireEvent.press(getByText('del-B'))
-    fireEvent.press(getByText('+ ticket.add_batch'))
+    const { getByText } = await renderScreen()
+    await fireEvent.press(getByText('edit-A'))
+    await fireEvent.press(getByText('del-B'))
+    await fireEvent.press(getByText('+ ticket.add_batch'))
     expect(mockHook.handleEditBatch).toHaveBeenCalledWith(
       expect.objectContaining({ batch_code: 'A' })
     )

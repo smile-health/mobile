@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default
@@ -185,10 +182,10 @@ describe('DisposalShipmentDetailScreen', () => {
     ...over,
   })
 
-  it('menampilkan item, komentar, peringatan dan menjalankan aksi', () => {
+  it('menampilkan item, komentar, peringatan dan menjalankan aksi', async () => {
     const h = hook()
     mockDetail.mockReturnValue(h)
-    render(
+    await render(
       <DisposalShipmentDetailScreen
         {...({ route: { params: { id: 1 } } } as any)}
       />
@@ -197,18 +194,18 @@ describe('DisposalShipmentDetailScreen', () => {
     expect(screen.getByText('comment 2')).toBeTruthy()
     expect(screen.getByText('WarningBox')).toBeTruthy()
     expect(screen.getByText('DetailHeader')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('item-1'))
+    await fireEvent.press(screen.getByTestId('item-1'))
     expect(h.handlePressItem).toHaveBeenCalledWith({ id: 1 })
-    fireEvent.press(screen.getByTestId('btn-action'))
+    await fireEvent.press(screen.getByTestId('btn-action'))
     expect(h.handleActionButton).toHaveBeenCalled()
     expect(mockDetail).toHaveBeenCalledWith({ id: 1 })
   })
 
-  it('pengirim tidak melihat peringatan dan data kosong tanpa header', () => {
+  it('pengirim tidak melihat peringatan dan data kosong tanpa header', async () => {
     mockDetail.mockReturnValue(
       hook({ isSender: true, data: undefined, isShipped: false, sections: [] })
     )
-    render(
+    await render(
       <DisposalShipmentDetailScreen {...({ route: { params: {} } } as any)} />
     )
     expect(screen.queryByText('WarningBox')).toBeNull()
@@ -216,13 +213,13 @@ describe('DisposalShipmentDetailScreen', () => {
     expect(screen.queryByTestId('btn-action')).toBeNull()
   })
 
-  it('status bukan shipped tidak menampilkan peringatan', () => {
+  it('status bukan shipped tidak menampilkan peringatan', async () => {
     mockDetail.mockReturnValue(
       hook({
         data: { activity: { name: 'A' }, status: DISPOSAL_STATUS.RECEIVED },
       })
     )
-    render(
+    await render(
       <DisposalShipmentDetailScreen {...({ route: { params: {} } } as any)} />
     )
     expect(screen.queryByText('WarningBox')).toBeNull()
@@ -250,15 +247,15 @@ describe('DisposalShipmentItemDetailScreen', () => {
       },
     },
   })
-  it('batch tampil dengan judul section', () => {
-    render(
+  it('batch tampil dengan judul section', async () => {
+    await render(
       <DisposalShipmentItemDetailScreen {...({ route: route(1) } as any)} />
     )
     expect(screen.getByText('section.material_batch')).toBeTruthy()
     expect(screen.getByText('ItemDetailHeader')).toBeTruthy()
   })
-  it('non batch tanpa judul section', () => {
-    render(
+  it('non batch tanpa judul section', async () => {
+    await render(
       <DisposalShipmentItemDetailScreen {...({ route: route(0) } as any)} />
     )
     expect(screen.queryByText('section.material_batch')).toBeNull()
@@ -291,21 +288,25 @@ describe('ReceiveDisposalShipmentScreen', () => {
     )
   }
 
-  it('membuka dialog lalu konfirmasi dan menutup', () => {
-    const { rerender } = render(<Harness />)
+  it('membuka dialog lalu konfirmasi dan menutup', async () => {
+    const { rerender } = await render(<Harness />)
     expect(screen.getByText('material 1')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-submit-receive-disposal-shipment'))
+    await fireEvent.press(
+      screen.getByTestId('btn-submit-receive-disposal-shipment')
+    )
     expect((Harness as any).h.openDialog).toHaveBeenCalled()
-    rerender(<Harness over={{ isOpenDialog: true }} />)
-    fireEvent.press(screen.getByTestId('dlg-confirm'))
+    await rerender(<Harness over={{ isOpenDialog: true }} />)
+    await fireEvent.press(screen.getByTestId('dlg-confirm'))
     expect((Harness as any).h.confirmSubmitReceive).toHaveBeenCalled()
-    fireEvent.press(screen.getByTestId('dlg-close'))
+    await fireEvent.press(screen.getByTestId('dlg-close'))
     expect((Harness as any).h.closeDialog).toHaveBeenCalled()
   })
 
-  it('tombol nonaktif saat belum bisa disimpan', () => {
-    render(<Harness over={{ isSaveDisabled: true }} />)
-    fireEvent.press(screen.getByTestId('btn-submit-receive-disposal-shipment'))
+  it('tombol nonaktif saat belum bisa disimpan', async () => {
+    await render(<Harness over={{ isSaveDisabled: true }} />)
+    await fireEvent.press(
+      screen.getByTestId('btn-submit-receive-disposal-shipment')
+    )
     expect((Harness as any).h.openDialog).not.toHaveBeenCalled()
   })
 })
@@ -338,12 +339,12 @@ describe('AddDisposalScreen', () => {
     )
   }
 
-  it('menampilkan section dan menyimpan', () => {
-    render(<Harness />)
+  it('menampilkan section dan menyimpan', async () => {
+    await render(<Harness />)
     expect(screen.getByText('Buang')).toBeTruthy()
     expect(screen.getByText('input discard.0.disposal_qty')).toBeTruthy()
     expect(screen.getByText('input received.0.disposal_qty')).toBeTruthy()
-    fireEvent.press(screen.getByText('button.save'))
+    await fireEvent.press(screen.getByText('button.save'))
     expect((Harness as any).h.handleSave).toHaveBeenCalled()
     expect(mockAddForm).toHaveBeenCalledWith({
       disposalStock: { id: 1 },
@@ -351,15 +352,15 @@ describe('AddDisposalScreen', () => {
     })
   })
 
-  it('tombol simpan tidak aktif jika form belum valid', () => {
-    render(<Harness over={{ isSaveEnabled: false }} />)
-    fireEvent.press(screen.getByText('button.save'))
+  it('tombol simpan tidak aktif jika form belum valid', async () => {
+    await render(<Harness over={{ isSaveEnabled: false }} />)
+    await fireEvent.press(screen.getByText('button.save'))
     expect((Harness as any).h.handleSave).not.toHaveBeenCalled()
   })
 })
 
 describe('ReviewSelfDisposalScreen', () => {
-  const setup = () => {
+  const setup = async () => {
     const h = {
       t,
       activity: { name: 'Rutin' },
@@ -368,34 +369,36 @@ describe('ReviewSelfDisposalScreen', () => {
       submitData: jest.fn(),
     }
     mockReviewSelf.mockReturnValue(h)
-    render(<ReviewSelfDisposalScreen />)
+    await render(<ReviewSelfDisposalScreen />)
     return h
   }
   beforeEach(() => jest.clearAllMocks())
 
-  it('menampilkan item dan menolak submit tanpa nomor laporan', () => {
-    setup()
+  it('menampilkan item dan menolak submit tanpa nomor laporan', async () => {
+    await setup()
     expect(screen.getByText('review 1')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-submit-self-disposal'))
+    await fireEvent.press(screen.getByTestId('btn-submit-self-disposal'))
     expect(showError).toHaveBeenCalledWith(
       'disposal.validation.empty_report_number'
     )
   })
 
-  it('konfirmasi dialog mengirim nomor laporan dan komentar', () => {
-    const h = setup()
-    fireEvent.changeText(screen.getByTestId('report-input'), 'RPT-9')
-    fireEvent.changeText(screen.getByTestId('comment-input'), 'catatan')
-    fireEvent.press(screen.getByTestId('btn-submit-self-disposal'))
-    fireEvent.press(screen.getByTestId('btn-confirm-submit-self-disposal'))
+  it('konfirmasi dialog mengirim nomor laporan dan komentar', async () => {
+    const h = await setup()
+    await fireEvent.changeText(screen.getByTestId('report-input'), 'RPT-9')
+    await fireEvent.changeText(screen.getByTestId('comment-input'), 'catatan')
+    await fireEvent.press(screen.getByTestId('btn-submit-self-disposal'))
+    await fireEvent.press(
+      screen.getByTestId('btn-confirm-submit-self-disposal')
+    )
     expect(h.submitData).toHaveBeenCalledWith('RPT-9', 'catatan')
   })
 
-  it('batal dialog tidak mengirim', () => {
-    const h = setup()
-    fireEvent.changeText(screen.getByTestId('report-input'), 'RPT-9')
-    fireEvent.press(screen.getByTestId('btn-submit-self-disposal'))
-    fireEvent.press(screen.getByTestId('btn-cancel-submit-self-disposal'))
+  it('batal dialog tidak mengirim', async () => {
+    const h = await setup()
+    await fireEvent.changeText(screen.getByTestId('report-input'), 'RPT-9')
+    await fireEvent.press(screen.getByTestId('btn-submit-self-disposal'))
+    await fireEvent.press(screen.getByTestId('btn-cancel-submit-self-disposal'))
     expect(h.submitData).not.toHaveBeenCalled()
   })
 })

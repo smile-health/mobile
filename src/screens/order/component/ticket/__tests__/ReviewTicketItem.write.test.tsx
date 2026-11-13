@@ -16,7 +16,7 @@ const reasons: any = [
 ]
 
 describe('ReviewTicketItem', () => {
-  it('non-batch: tampil alasan dan hapus', () => {
+  it('non-batch: tampil alasan dan hapus', async () => {
     const handleDelete = jest.fn()
     const item: any = {
       id: 5,
@@ -26,7 +26,7 @@ describe('ReviewTicketItem', () => {
       reason: '1',
       detail_reason: '2',
     }
-    const { getByText, queryByText } = render(
+    const { getByText, queryByText } = await render(
       <ReviewTicketItem
         item={item}
         t={t}
@@ -38,11 +38,11 @@ describe('ReviewTicketItem', () => {
     getByText('Rusak')
     getByText('Pecah')
     expect(queryByText('ticket.new_material_label')).toBeNull()
-    fireEvent.press(getByText('button.delete'))
+    await fireEvent.press(getByText('button.delete'))
     expect(handleDelete).toHaveBeenCalledWith(item)
   })
 
-  it('tanpa handleDelete tidak ada tombol hapus; detail dari child_reason', () => {
+  it('tanpa handleDelete tidak ada tombol hapus; detail dari child_reason', async () => {
     const item: any = {
       id: 5,
       custom_material: null,
@@ -52,7 +52,7 @@ describe('ReviewTicketItem', () => {
       reason: '1',
       child_reason: '2',
     }
-    const { queryByText, getByText } = render(
+    const { queryByText, getByText } = await render(
       <ReviewTicketItem item={item} t={t} reasonOptions={reasons} />
     )
     expect(queryByText('button.delete')).toBeNull()
@@ -60,29 +60,29 @@ describe('ReviewTicketItem', () => {
     getByText('Pecah')
   })
 
-  it('material custom ditandai baru dan memakai nama custom', () => {
+  it('material custom ditandai baru dan memakai nama custom', async () => {
     const item: any = { id: 7, custom_material: 'Custom', name: 'n', qty: 1 }
-    const { getByText } = render(
+    const { getByText } = await render(
       <ReviewTicketItem item={item} t={t} reasonOptions={reasons} />
     )
     getByText('Custom')
     getByText('ticket.new_material_label')
   })
 
-  it('id material baru (timestamp besar) juga ditandai baru; reason kosong aman', () => {
+  it('id material baru (timestamp besar) juga ditandai baru; reason kosong aman', async () => {
     const item: any = {
       id: 1_700_000_000,
       custom_material: null,
       name: 'Baru',
       qty: 1,
     }
-    const { getByText } = render(
+    const { getByText } = await render(
       <ReviewTicketItem item={item} t={t} reasonOptions={[]} />
     )
     getByText('ticket.new_material_label')
   })
 
-  it('batch: daftar BatchItemCard', () => {
+  it('batch: daftar BatchItemCard', async () => {
     const item: any = {
       id: 5,
       custom_material: null,
@@ -90,7 +90,7 @@ describe('ReviewTicketItem', () => {
       qty: 3,
       batches: [{ batch_code: 'A' }, { batch_code: 'B' }],
     }
-    const { getByText, queryByText } = render(
+    const { getByText, queryByText } = await render(
       <ReviewTicketItem
         item={item}
         t={t}

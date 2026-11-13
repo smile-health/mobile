@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default
@@ -42,10 +39,10 @@ import ReconciliationPeriodBottomSheet from '../components/ReconciliationPeriodB
 import ReviewReconciliationScreen from '../ReviewReconciliationScreen'
 
 describe('ReconciliationFilterBottomSheet', () => {
-  const setup = (filter: any = {}, isOpen = true) => {
+  const setup = async (filter: any = {}, isOpen = true) => {
     const onApplyFilter = jest.fn()
     const toggleSheet = jest.fn()
-    render(
+    await render(
       <ReconciliationFilterBottomSheet
         isOpen={isOpen}
         filter={filter}
@@ -57,11 +54,11 @@ describe('ReconciliationFilterBottomSheet', () => {
   }
 
   it('menerapkan rentang tanggal dibuat dan periode', async () => {
-    const { onApplyFilter, toggleSheet } = setup()
-    fireEvent.press(screen.getByTestId('daterangepicker-created-filter'))
-    fireEvent.press(screen.getByTestId('daterangepicker-period-filter'))
+    const { onApplyFilter, toggleSheet } = await setup()
+    await fireEvent.press(screen.getByTestId('daterangepicker-created-filter'))
+    await fireEvent.press(screen.getByTestId('daterangepicker-period-filter'))
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-filter'))
+      await fireEvent.press(screen.getByTestId('btn-apply-filter'))
     })
     expect(onApplyFilter).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -75,29 +72,29 @@ describe('ReconciliationFilterBottomSheet', () => {
   })
 
   it('reset mengosongkan filter, close menutup sheet', async () => {
-    const { onApplyFilter, toggleSheet } = setup({ created_from: 'x' })
+    const { onApplyFilter, toggleSheet } = await setup({ created_from: 'x' })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-reset-filter'))
+      await fireEvent.press(screen.getByTestId('btn-reset-filter'))
     })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-filter'))
+      await fireEvent.press(screen.getByTestId('btn-apply-filter'))
     })
     expect(onApplyFilter.mock.calls[0][0].created_from).toBeUndefined()
-    fireEvent.press(screen.getByTestId('btn-close-filter'))
+    await fireEvent.press(screen.getByTestId('btn-close-filter'))
     expect(toggleSheet).toHaveBeenCalled()
   })
 
-  it('sheet tertutup tidak mereset form', () => {
-    setup({ created_from: 'x' }, false)
+  it('sheet tertutup tidak mereset form', async () => {
+    await setup({ created_from: 'x' }, false)
     expect(screen.getByTestId('btn-apply-filter')).toBeTruthy()
   })
 })
 
 describe('ReconciliationPeriodBottomSheet', () => {
-  const setup = (startDate?: string, endDate?: string) => {
+  const setup = async (startDate?: string, endDate?: string) => {
     const onSelectDate = jest.fn()
     const toggleSheet = jest.fn()
-    render(
+    await render(
       <ReconciliationPeriodBottomSheet
         isOpen
         startDate={startDate}
@@ -110,57 +107,59 @@ describe('ReconciliationPeriodBottomSheet', () => {
   }
 
   it('apply nonaktif tanpa tanggal, aktif setelah memilih rentang', async () => {
-    const { onSelectDate, toggleSheet } = setup()
+    const { onSelectDate, toggleSheet } = await setup()
     expect(
       screen.getByTestId('btn-apply-period').props.accessibilityState?.disabled
     ).toBe(true)
-    fireEvent.press(screen.getByTestId('daterangepicker-reconciliation-period'))
+    await fireEvent.press(
+      screen.getByTestId('daterangepicker-reconciliation-period')
+    )
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-period'))
+      await fireEvent.press(screen.getByTestId('btn-apply-period'))
     })
     expect(onSelectDate).toHaveBeenCalledWith('2025-01-01', '2025-01-31')
     expect(toggleSheet).toHaveBeenCalled()
   })
 
   it('reset mengosongkan tanggal awal', async () => {
-    setup('2025-02-01', '2025-02-10')
+    await setup('2025-02-01', '2025-02-10')
     expect(screen.getByText('2025-02-01|2025-02-10')).toBeTruthy()
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-reset-period'))
+      await fireEvent.press(screen.getByTestId('btn-reset-period'))
     })
     expect(screen.getByText('|')).toBeTruthy()
   })
 
-  it('tombol tutup menutup sheet', () => {
-    const { toggleSheet } = setup('a', 'b')
-    fireEvent.press(screen.getByTestId('btn-close-filter'))
+  it('tombol tutup menutup sheet', async () => {
+    const { toggleSheet } = await setup('a', 'b')
+    await fireEvent.press(screen.getByTestId('btn-close-filter'))
     expect(toggleSheet).toHaveBeenCalled()
   })
 })
 
 describe('ReconciliationFormItem', () => {
-  const renderItem = (item: any) =>
-    render(
+  const renderItem = async (item: any) =>
+    await render(
       <FormWrapper defaultValues={{ items: [item] }}>
         <ReconciliationFormItem index={0} />
       </FormWrapper>
     )
 
-  it('belum ada qty aktual menampilkan tombol isi nilai riil', () => {
-    renderItem({
+  it('belum ada qty aktual menampilkan tombol isi nilai riil', async () => {
+    await renderItem({
       reconciliation_category_label: 'Batch',
       recorded_qty: 4,
       actual_qty: null,
     })
-    fireEvent.press(screen.getByTestId('btn-add-enter-real-value'))
+    await fireEvent.press(screen.getByTestId('btn-add-enter-real-value'))
     expect(navigate).toHaveBeenCalledWith(
       'AddReconciliationType',
       expect.objectContaining({ path: 'items.0' })
     )
   })
 
-  it('qty aktual 0 dianggap sudah diisi dan menampilkan alasan serta aksi', () => {
-    renderItem({
+  it('qty aktual 0 dianggap sudah diisi dan menampilkan alasan serta aksi', async () => {
+    await renderItem({
       reconciliation_category_label: 'Batch',
       recorded_qty: 4,
       actual_qty: 0,
@@ -174,12 +173,12 @@ describe('ReconciliationFormItem', () => {
       ],
     })
     expect(screen.getByText('reconciliation.reason_action')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-edit-add-actual-qty'))
+    await fireEvent.press(screen.getByTestId('btn-edit-add-actual-qty'))
     expect(navigate).toHaveBeenCalled()
   })
 
-  it('actual_qty terisi tanpa alasan tidak menampilkan blok alasan', () => {
-    renderItem({
+  it('actual_qty terisi tanpa alasan tidak menampilkan blok alasan', async () => {
+    await renderItem({
       reconciliation_category_label: 'B',
       recorded_qty: 1,
       actual_qty: 3,
@@ -188,8 +187,8 @@ describe('ReconciliationFormItem', () => {
     expect(screen.queryByText('reconciliation.reason_action')).toBeNull()
   })
 
-  it('actual_qty undefined diperlakukan belum diisi', () => {
-    renderItem({ reconciliation_category_label: 'B', recorded_qty: 1 })
+  it('actual_qty undefined diperlakukan belum diisi', async () => {
+    await renderItem({ reconciliation_category_label: 'B', recorded_qty: 1 })
     expect(screen.getByTestId('btn-add-enter-real-value')).toBeTruthy()
   })
 })
@@ -206,25 +205,25 @@ describe('ReviewReconciliationScreen', () => {
   })
   const route: any = { params: { x: 1 } }
 
-  it('mengirim rekonsiliasi dari tombol kirim', () => {
+  it('mengirim rekonsiliasi dari tombol kirim', async () => {
     const h = hook()
     mockReview.mockReturnValue(h)
-    render(<ReviewReconciliationScreen {...({ route } as any)} />)
-    fireEvent.press(screen.getByTestId('btn-submit-reconciliation'))
+    await render(<ReviewReconciliationScreen {...({ route } as any)} />)
+    await fireEvent.press(screen.getByTestId('btn-submit-reconciliation'))
     expect(h.handleSubmitReconciliation).toHaveBeenCalled()
     expect(mockReview).toHaveBeenCalledWith(route.params)
   })
 
-  it('hapus semua membuka dialog lalu konfirmasi', () => {
+  it('hapus semua membuka dialog lalu konfirmasi', async () => {
     const h = hook()
     mockReview.mockReturnValue(h)
-    render(<ReviewReconciliationScreen {...({ route } as any)} />)
-    fireEvent.press(screen.getByTestId('btn-delete-all-reconciliation'))
-    fireEvent.press(screen.getByText('button.yes'))
+    await render(<ReviewReconciliationScreen {...({ route } as any)} />)
+    await fireEvent.press(screen.getByTestId('btn-delete-all-reconciliation'))
+    await fireEvent.press(screen.getByText('button.yes'))
     expect(h.handleDeleteAll).toHaveBeenCalled()
   })
 
-  it('menampilkan item review', () => {
+  it('menampilkan item review', async () => {
     mockReview.mockReturnValue(
       hook({
         reviewItems: [
@@ -237,7 +236,7 @@ describe('ReviewReconciliationScreen', () => {
         ],
       })
     )
-    render(<ReviewReconciliationScreen {...({ route } as any)} />)
+    await render(<ReviewReconciliationScreen {...({ route } as any)} />)
     expect(screen.getByText('Vaksin X')).toBeTruthy()
   })
 })

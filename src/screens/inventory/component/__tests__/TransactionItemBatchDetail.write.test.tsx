@@ -19,8 +19,8 @@ const patient = (over: any = {}): any => ({
   ...over,
 })
 
-const setup = (over: any = {}) =>
-  render(
+const setup = async (over: any = {}) =>
+  await render(
     <TransactionItemBatchDetail
       batch={batch}
       activity={activity}
@@ -33,39 +33,39 @@ const setup = (over: any = {}) =>
   )
 
 describe('TransactionItemBatchDetail', () => {
-  it('mode batch menampilkan kode, tanggal, dan produsen', () => {
-    setup()
+  it('mode batch menampilkan kode, tanggal, dan produsen', async () => {
+    await setup()
     expect(screen.getByText('B-01')).toBeTruthy()
     expect(screen.getByText('label.production_by')).toBeTruthy()
     expect(screen.getByText('Bio Farma')).toBeTruthy()
   })
 
-  it('mode batch tanpa data batch memakai nilai kosong', () => {
-    setup({ batch: null })
+  it('mode batch tanpa data batch memakai nilai kosong', async () => {
+    await setup({ batch: null })
     expect(screen.getByText('label.expired_date')).toBeTruthy()
     expect(screen.queryByText('B-01')).toBeNull()
   })
 
-  it('batch tanpa manufacture tetap tampil', () => {
-    setup({ batch: { ...batch, manufacture: undefined } })
+  it('batch tanpa manufacture tetap tampil', async () => {
+    await setup({ batch: { ...batch, manufacture: undefined } })
     expect(screen.getByText('label.production_by')).toBeTruthy()
   })
 
-  it('non-batch menampilkan stok aktivitas', () => {
-    setup({ isBatch: false })
+  it('non-batch menampilkan stok aktivitas', async () => {
+    await setup({ isBatch: false })
     expect(screen.getByText('label.taken_from_activity_stock')).toBeTruthy()
     expect(screen.getByText('Imunisasi')).toBeTruthy()
     expect(screen.queryByText('label.production_by')).toBeNull()
   })
 
-  it('menampilkan pasien dengan urutan vaksin bila lengkap', () => {
-    setup({ patients: [patient()] })
+  it('menampilkan pasien dengan urutan vaksin bila lengkap', async () => {
+    await setup({ patients: [patient()] })
     expect(screen.getByText('123')).toBeTruthy()
     expect(screen.getByText('Metode (Dosis 1)')).toBeTruthy()
   })
 
-  it('pasien tanpa urutan vaksin tidak menampilkan baris vaksin', () => {
-    setup({
+  it('pasien tanpa urutan vaksin tidak menampilkan baris vaksin', async () => {
+    await setup({
       patients: [
         patient({ vaccine_sequence: undefined, identity_number: '999' }),
         patient({ vaccine_method: { id: 0 }, identity_number: '888' }),
@@ -75,8 +75,8 @@ describe('TransactionItemBatchDetail', () => {
     expect(screen.queryByText('label.vaccine_sequence')).toBeNull()
   })
 
-  it('pembelian menampilkan sumber dana, tahun, harga total dan satuan', () => {
-    setup({
+  it('pembelian menampilkan sumber dana, tahun, harga total dan satuan', async () => {
+    await setup({
       purchase: {
         id: 1,
         year: 2025,
@@ -90,8 +90,8 @@ describe('TransactionItemBatchDetail', () => {
     expect(screen.getByText('label.total_price')).toBeTruthy()
   })
 
-  it('pembelian tanpa harga, tahun, dan sumber dana memakai tanda -', () => {
-    setup({ purchase: { id: 2 } })
+  it('pembelian tanpa harga, tahun, dan sumber dana memakai tanda -', async () => {
+    await setup({ purchase: { id: 2 } })
     expect(screen.getAllByText('-').length).toBeGreaterThanOrEqual(2)
   })
 })

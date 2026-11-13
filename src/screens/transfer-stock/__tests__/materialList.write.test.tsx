@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
@@ -18,13 +15,13 @@ const mat = (id: number, name: string, extra: any = {}) => ({
 })
 
 describe('TransferStockMaterialList', () => {
-  it('menampilkan material, label transaksi dan memilih material', () => {
+  it('menampilkan material, label transaksi dan memilih material', async () => {
     const onSelect = jest.fn()
     const materials: any = [
       mat(1, 'Alpha'),
       mat(2, 'Beta', { aggregate: undefined }),
     ]
-    render(
+    await render(
       <TransferStockMaterialList
         materials={materials}
         transactions={
@@ -39,17 +36,17 @@ describe('TransferStockMaterialList', () => {
       />
     )
     expect(screen.getByText('transfer_stock.alert_material')).toBeTruthy()
-    fireEvent.press(screen.getByText('Alpha'))
+    await fireEvent.press(screen.getByText('Alpha'))
     expect(onSelect).toHaveBeenCalledWith(materials[0])
-    fireEvent.press(screen.getByText('Beta'))
+    await fireEvent.press(screen.getByText('Beta'))
     expect(onSelect).toHaveBeenCalledWith(materials[1])
     expect(
       screen.getAllByText('transaction.transaction_label.transfer_stock').length
     ).toBeGreaterThan(0)
   })
 
-  it('sedang memuat awal hanya menampilkan loader jika isLoadMore', () => {
-    const { toJSON } = render(
+  it('sedang memuat awal hanya menampilkan loader jika isLoadMore', async () => {
+    const { toJSON } = await render(
       <TransferStockMaterialList
         materials={[]}
         transactions={[]}
@@ -61,8 +58,8 @@ describe('TransferStockMaterialList', () => {
     expect(toJSON()).toBeTruthy()
   })
 
-  it('memuat tanpa isLoadMore tidak merender apa pun', () => {
-    const { toJSON } = render(
+  it('memuat tanpa isLoadMore tidak merender apa pun', async () => {
+    const { toJSON } = await render(
       <TransferStockMaterialList
         materials={[]}
         transactions={[]}
@@ -73,8 +70,8 @@ describe('TransferStockMaterialList', () => {
     expect(toJSON()).toBeNull()
   })
 
-  it('kosong menampilkan empty state dan loader footer saat load more', () => {
-    render(
+  it('kosong menampilkan empty state dan loader footer saat load more', async () => {
+    await render(
       <TransferStockMaterialList
         materials={[]}
         transactions={[]}
@@ -87,9 +84,9 @@ describe('TransferStockMaterialList', () => {
     expect(screen.getByTestId('empty-state-material')).toBeTruthy()
   })
 
-  it('onEndReached memanggil onLoadMore', () => {
+  it('onEndReached memanggil onLoadMore', async () => {
     const onLoadMore = jest.fn()
-    render(
+    await render(
       <TransferStockMaterialList
         materials={[mat(1, 'A')] as any}
         transactions={[]}

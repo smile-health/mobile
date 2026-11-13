@@ -34,8 +34,8 @@ const data = [
 ]
 
 describe('OrderColdChain', () => {
-  it('pending: status "ordered", memakai data unconfirmed, tanpa checkbox', () => {
-    const { getByText, queryByText } = render(
+  it('pending: status "ordered", memakai data unconfirmed, tanpa checkbox', async () => {
+    const { getByText, queryByText } = await render(
       <OrderColdChain orderStatus={1} data={[data[0]]} />
     )
     getByText('order.coldchain_capacity_status(order.ordered)')
@@ -43,31 +43,31 @@ describe('OrderColdChain', () => {
     expect(queryByText(/show_ordered_coldchain/)).toBeNull()
   })
 
-  it('status lain: memakai data terkonfirmasi dan checkbox menampilkan data awal', () => {
-    const { getByText, queryByText } = render(
+  it('status lain: memakai data terkonfirmasi dan checkbox menampilkan data awal', async () => {
+    const { getByText, queryByText } = await render(
       <OrderColdChain orderStatus={2} data={data} />
     )
     getByText('order.coldchain_capacity_status(order.confirmed)')
     getByText('20%')
     expect(queryByText('10%')).toBeNull()
-    fireEvent.press(getByText('order.show_ordered_coldchain:false'))
+    await fireEvent.press(getByText('order.show_ordered_coldchain:false'))
     getByText('10%')
-    fireEvent.press(getByText('order.show_ordered_coldchain:true'))
+    await fireEvent.press(getByText('order.show_ordered_coldchain:true'))
     expect(queryByText('10%')).toBeNull()
   })
 
-  it('data kosong menampilkan "-%"', () => {
-    const { getAllByText } = render(
+  it('data kosong menampilkan "-%"', async () => {
+    const { getAllByText } = await render(
       <OrderColdChain orderStatus={2} data={[]} />
     )
     expect(getAllByText('-%').length).toBeGreaterThan(0)
   })
 
-  it('checkbox dengan data awal kosong memakai tanda strip', () => {
-    const { getByText, getAllByText } = render(
+  it('checkbox dengan data awal kosong memakai tanda strip', async () => {
+    const { getByText, getAllByText } = await render(
       <OrderColdChain orderStatus={3} data={[data[1]]} />
     )
-    fireEvent.press(getByText('order.show_ordered_coldchain:false'))
+    await fireEvent.press(getByText('order.show_ordered_coldchain:false'))
     expect(getAllByText('-%')).toHaveLength(1)
   })
 })

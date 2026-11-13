@@ -37,6 +37,7 @@ export default [
       'unicorn/no-object-as-default-parameter': 'off',
       'unicorn/prefer-code-point': 'off',
       'unicorn/prefer-spread': 'off',
+      'unicorn/no-await-expression-member': 'off',
       'unicorn/prefer-logical-operator-over-ternary': 'off',
     },
   },

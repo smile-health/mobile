@@ -1,6 +1,3 @@
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   '@/components/bottomsheet/BottomSheet',
   () => require('@/test-utils/misc-sheet').bottomSheetModule
@@ -15,33 +12,33 @@ import { fireEvent, render, screen } from '@testing-library/react-native'
 import StockTakingFilter from '../components/StockTakingFilter'
 
 describe('StockTakingFilter', () => {
-  it('toggle batch kosong membalik only_have_qty', () => {
+  it('toggle batch kosong membalik only_have_qty', async () => {
     const onApply = jest.fn()
-    render(
+    await render(
       <StockTakingFilter
         filter={{ only_have_qty: 1 }}
         onApplyFilter={onApply}
       />
     )
-    fireEvent.press(screen.getByText('label.show_empty_batch'))
+    await fireEvent.press(screen.getByText('label.show_empty_batch'))
     expect(onApply).toHaveBeenCalledWith({ only_have_qty: 0 })
   })
 
-  it('toggle kembali ke 1 saat sebelumnya 0', () => {
+  it('toggle kembali ke 1 saat sebelumnya 0', async () => {
     const onApply = jest.fn()
-    render(
+    await render(
       <StockTakingFilter
         filter={{ only_have_qty: 0 }}
         onApplyFilter={onApply}
       />
     )
-    fireEvent.press(screen.getByText('label.show_empty_batch'))
+    await fireEvent.press(screen.getByText('label.show_empty_batch'))
     expect(onApply).toHaveBeenCalledWith({ only_have_qty: 1 })
   })
 
-  it('menampilkan ringkasan filter tanggal dan bisa dihapus', () => {
+  it('menampilkan ringkasan filter tanggal dan bisa dihapus', async () => {
     const onApply = jest.fn()
-    render(
+    await render(
       <StockTakingFilter
         filter={
           {
@@ -57,12 +54,12 @@ describe('StockTakingFilter', () => {
     )
     expect(screen.getByText('label.created', { exact: false })).toBeTruthy()
     expect(screen.getByText('label.expired', { exact: false })).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-reset-filters'))
+    await fireEvent.press(screen.getByTestId('btn-reset-filters'))
     expect(onApply).toHaveBeenCalledWith({ only_have_qty: 1 })
   })
 
-  it('hanya rentang dibuat: tidak menampilkan baris kedaluwarsa', () => {
-    render(
+  it('hanya rentang dibuat: tidak menampilkan baris kedaluwarsa', async () => {
+    await render(
       <StockTakingFilter
         filter={
           {
@@ -77,15 +74,15 @@ describe('StockTakingFilter', () => {
     expect(screen.queryByText('label.expired', { exact: false })).toBeNull()
   })
 
-  it('tanpa filter tidak menampilkan ringkasan; tombol filter membuka sheet', () => {
-    render(
+  it('tanpa filter tidak menampilkan ringkasan; tombol filter membuka sheet', async () => {
+    await render(
       <StockTakingFilter
         filter={{ only_have_qty: 1 }}
         onApplyFilter={jest.fn()}
       />
     )
     expect(screen.queryByTestId('btn-reset-filters')).toBeNull()
-    fireEvent.press(screen.getByTestId('btn-open-filter'))
+    await fireEvent.press(screen.getByTestId('btn-open-filter'))
     expect(screen.getByTestId('btn-apply-filter')).toBeTruthy()
   })
 })

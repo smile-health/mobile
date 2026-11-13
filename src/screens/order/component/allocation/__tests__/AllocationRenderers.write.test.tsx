@@ -83,12 +83,12 @@ beforeEach(() => {
 })
 
 describe('AllocationMaterialHierarchyRenderer', () => {
-  const setup = (it: any, extra: any = {}) => {
+  const setup = async (it: any, extra: any = {}) => {
     const setValue = jest.fn()
     const watch = jest.fn((name: string) =>
       name.endsWith('draft_allocated_qty') ? extra.watched : undefined
     )
-    const utils = render(
+    const utils = await render(
       <Hier
         item={it}
         index={2}
@@ -104,13 +104,13 @@ describe('AllocationMaterialHierarchyRenderer', () => {
     return { setValue, watch, ...utils }
   }
 
-  it('stok kosong menampilkan EmptyStockView', () => {
-    const { getByText } = setup(item({ stocks: [] }))
+  it('stok kosong menampilkan EmptyStockView', async () => {
+    const { getByText } = await setup(item({ stocks: [] }))
     getByText('empty-view')
   })
 
-  it('input qty: nilai dari draft, editable sesuai ketersediaan, error bila melebihi stok', () => {
-    setup(item(), { watched: 99 })
+  it('input qty: nilai dari draft, editable sesuai ketersediaan, error bila melebihi stok', async () => {
+    await setup(item(), { watched: 99 })
     expect(mockInputs).toHaveLength(2)
     expect(mockInputs[0].editable).toBe(true)
     expect(mockInputs[1].editable).toBe(false)
@@ -118,14 +118,14 @@ describe('AllocationMaterialHierarchyRenderer', () => {
     expect(mockInputs[0].value).toBe(99)
   })
 
-  it('nilai draft dipakai bila form kosong; tanpa error', () => {
-    setup(item(), { watched: undefined })
+  it('nilai draft dipakai bila form kosong; tanpa error', async () => {
+    await setup(item(), { watched: undefined })
     expect(mockInputs[0].value).toBe(3)
     expect(mockInputs[0].errors).toBeUndefined()
   })
 
-  it('onChangeText mengisi semua field alokasi', () => {
-    const { setValue } = setup(item(), { watched: 1 })
+  it('onChangeText mengisi semua field alokasi', async () => {
+    const { setValue } = await setup(item(), { watched: 1 })
     mockInputs[0].onChangeText(5)
     const calls = Object.fromEntries(setValue.mock.calls)
     const base = 'order_items.2.children[0].allocations.0'
@@ -136,8 +136,8 @@ describe('AllocationMaterialHierarchyRenderer', () => {
     expect(calls[`${base}.material`]).toMatchObject({ id: 11 })
   })
 
-  it('material sensitif suhu menampilkan dropdown status dan menyimpan pilihan', () => {
-    const { setValue } = setup(
+  it('material sensitif suhu menampilkan dropdown status dan menyimpan pilihan', async () => {
+    const { setValue } = await setup(
       item({ material: { id: 11, name: 'M', is_temperature_sensitive: 1 } }),
       { watched: 1 }
     )
@@ -151,8 +151,8 @@ describe('AllocationMaterialHierarchyRenderer', () => {
     )
   })
 
-  it('mode batch menampilkan info batch', () => {
-    const { getByText, getAllByText } = setup(item(), {
+  it('mode batch menampilkan info batch', async () => {
+    const { getByText, getAllByText } = await setup(item(), {
       isBatch: true,
       watched: 1,
     })
@@ -160,20 +160,22 @@ describe('AllocationMaterialHierarchyRenderer', () => {
     expect(getAllByText(/label.expired_date=/)).toHaveLength(2)
   })
 
-  it('tanpa tanggal batch memakai "-"', () => {
+  it('tanpa tanggal batch memakai "-"', async () => {
     const s = stock(3, 1)
     ;(s.batch as any).expired_date = undefined
     ;(s.batch as any).production_date = undefined
-    const { getAllByText } = setup(item({ stocks: [s] }), { isBatch: true })
+    const { getAllByText } = await setup(item({ stocks: [s] }), {
+      isBatch: true,
+    })
     getAllByText('label.expired_date=-')
     getAllByText('label.production_date=-')
   })
 })
 
 describe('AllocationMaterialNonHierarchyRenderer', () => {
-  const setup = (it: any, isBatch = false) => {
+  const setup = async (it: any, isBatch = false) => {
     const setValue = jest.fn()
-    const utils = render(
+    const utils = await render(
       <NonHier
         item={it}
         index={1}
@@ -187,13 +189,13 @@ describe('AllocationMaterialNonHierarchyRenderer', () => {
     return { setValue, ...utils }
   }
 
-  it('stok kosong: pesan empty_stock', () => {
-    const { getByText } = setup(item({ stocks: [] }))
+  it('stok kosong: pesan empty_stock', async () => {
+    const { getByText } = await setup(item({ stocks: [] }))
     getByText('label.empty_stock')
   })
 
-  it('input qty memakai draft dan menyimpan qty serta stock id', () => {
-    const { setValue } = setup(item())
+  it('input qty memakai draft dan menyimpan qty serta stock id', async () => {
+    const { setValue } = await setup(item())
     expect(mockInputs[0].value).toBe(3)
     mockInputs[0].onChangeText(8)
     expect(setValue).toHaveBeenCalledWith(
@@ -206,8 +208,8 @@ describe('AllocationMaterialNonHierarchyRenderer', () => {
     )
   })
 
-  it('sensitif suhu: dropdown status; mode batch: info batch', () => {
-    const { getByText, getAllByText } = setup(
+  it('sensitif suhu: dropdown status; mode batch: info batch', async () => {
+    const { getByText, getAllByText } = await setup(
       item({ material: { id: 1, name: 'M', is_temperature_sensitive: 1 } }),
       true
     )
@@ -217,11 +219,11 @@ describe('AllocationMaterialNonHierarchyRenderer', () => {
     expect(getAllByText(/label.manufacturer=Man/)).toHaveLength(2)
   })
 
-  it('tanpa tanggal batch memakai "-"', () => {
+  it('tanpa tanggal batch memakai "-"', async () => {
     const s: any = stock(4, 1)
     s.batch.expired_date = undefined
     s.batch.production_date = undefined
-    const { getAllByText } = setup(item({ stocks: [s] }), true)
+    const { getAllByText } = await setup(item({ stocks: [s] }), true)
     getAllByText('label.expired_date=-')
   })
 })

@@ -22,21 +22,21 @@ const batch: any = {
 }
 
 describe('BatchItemCard', () => {
-  it('editable: tampil kode batch, label alasan dari opsi, dan edit', () => {
+  it('editable: tampil kode batch, label alasan dari opsi, dan edit', async () => {
     const onEdit = jest.fn()
-    const { getAllByText, getByText } = render(
+    const { getAllByText, getByText } = await render(
       <BatchItemCard batch={batch} t={t} isSubmitted={0} onEdit={onEdit} />
     )
     expect(getAllByText('BC1')).toHaveLength(2)
     getByText('Rusak')
     getByText('Pecah')
     getByText('06 MAY 2030')
-    fireEvent.press(getAllByText('BC1')[0])
+    await fireEvent.press(getAllByText('BC1')[0])
     expect(onEdit).toHaveBeenCalled()
   })
 
-  it('editable dengan showBatchCode=false menyembunyikan kode di info', () => {
-    const { getAllByText } = render(
+  it('editable dengan showBatchCode=false menyembunyikan kode di info', async () => {
+    const { getAllByText } = await render(
       <BatchItemCard
         batch={batch}
         t={t}
@@ -47,8 +47,8 @@ describe('BatchItemCard', () => {
     expect(getAllByText('BC1')).toHaveLength(1)
   })
 
-  it('non-editable memakai BatchInfo tanpa tombol hapus bila tidak ada handler', () => {
-    const { queryByText, getByText } = render(
+  it('non-editable memakai BatchInfo tanpa tombol hapus bila tidak ada handler', async () => {
+    const { queryByText, getByText } = await render(
       <BatchItemCard
         batch={{ ...batch, reason: 'x', detail_reason: 'y' }}
         t={t}
@@ -61,10 +61,10 @@ describe('BatchItemCard', () => {
     getByText('y')
   })
 
-  it('onDelete diprioritaskan', () => {
+  it('onDelete diprioritaskan', async () => {
     const onDelete = jest.fn()
     const handleDeleteMaterial = jest.fn()
-    const { getByText } = render(
+    const { getByText } = await render(
       <BatchItemCard
         batch={batch}
         t={t}
@@ -74,14 +74,14 @@ describe('BatchItemCard', () => {
         materialId={4}
       />
     )
-    fireEvent.press(getByText('button.delete'))
+    await fireEvent.press(getByText('button.delete'))
     expect(onDelete).toHaveBeenCalled()
     expect(handleDeleteMaterial).not.toHaveBeenCalled()
   })
 
-  it('handleDeleteMaterial menerima material yang dibentuk dari batch', () => {
+  it('handleDeleteMaterial menerima material yang dibentuk dari batch', async () => {
     const handleDeleteMaterial = jest.fn()
-    const { getByText } = render(
+    const { getByText } = await render(
       <BatchItemCard
         batch={batch}
         t={t}
@@ -90,7 +90,7 @@ describe('BatchItemCard', () => {
         materialId={4}
       />
     )
-    fireEvent.press(getByText('button.delete'))
+    await fireEvent.press(getByText('button.delete'))
     expect(handleDeleteMaterial).toHaveBeenCalledWith({
       id: 4,
       name: '',
@@ -100,9 +100,9 @@ describe('BatchItemCard', () => {
     })
   })
 
-  it('handleDeleteMaterial tanpa materialId tidak melakukan apa-apa; batch_code null', () => {
+  it('handleDeleteMaterial tanpa materialId tidak melakukan apa-apa; batch_code null', async () => {
     const handleDeleteMaterial = jest.fn()
-    const { getByText } = render(
+    const { getByText } = await render(
       <BatchItemCard
         batch={{ ...batch, batch_code: null }}
         t={t}
@@ -110,13 +110,13 @@ describe('BatchItemCard', () => {
         handleDeleteMaterial={handleDeleteMaterial}
       />
     )
-    fireEvent.press(getByText('button.delete'))
+    await fireEvent.press(getByText('button.delete'))
     expect(handleDeleteMaterial).not.toHaveBeenCalled()
   })
 
-  it('handleDeleteMaterial dengan batch_code null memetakan undefined', () => {
+  it('handleDeleteMaterial dengan batch_code null memetakan undefined', async () => {
     const handleDeleteMaterial = jest.fn()
-    const { getByText } = render(
+    const { getByText } = await render(
       <BatchItemCard
         batch={{ ...batch, batch_code: null }}
         t={t}
@@ -125,7 +125,7 @@ describe('BatchItemCard', () => {
         materialId={9}
       />
     )
-    fireEvent.press(getByText('button.delete'))
+    await fireEvent.press(getByText('button.delete'))
     expect(handleDeleteMaterial.mock.calls[0][0].batch_code).toBeUndefined()
   })
 })

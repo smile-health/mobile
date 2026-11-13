@@ -152,9 +152,6 @@ jest.mock('i18next', () => {
   }
   return { __esModule: true, default: i18n, t, ...i18n }
 })
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default
@@ -554,7 +551,7 @@ describe.each([
           for (const m of modes) {
             setRtkMode(m)
             await safe(async () => {
-              const screen = render(React.createElement(v, baseProps))
+              const screen = await render(React.createElement(v, baseProps))
               await act(async () => {
                 await Promise.resolve()
               })
@@ -567,7 +564,7 @@ describe.each([
             setRtkMode('chaos', seed)
             const c = chaosItem(seed)
             await safe(async () => {
-              const screen = render(
+              const screen = await render(
                 React.createElement(v, {
                   ...baseProps,
                   item: c,
@@ -592,7 +589,7 @@ describe.each([
               const proxyProps = propsChaos(seed)
               const Wrapper = () => renderFn(proxyProps, null)
               await safe(async () => {
-                render(React.createElement(Wrapper))
+                await render(React.createElement(Wrapper))
                 await act(async () => {
                   await Promise.resolve()
                 })
@@ -605,12 +602,12 @@ describe.each([
             setRtkMode(m, m === 'chaos' ? (hookSeed += 1) : 0)
             for (const args of hookArgs) {
               await safe(async () => {
-                const hook = renderHook(() => v(...args))
+                const hook = await renderHook(() => v(...args))
                 await act(async () => {
                   await Promise.resolve()
                 })
                 await exercise(hook.result.current)
-                hook.unmount()
+                await hook.unmount()
               })
             }
           }

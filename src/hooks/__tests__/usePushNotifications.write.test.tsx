@@ -57,7 +57,7 @@ beforeEach(() => {
 
 describe('usePushNotifications', () => {
   it('izin sudah ada: simpan token', async () => {
-    const { result } = renderHook(() => usePushNotifications())
+    const { result } = await renderHook(() => usePushNotifications())
     await waitFor(() => expect(result.current.token).toBe('tok'))
     expect(result.current.isPermissionGranted).toBe(true)
     expect(saveLocalData).toHaveBeenCalledWith(expect.anything(), 'tok')
@@ -67,7 +67,7 @@ describe('usePushNotifications', () => {
   it('izin diminta, token kosong', async () => {
     f.checkPermission.mockResolvedValue(false)
     f.getFCMToken.mockResolvedValue(null)
-    const { result } = renderHook(() => usePushNotifications())
+    const { result } = await renderHook(() => usePushNotifications())
     await waitFor(() => expect(f.requestPermission).toHaveBeenCalled())
     await waitFor(() => expect(result.current.isPermissionGranted).toBe(true))
     expect(result.current.token).toBeNull()
@@ -76,14 +76,14 @@ describe('usePushNotifications', () => {
   it('izin ditolak', async () => {
     f.checkPermission.mockResolvedValue(false)
     f.requestPermission.mockResolvedValue(false)
-    const { result } = renderHook(() => usePushNotifications())
+    const { result } = await renderHook(() => usePushNotifications())
     await waitFor(() => expect(f.requestPermission).toHaveBeenCalled())
     expect(result.current.isPermissionGranted).toBe(false)
     expect(result.current.token).toBeNull()
   })
 
   it('requestPermission melempar error terbungkus', async () => {
-    const { result } = renderHook(() => usePushNotifications())
+    const { result } = await renderHook(() => usePushNotifications())
     await waitFor(() => expect(result.current.token).toBe('tok'))
     f.checkPermission.mockRejectedValue(new Error('x'))
     await expect(result.current.requestPermission()).rejects.toThrow(
@@ -92,7 +92,7 @@ describe('usePushNotifications', () => {
   })
 
   it('initializePushNotifications: token baru, token tersimpan, gagal', async () => {
-    const { result } = renderHook(() => usePushNotifications())
+    const { result } = await renderHook(() => usePushNotifications())
     await waitFor(() => expect(result.current.token).toBe('tok'))
     ;(loadLocalData as jest.Mock).mockResolvedValueOnce(null)
     await act(async () => result.current.initializePushNotifications())
@@ -124,7 +124,7 @@ describe('usePushNotifications', () => {
       cb = c
       return { remove }
     }) as any)
-    const { unmount } = renderHook(() => usePushNotifications())
+    const { unmount } = await renderHook(() => usePushNotifications())
     await waitFor(() => expect(cb).toBeDefined())
     await cb('background')
     expect(isNetworkAvailable).not.toHaveBeenCalled()
@@ -135,7 +135,7 @@ describe('usePushNotifications', () => {
     ;(handler.isServiceInitialized as jest.Mock).mockReturnValue(true)
     await cb('active')
     expect(store.processOfflineQueue).toHaveBeenCalled()
-    unmount()
+    await unmount()
     expect(remove).toHaveBeenCalled()
     spy.mockRestore()
   })
@@ -151,7 +151,7 @@ describe('useNotificationPermission', () => {
     ;(mockCreate as jest.Mock).mockReturnValue({
       hasPermission: jest.fn().mockResolvedValue(s),
     })
-    const { result } = renderHook(() => useNotificationPermission())
+    const { result } = await renderHook(() => useNotificationPermission())
     await waitFor(() => expect(result.current.permissionStatus).toBe(label))
   })
 
@@ -159,7 +159,7 @@ describe('useNotificationPermission', () => {
     ;(mockCreate as jest.Mock).mockReturnValue({
       hasPermission: jest.fn().mockRejectedValue(new Error('x')),
     })
-    const { result } = renderHook(() => useNotificationPermission())
+    const { result } = await renderHook(() => useNotificationPermission())
     let r: any
     await act(async () => {
       r = await result.current.checkPermissionStatus()
@@ -171,7 +171,7 @@ describe('useNotificationPermission', () => {
 describe('useNotificationBadge', () => {
   it('load, update, increment, clear', async () => {
     ;(loadLocalData as jest.Mock).mockResolvedValue('3')
-    const { result } = renderHook(() => useNotificationBadge())
+    const { result } = await renderHook(() => useNotificationBadge())
     await waitFor(() => expect(result.current.badgeCount).toBe(3))
     expect(notifee.setBadgeCount).toHaveBeenCalledWith(3)
     await act(async () => result.current.updateBadgeCount(7))
@@ -186,7 +186,7 @@ describe('useNotificationBadge', () => {
 
   it('nilai tidak valid / null jadi 0 dan error ditelan', async () => {
     ;(loadLocalData as jest.Mock).mockResolvedValue(null)
-    const { result } = renderHook(() => useNotificationBadge())
+    const { result } = await renderHook(() => useNotificationBadge())
     await waitFor(() => expect(notifee.setBadgeCount).toHaveBeenCalledWith(0))
     ;(loadLocalData as jest.Mock).mockResolvedValue('abc')
     await act(async () => result.current.incrementBadgeCount())

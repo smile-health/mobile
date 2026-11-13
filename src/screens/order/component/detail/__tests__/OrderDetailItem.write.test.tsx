@@ -17,9 +17,9 @@ const data = (over: any = {}): any => ({
   ...over,
 })
 
-const setup = (status: number, over: any = {}, props: any = {}) => {
+const setup = async (status: number, over: any = {}, props: any = {}) => {
   const onPress = jest.fn()
-  render(
+  await render(
     <OrderDetailItem
       data={data(over)}
       orderStatus={status}
@@ -39,13 +39,13 @@ describe('OrderDetailItem', () => {
     ORDER_STATUS.FULFILLED,
     ORDER_STATUS.DRAFT,
     999,
-  ])('status %s menampilkan jumlah sesuai status', (status) => {
-    setup(status)
+  ])('status %s menampilkan jumlah sesuai status', async (status) => {
+    await setup(status)
     expect(screen.getByText('Vaksin')).toBeTruthy()
   })
 
-  it('draft memakai label confirmed_qty', () => {
-    setup(ORDER_STATUS.DRAFT)
+  it('draft memakai label confirmed_qty', async () => {
+    await setup(ORDER_STATUS.DRAFT)
     expect(screen.getByText('label.confirmed_qty')).toBeTruthy()
   })
 
@@ -62,31 +62,31 @@ describe('OrderDetailItem', () => {
         qty: 0,
       },
     ],
-  ])('dibatalkan memilih qty pertama yang terisi %#', (over) => {
-    setup(ORDER_STATUS.CANCELLED, over)
+  ])('dibatalkan memilih qty pertama yang terisi %#', async (over) => {
+    await setup(ORDER_STATUS.CANCELLED, over)
     expect(screen.getByText('Vaksin')).toBeTruthy()
   })
 
-  it('menekan item memanggil onPress dengan data', () => {
-    const onPress = setup(ORDER_STATUS.PENDING)
-    fireEvent.press(screen.getByTestId('order_item_1'))
+  it('menekan item memanggil onPress dengan data', async () => {
+    const onPress = await setup(ORDER_STATUS.PENDING)
+    await fireEvent.press(screen.getByTestId('order_item_1'))
     expect(onPress).toHaveBeenCalled()
   })
 
-  it('tanpa onPress dan tanpa detail tidak error', () => {
-    render(
+  it('tanpa onPress dan tanpa detail tidak error', async () => {
+    await render(
       <OrderDetailItem
         data={data()}
         orderStatus={ORDER_STATUS.PENDING}
         withDetail={false}
       />
     )
-    fireEvent.press(screen.getByTestId('order_item_1'))
+    await fireEvent.press(screen.getByTestId('order_item_1'))
     expect(screen.queryByText('order.detail')).toBeNull()
   })
 
-  it('bahan aktif hierarki menampilkan label bahan aktif', () => {
-    setup(
+  it('bahan aktif hierarki menampilkan label bahan aktif', async () => {
+    await setup(
       ORDER_STATUS.PENDING,
       {},
       { isHierarchy: true, type: ORDER_TYPE.REQUEST }
@@ -96,14 +96,14 @@ describe('OrderDetailItem', () => {
 
   it.each([ORDER_TYPE.DISTRIBUTION, ORDER_TYPE.RETURN])(
     'hierarki tipe %s tidak memakai bahan aktif',
-    (type) => {
-      setup(ORDER_STATUS.PENDING, {}, { isHierarchy: true, type })
+    async (type) => {
+      await setup(ORDER_STATUS.PENDING, {}, { isHierarchy: true, type })
       expect(screen.queryByText('label.active_ingredient_material')).toBeNull()
     }
   )
 
-  it('menampilkan anak merek dagang', () => {
-    setup(ORDER_STATUS.PENDING, {
+  it('menampilkan anak merek dagang', async () => {
+    await setup(ORDER_STATUS.PENDING, {
       children: [
         { id: 2, material: { name: 'Merek A' }, qty: 3 },
         { id: 3, qty: 1 },
@@ -117,14 +117,14 @@ describe('OrderReviewItem', () => {
   const reasons: any = [{ reason_id: 2, value: 'Stok habis' }]
   const base: any = { material_name: 'Vaksin', ordered_qty: 5, children: [] }
 
-  it('dasar tanpa alasan dan tanpa anak', () => {
-    render(<OrderReviewItem item={base} />)
+  it('dasar tanpa alasan dan tanpa anak', async () => {
+    await render(<OrderReviewItem item={base} />)
     expect(screen.getByText('Vaksin')).toBeTruthy()
     expect(screen.queryByText('label.reason')).toBeNull()
   })
 
-  it('hierarki menampilkan label bahan aktif', () => {
-    render(
+  it('hierarki menampilkan label bahan aktif', async () => {
+    await render(
       <OrderReviewItem
         item={{ ...base, material_name: undefined }}
         isHierarchy
@@ -133,8 +133,8 @@ describe('OrderReviewItem', () => {
     expect(screen.getByText('label.active_ingredient_material')).toBeTruthy()
   })
 
-  it('alasan dari daftar', () => {
-    render(
+  it('alasan dari daftar', async () => {
+    await render(
       <OrderReviewItem
         item={{ ...base, reason_id: 2 }}
         isReason
@@ -144,8 +144,8 @@ describe('OrderReviewItem', () => {
     expect(screen.getByText('Stok habis')).toBeTruthy()
   })
 
-  it('alasan lainnya memakai teks bebas', () => {
-    render(
+  it('alasan lainnya memakai teks bebas', async () => {
+    await render(
       <OrderReviewItem
         item={{ ...base, reason_id: 9, other_reason: 'Rusak' }}
         isReason
@@ -155,8 +155,8 @@ describe('OrderReviewItem', () => {
     expect(screen.getByText('Rusak')).toBeTruthy()
   })
 
-  it('alasan dari order_reason_id dan tidak ketemu', () => {
-    render(
+  it('alasan dari order_reason_id dan tidak ketemu', async () => {
+    await render(
       <OrderReviewItem
         item={{ ...base, order_reason_id: '77' }}
         isReason
@@ -166,13 +166,13 @@ describe('OrderReviewItem', () => {
     expect(screen.getByText('label.reason')).toBeTruthy()
   })
 
-  it('tanpa reason sama sekali dan tanpa dataReason', () => {
-    render(<OrderReviewItem item={base} isReason />)
+  it('tanpa reason sama sekali dan tanpa dataReason', async () => {
+    await render(<OrderReviewItem item={base} isReason />)
     expect(screen.getByText('label.reason')).toBeTruthy()
   })
 
-  it('menampilkan anak dan hierarki material', () => {
-    render(
+  it('menampilkan anak dan hierarki material', async () => {
+    await render(
       <OrderReviewItem
         item={{
           ...base,
@@ -193,8 +193,8 @@ describe('OrderReviewItem', () => {
     expect(screen.getByText('label.trademark_material')).toBeTruthy()
   })
 
-  it('hanya anak tanpa hierarki', () => {
-    render(
+  it('hanya anak tanpa hierarki', async () => {
+    await render(
       <OrderReviewItem
         item={{
           ...base,
@@ -205,8 +205,8 @@ describe('OrderReviewItem', () => {
     expect(screen.getByText('label.trademark_material')).toBeTruthy()
   })
 
-  it('item tanpa children dan nama kosong', () => {
-    render(<OrderReviewItem item={{ ordered_qty: undefined } as any} />)
+  it('item tanpa children dan nama kosong', async () => {
+    await render(<OrderReviewItem item={{ ordered_qty: undefined } as any} />)
     expect(screen.getByText('label.order_qty')).toBeTruthy()
   })
 })

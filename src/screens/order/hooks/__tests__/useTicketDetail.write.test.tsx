@@ -92,33 +92,33 @@ describe('mapItemsToTicketMaterials', () => {
 })
 
 describe('useTicketDetail', () => {
-  it('visibilitas tombol berdasar status', () => {
-    const { result, rerender } = renderHook(() => useTicketDetail(1))
+  it('visibilitas tombol berdasar status', async () => {
+    const { result, rerender } = await renderHook(() => useTicketDetail(1))
     expect(result.current.buttonVisibility).toEqual({
       showCancel: true,
       showComplete: true,
     })
     mockDetail = { status_id: 1 }
-    rerender({})
+    await rerender({})
     expect(result.current.buttonVisibility).toEqual({
       showCancel: true,
       showComplete: false,
     })
     mockDetail = { status_id: 3 }
-    rerender({})
+    await rerender({})
     expect(result.current.buttonVisibility.showCancel).toBe(false)
     mockDetail = undefined
-    rerender({})
+    await rerender({})
     expect(result.current.buttonVisibility).toEqual({
       showCancel: false,
       showComplete: false,
     })
   })
 
-  it('navigasi ke order dan buka packing slip bila tersedia', () => {
+  it('navigasi ke order dan buka packing slip bila tersedia', async () => {
     const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true as any)
-    const { result, rerender } = renderHook(() => useTicketDetail(1))
-    act(() => {
+    const { result, rerender } = await renderHook(() => useTicketDetail(1))
+    await act(() => {
       result.current.handleViewOrderDetail()
       result.current.handleViewPackingSlip()
     })
@@ -128,8 +128,8 @@ describe('useTicketDetail', () => {
     })
     expect(open).toHaveBeenCalledWith('http://slip')
     mockDetail = {}
-    rerender({})
-    act(() => {
+    await rerender({})
+    await act(() => {
       result.current.handleViewOrderDetail()
       result.current.handleViewPackingSlip()
     })
@@ -138,7 +138,7 @@ describe('useTicketDetail', () => {
   })
 
   it('refetch sukses mengembalikan hasil dan melepas loading', async () => {
-    const { result } = renderHook(() => useTicketDetail(1))
+    const { result } = await renderHook(() => useTicketDetail(1))
     let r: any
     await act(async () => {
       r = await result.current.refetch()
@@ -149,7 +149,7 @@ describe('useTicketDetail', () => {
 
   it('refetch gagal melempar ulang error', async () => {
     mockRefetch.mockRejectedValue(new Error('x'))
-    const { result } = renderHook(() => useTicketDetail(1))
+    const { result } = await renderHook(() => useTicketDetail(1))
     await act(async () => {
       await expect(result.current.refetch()).rejects.toThrow('x')
     })
@@ -157,7 +157,7 @@ describe('useTicketDetail', () => {
   })
 
   it('update event report sukses dan gagal', async () => {
-    const { result } = renderHook(() => useTicketDetail(3))
+    const { result } = await renderHook(() => useTicketDetail(3))
     let r: any
     await act(async () => {
       r = await result.current.handleUpdateEventReport({
@@ -181,7 +181,7 @@ describe('useTicketDetail', () => {
   })
 
   it('ubah status memanggil update lalu refetch', async () => {
-    const { result } = renderHook(() => useTicketDetail(3))
+    const { result } = await renderHook(() => useTicketDetail(3))
     await act(async () => {
       await result.current.handleChangeStatus(4)
     })
@@ -194,7 +194,7 @@ describe('useTicketDetail', () => {
 
   it('ubah status: error dari refetch ditampilkan', async () => {
     mockRefetch.mockRejectedValue(new Error('r'))
-    const { result } = renderHook(() => useTicketDetail(3))
+    const { result } = await renderHook(() => useTicketDetail(3))
     await act(async () => {
       await result.current.handleChangeStatus(4)
     })
@@ -209,12 +209,12 @@ describe('useTicketDetail', () => {
         resolve = r
       })
     )
-    const { result } = renderHook(() => useTicketDetail(1))
+    const { result } = await renderHook(() => useTicketDetail(1))
     let p: any
-    act(() => {
+    await act(() => {
       p = result.current.refetch()
     })
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(120_000)
     })
     await act(async () => {
@@ -224,9 +224,9 @@ describe('useTicketDetail', () => {
     expect(result.current.isLoading).toBe(false)
   })
 
-  it('loading query diteruskan', () => {
+  it('loading query diteruskan', async () => {
     mockQueryLoading = true
-    const { result } = renderHook(() => useTicketDetail(1))
+    const { result } = await renderHook(() => useTicketDetail(1))
     expect(result.current.isLoading).toBe(true)
   })
 })

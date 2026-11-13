@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   '@/components/bottomsheet/BottomSheet',
   () => require('@/test-utils/misc-sheet').bottomSheetModule
@@ -37,10 +34,10 @@ import DisposalShipmentList from '../components/shipment-list/DisposalShipmentLi
 import useDisposalShipmentFilterForm from '../hooks/useDisposalShipmentFilterForm'
 
 describe('SelfDisposalListFilterBottomSheet', () => {
-  const setup = (filter: any = {}) => {
+  const setup = async (filter: any = {}) => {
     const onApply = jest.fn()
     const toggleSheet = jest.fn()
-    render(
+    await render(
       <SelfDisposalListFilterBottomSheet
         isOpen
         filter={filter}
@@ -54,12 +51,14 @@ describe('SelfDisposalListFilterBottomSheet', () => {
   }
 
   it('mengirim filter tanggal, aktivitas, dan material yang dipilih', async () => {
-    const { onApply } = setup()
-    fireEvent.press(screen.getByTestId('daterangepicker-transaction-filter'))
-    fireEvent.press(screen.getByTestId('pickerselect-activity'))
-    fireEvent.press(screen.getByTestId('pickerselect-material'))
+    const { onApply } = await setup()
+    await fireEvent.press(
+      screen.getByTestId('daterangepicker-transaction-filter')
+    )
+    await fireEvent.press(screen.getByTestId('pickerselect-activity'))
+    await fireEvent.press(screen.getByTestId('pickerselect-material'))
     await act(async () => {
-      fireEvent.press(screen.getByText('button.apply'))
+      await fireEvent.press(screen.getByText('button.apply'))
     })
     expect(onApply).toHaveBeenCalledWith({
       start_date: '2025-01-01',
@@ -70,20 +69,20 @@ describe('SelfDisposalListFilterBottomSheet', () => {
   })
 
   it('tombol reset lalu terapkan tetap memanggil onApply', async () => {
-    const { onApply } = setup({ activity_id: 3 })
+    const { onApply } = await setup({ activity_id: 3 })
     await act(async () => {
-      fireEvent.press(screen.getByText('button.reset'))
+      await fireEvent.press(screen.getByText('button.reset'))
     })
     await act(async () => {
-      fireEvent.press(screen.getByText('button.apply'))
+      await fireEvent.press(screen.getByText('button.apply'))
     })
     // catatan: reset({}) RHF mempertahankan default awal, jadi activity_id tidak dikosongkan
     expect(onApply).toHaveBeenCalledTimes(1)
   })
 
-  it('daftar opsi default kosong dan tombol tutup', () => {
+  it('daftar opsi default kosong dan tombol tutup', async () => {
     const toggleSheet = jest.fn()
-    render(
+    await render(
       <SelfDisposalListFilterBottomSheet
         isOpen
         filter={{}}
@@ -91,16 +90,16 @@ describe('SelfDisposalListFilterBottomSheet', () => {
         toggleSheet={toggleSheet}
       />
     )
-    fireEvent.press(screen.getByText('label.all_filter'))
+    await fireEvent.press(screen.getByText('label.all_filter'))
     expect(screen.getByTestId('pickerselect-activity')).toBeTruthy()
   })
 })
 
 describe('DisposalShipmentFilterBottomSheet', () => {
-  const setup = (isSender: boolean, filter: any = {}) => {
+  const setup = async (isSender: boolean, filter: any = {}) => {
     const onApply = jest.fn()
     const toggleSheet = jest.fn()
-    render(
+    await render(
       <DisposalShipmentFilterBottomSheet
         isOpen
         filter={filter}
@@ -116,14 +115,16 @@ describe('DisposalShipmentFilterBottomSheet', () => {
   }
 
   it('pengirim memilih penerima (customer_id)', async () => {
-    const { onApply, toggleSheet } = setup(true)
-    fireEvent.press(
+    const { onApply, toggleSheet } = await setup(true)
+    await fireEvent.press(
       screen.getByTestId('daterangepicker-disposal-shipment-filter')
     )
-    fireEvent.press(screen.getByTestId('pickerselect-entity'))
-    fireEvent.press(screen.getByTestId('pickerselect-activity'))
+    await fireEvent.press(screen.getByTestId('pickerselect-entity'))
+    await fireEvent.press(screen.getByTestId('pickerselect-activity'))
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-disposal-shipment-filter'))
+      await fireEvent.press(
+        screen.getByTestId('btn-apply-disposal-shipment-filter')
+      )
     })
     expect(onApply).toHaveBeenCalledWith({
       from_date: '2025-01-01',
@@ -136,10 +137,12 @@ describe('DisposalShipmentFilterBottomSheet', () => {
   })
 
   it('penerima memilih pengirim (vendor_id)', async () => {
-    const { onApply } = setup(false)
-    fireEvent.press(screen.getByTestId('pickerselect-entity'))
+    const { onApply } = await setup(false)
+    await fireEvent.press(screen.getByTestId('pickerselect-entity'))
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-disposal-shipment-filter'))
+      await fireEvent.press(
+        screen.getByTestId('btn-apply-disposal-shipment-filter')
+      )
     })
     expect(onApply.mock.calls[0][0]).toMatchObject({
       vendor_id: 22,
@@ -148,37 +151,41 @@ describe('DisposalShipmentFilterBottomSheet', () => {
   })
 
   it('reset dan tutup', async () => {
-    const { toggleSheet, onApply } = setup(true, { customer_id: 11 })
+    const { toggleSheet, onApply } = await setup(true, { customer_id: 11 })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-reset-disposal-shipment-filter'))
+      await fireEvent.press(
+        screen.getByTestId('btn-reset-disposal-shipment-filter')
+      )
     })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-disposal-shipment-filter'))
+      await fireEvent.press(
+        screen.getByTestId('btn-apply-disposal-shipment-filter')
+      )
     })
     expect(onApply.mock.calls[0][0].customer_id).toBeUndefined()
-    fireEvent.press(screen.getByTestId('btn-close-filter'))
+    await fireEvent.press(screen.getByTestId('btn-close-filter'))
     expect(toggleSheet).toHaveBeenCalled()
   })
 })
 
 describe('useDisposalShipmentFilterForm', () => {
-  it('mereset form ke filter saat sheet dibuka', () => {
-    const { result, rerender } = renderHook(
+  it('mereset form ke filter saat sheet dibuka', async () => {
+    const { result, rerender } = await renderHook(
       ({ isOpen, filter }: any) =>
         useDisposalShipmentFilterForm({ filter, isOpen }),
       { initialProps: { isOpen: false, filter: { from_date: 'a' } } }
     )
     expect(result.current.form.from_date).toBe('a')
-    act(() =>
+    await act(() =>
       result.current.handleSelect('activity_id')({
         value: 4,
         label: 'x',
       } as any)
     )
     expect(result.current.form.activity_id).toBe(4)
-    rerender({ isOpen: true, filter: { from_date: 'b' } })
+    await rerender({ isOpen: true, filter: { from_date: 'b' } })
     expect(result.current.form.from_date).toBe('b')
-    act(() => result.current.handleResetFilter())
+    await act(() => result.current.handleResetFilter())
     expect(result.current.form.from_date).toBeUndefined()
   })
 })
@@ -195,8 +202,8 @@ describe('DisposalShipmentList', () => {
     },
   ]
 
-  it('menekan item menavigasi ke detail dengan isSender', () => {
-    render(
+  it('menekan item menavigasi ke detail dengan isSender', async () => {
+    await render(
       <DisposalShipmentList
         data={data}
         isSender
@@ -204,15 +211,15 @@ describe('DisposalShipmentList', () => {
         onEndReached={jest.fn()}
       />
     )
-    fireEvent.press(screen.getByTestId('disposal-KPM-4'))
+    await fireEvent.press(screen.getByTestId('disposal-KPM-4'))
     expect(navigate).toHaveBeenCalledWith('DisposalShipmentDetail', {
       id: 4,
       isSender: true,
     })
   })
 
-  it('kosong menampilkan empty state saat tidak memuat', () => {
-    render(
+  it('kosong menampilkan empty state saat tidak memuat', async () => {
+    await render(
       <DisposalShipmentList
         data={[]}
         isSender={false}
@@ -223,8 +230,8 @@ describe('DisposalShipmentList', () => {
     expect(screen.getByTestId('empty-state-disposal-shipment')).toBeTruthy()
   })
 
-  it('sedang memuat menyembunyikan empty state dan menampilkan loader', () => {
-    render(
+  it('sedang memuat menyembunyikan empty state dan menampilkan loader', async () => {
+    await render(
       <DisposalShipmentList
         data={[]}
         isSender={false}
@@ -235,9 +242,9 @@ describe('DisposalShipmentList', () => {
     expect(screen.queryByTestId('empty-state-disposal-shipment')).toBeNull()
   })
 
-  it('memicu onEndReached', () => {
+  it('memicu onEndReached', async () => {
     const onEnd = jest.fn()
-    render(
+    await render(
       <DisposalShipmentList
         data={data}
         isSender

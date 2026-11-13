@@ -21,8 +21,8 @@ const base: any = {
   total_price: 3000,
 }
 
-const setup = (over: any = {}, onDelete = jest.fn()) => {
-  render(
+const setup = async (over: any = {}, onDelete = jest.fn()) => {
+  await render(
     <ReviewTransferStockItem
       index={2}
       item={{ ...base, ...over }}
@@ -33,27 +33,29 @@ const setup = (over: any = {}, onDelete = jest.fn()) => {
 }
 
 describe('ReviewTransferStockItem', () => {
-  it('menampilkan detail lengkap dan menghapus lewat tombol', () => {
-    const onDelete = setup()
+  it('menampilkan detail lengkap dan menghapus lewat tombol', async () => {
+    const onDelete = await setup()
     expect(screen.getByText('Program X')).toBeTruthy()
     expect(screen.getByText('Aktivitas Tujuan')).toBeTruthy()
     expect(screen.getByText('label.expired_date')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('btn-delete-transfer-stock-item-2'))
+    await fireEvent.press(
+      screen.getByTestId('btn-delete-transfer-stock-item-2')
+    )
     expect(onDelete).toHaveBeenCalled()
   })
 
-  it('tanpa batch id menyembunyikan info batch', () => {
-    setup({ batch: { code: 'X' } })
+  it('tanpa batch id menyembunyikan info batch', async () => {
+    await setup({ batch: { code: 'X' } })
     expect(screen.queryByText('label.expired_date')).toBeNull()
   })
 
-  it('tanpa batch sama sekali tetap tampil', () => {
-    setup({ batch: undefined })
+  it('tanpa batch sama sekali tetap tampil', async () => {
+    await setup({ batch: undefined })
     expect(screen.queryByText('label.expired_date')).toBeNull()
   })
 
-  it('nilai kosong memakai tanda -', () => {
-    setup({
+  it('nilai kosong memakai tanda -', async () => {
+    await setup({
       program_name: undefined,
       destination_activity: undefined,
       budget_source: undefined,

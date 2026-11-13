@@ -1,6 +1,3 @@
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   '@/components/bottomsheet/BottomSheet',
   () => require('@/test-utils/misc-sheet').bottomSheetModule
@@ -15,10 +12,10 @@ import { fireEvent, render, screen, act } from '@testing-library/react-native'
 import StockTakingFilterBottomSheet from '../components/StockTakingFilterBottomSheet'
 
 describe('StockTakingFilterBottomSheet', () => {
-  const setup = (filter: any = { only_have_qty: 1 }, isOpen = true) => {
+  const setup = async (filter: any = { only_have_qty: 1 }, isOpen = true) => {
     const onApplyFilter = jest.fn()
     const toggleSheet = jest.fn()
-    const view = render(
+    const view = await render(
       <StockTakingFilterBottomSheet
         isOpen={isOpen}
         filter={filter}
@@ -30,10 +27,10 @@ describe('StockTakingFilterBottomSheet', () => {
   }
 
   it('menerapkan rentang tanggal dibuat lalu mengirim filter', async () => {
-    const { onApplyFilter, toggleSheet } = setup()
-    fireEvent.press(screen.getByTestId('daterangepicker-created-filter'))
+    const { onApplyFilter, toggleSheet } = await setup()
+    await fireEvent.press(screen.getByTestId('daterangepicker-created-filter'))
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-filter'))
+      await fireEvent.press(screen.getByTestId('btn-apply-filter'))
     })
     expect(onApplyFilter).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -46,10 +43,10 @@ describe('StockTakingFilterBottomSheet', () => {
   })
 
   it('menerapkan rentang tanggal kedaluwarsa', async () => {
-    const { onApplyFilter } = setup()
-    fireEvent.press(screen.getByTestId('daterangepicker-expired-filter'))
+    const { onApplyFilter } = await setup()
+    await fireEvent.press(screen.getByTestId('daterangepicker-expired-filter'))
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-filter'))
+      await fireEvent.press(screen.getByTestId('btn-apply-filter'))
     })
     expect(onApplyFilter).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -60,30 +57,30 @@ describe('StockTakingFilterBottomSheet', () => {
   })
 
   it('reset hanya menyisakan only_have_qty', async () => {
-    const { onApplyFilter } = setup({
+    const { onApplyFilter } = await setup({
       only_have_qty: 1,
       created_from: 'a',
       created_to: 'b',
     })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-reset-filter'))
+      await fireEvent.press(screen.getByTestId('btn-reset-filter'))
     })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-apply-filter'))
+      await fireEvent.press(screen.getByTestId('btn-apply-filter'))
     })
     const arg = onApplyFilter.mock.calls[0][0]
     expect(arg.created_from).toBeUndefined()
     expect(arg.only_have_qty).toBe(1)
   })
 
-  it('tombol tutup mengembalikan form dan menutup sheet', () => {
-    const { toggleSheet } = setup()
-    fireEvent.press(screen.getByTestId('btn-close-filter'))
+  it('tombol tutup mengembalikan form dan menutup sheet', async () => {
+    const { toggleSheet } = await setup()
+    await fireEvent.press(screen.getByTestId('btn-close-filter'))
     expect(toggleSheet).toHaveBeenCalled()
   })
 
-  it('tidak mereset form saat sheet tertutup', () => {
-    setup({ only_have_qty: 0 }, false)
+  it('tidak mereset form saat sheet tertutup', async () => {
+    await setup({ only_have_qty: 0 }, false)
     expect(screen.getByTestId('btn-apply-filter')).toBeTruthy()
   })
 })

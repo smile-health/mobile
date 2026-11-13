@@ -48,7 +48,7 @@ beforeEach(() => {
 
 describe('useRelocationMaterialDetailForm', () => {
   it('menghitung rekomendasi stok dari max, stok, dan unit distribusi', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({ data: material() })
     )
     // (20 - 5) / 2 dibulatkan ke atas = 8 -> 16
@@ -58,8 +58,8 @@ describe('useRelocationMaterialDetailForm', () => {
     await waitFor(() => expect(result.current.quantity).toBe(0))
   })
 
-  it('tanpa min max aktivitas rekomendasi nol dan tidak ada teks rekomendasi', () => {
-    const { result } = renderHook(() =>
+  it('tanpa min max aktivitas rekomendasi nol dan tidak ada teks rekomendasi', async () => {
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({
         data: material({ activityMinMax: [] }),
       })
@@ -68,8 +68,8 @@ describe('useRelocationMaterialDetailForm', () => {
     expect(result.current.getOrderRecommendation).toBe('')
   })
 
-  it('unit kosong memakai 1 dan stok melebihi max menghasilkan 0', () => {
-    const { result } = renderHook(() =>
+  it('unit kosong memakai 1 dan stok melebihi max menghasilkan 0', async () => {
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({
         data: material({
           consumption_unit_per_distribution_unit: undefined,
@@ -78,7 +78,7 @@ describe('useRelocationMaterialDetailForm', () => {
       })
     )
     expect(result.current.recommendedStock).toBe(20)
-    const over = renderHook(() =>
+    const over = await renderHook(() =>
       useRelocationMaterialDetailForm({ data: material({ total_qty: 99 }) })
     )
     expect(over.result.current.recommendedStock).toBe(0)
@@ -93,7 +93,7 @@ describe('useRelocationMaterialDetailForm', () => {
         material_hierarchy: [{ material_id: 1 }],
       },
     ]
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({ data: material() })
     )
     await waitFor(() => expect(result.current.quantity).toBe(6))
@@ -114,13 +114,13 @@ describe('useRelocationMaterialDetailForm', () => {
         material_hierarchy: [{ material_id: 1 }],
       },
     ]
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({
         data: material({ material_companion: [{ id: 1 }] }),
       })
     )
     await waitFor(() => expect(result.current.quantity).toBe(6))
-    act(() => result.current.handleSave())
+    await act(() => result.current.handleSave())
     const call = mockDispatch.mock.calls.find(
       (c) => c[0].type === 'setRelocations'
     )
@@ -137,12 +137,12 @@ describe('useRelocationMaterialDetailForm', () => {
   })
 
   it('simpan tanpa data relokasi lama memakai hierarki kosong dan id nol', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({
         data: material({ id: undefined, name: undefined }),
       })
     )
-    act(() => result.current.handleSave())
+    await act(() => result.current.handleSave())
     const call = mockDispatch.mock.calls.find(
       (c) => c[0].type === 'setRelocations'
     )
@@ -156,14 +156,14 @@ describe('useRelocationMaterialDetailForm', () => {
   })
 
   it('tombol simpan nonaktif tanpa qty, tanpa alasan, atau alasan lain kosong', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({ data: material() })
     )
     await waitFor(() => expect(result.current.isSaveDisabled).toBe(true))
     mockState.relocation.relocations = [
       { material_id: 10, ordered_qty: 4, reason_id: OTHER_REASON_ID },
     ]
-    const other = renderHook(() =>
+    const other = await renderHook(() =>
       useRelocationMaterialDetailForm({ data: material() })
     )
     await waitFor(() =>
@@ -172,12 +172,12 @@ describe('useRelocationMaterialDetailForm', () => {
     expect(other.result.current.isSaveDisabled).toBe(true)
   })
 
-  it('navigasi ke merek dagang menyimpan material induk', () => {
+  it('navigasi ke merek dagang menyimpan material induk', async () => {
     const data = material()
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useRelocationMaterialDetailForm({ data })
     )
-    act(() => result.current.handleNavigateToTrademark())
+    await act(() => result.current.handleNavigateToTrademark())
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'setParent',
       payload: data,

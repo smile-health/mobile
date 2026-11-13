@@ -68,8 +68,8 @@ const baseSection: any = [
   { data: [{ stock_id: 3, activity_id: 3 }] },
 ]
 const nav = { goBack: jest.fn() }
-const setup = (over: Partial<{ data: any; added: any[] }> = {}) =>
-  renderHook(() =>
+const setup = async (over: Partial<{ data: any; added: any[] }> = {}) =>
+  await renderHook(() =>
     useMaterialDetailDistReturn(
       over.data ?? data,
       1,
@@ -86,16 +86,16 @@ beforeEach(() => {
 })
 
 describe('useMaterialDetailDistReturn', () => {
-  it('rehydrate saat belum ada draft, tidak saat sudah ada', () => {
-    setup()
+  it('rehydrate saat belum ada draft, tidak saat sudah ada', async () => {
+    await setup()
     expect(rehydrateDraftFromStorage).toHaveBeenCalledWith(3, mockDispatch)
     jest.clearAllMocks()
     mockState.orders = { orders: [{ material_id: 7, data: [] }] }
-    setup()
+    await setup()
     expect(rehydrateDraftFromStorage).not.toHaveBeenCalled()
   })
 
-  it('default value dari draft & enrichedStocks menyaring stok sendiri/ditambahkan', () => {
+  it('default value dari draft & enrichedStocks menyaring stok sendiri/ditambahkan', async () => {
     mockState.orders = {
       orders: [
         {
@@ -104,7 +104,7 @@ describe('useMaterialDetailDistReturn', () => {
         },
       ],
     }
-    const { result } = setup({ added: [{ stock_id: 3 }] })
+    const { result } = await setup({ added: [{ stock_id: 3 }] })
     expect(result.current.quantityByStock[1]).toEqual({
       quantity: '4',
       stock_quality_id: 2,
@@ -124,9 +124,9 @@ describe('useMaterialDetailDistReturn', () => {
     })
   })
 
-  it('submit tanpa qty menampilkan error', () => {
-    const { result } = setup()
-    act(() => result.current.handleSubmit())
+  it('submit tanpa qty menampilkan error', async () => {
+    const { result } = await setup()
+    await act(() => result.current.handleSubmit())
     expect(showError).toHaveBeenCalledWith('error.complete_data')
     expect(mockDispatch).not.toHaveBeenCalled()
   })
@@ -140,9 +140,9 @@ describe('useMaterialDetailDistReturn', () => {
         },
       ],
     }
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.transformed).toHaveLength(1))
-    act(() => result.current.handleSubmit())
+    await act(() => result.current.handleSubmit())
     expect(setOrder).toHaveBeenCalledWith(
       expect.objectContaining({
         programId: 3,
@@ -160,8 +160,8 @@ describe('useMaterialDetailDistReturn', () => {
   })
 
   it('setValue memperbarui draft; stok tak dikenal & qty 0 disaring', async () => {
-    const { result } = setup()
-    act(() => {
+    const { result } = await setup()
+    await act(() => {
       result.current.setValue('quantityByStock.1.quantity' as any, '3')
       result.current.setValue('quantityByStock.2.quantity' as any, '0')
       result.current.setValue(
@@ -179,19 +179,19 @@ describe('useMaterialDetailDistReturn', () => {
     ).toBe('')
   })
 
-  it('toggle batch, bottom sheet & aktivitas lain', () => {
+  it('toggle batch, bottom sheet & aktivitas lain', async () => {
     mockStockByActivity = {
       data: [{ activity: { id: 1 } }, { activity: { id: 5 } }],
     }
-    const { result } = setup()
-    act(() => result.current.handleToggleBatch('a'))
+    const { result } = await setup()
+    await act(() => result.current.handleToggleBatch('a'))
     expect(result.current.selectedStockId).toBe('a')
-    act(() => result.current.handleToggleBatch('a'))
+    await act(() => result.current.handleToggleBatch('a'))
     expect(result.current.selectedStockId).toBeNull()
     expect(result.current.stockOtherActivity).toEqual([{ activity: { id: 5 } }])
-    act(() => result.current.setIsOpenActivityBottomSheet(true))
+    await act(() => result.current.setIsOpenActivityBottomSheet(true))
     expect(result.current.isOpenActivityBottomSheet).toBe(true)
-    act(() =>
+    await act(() =>
       result.current.handleSelectOtherActivtyStock({
         activity: { id: 5 },
       } as any)
@@ -201,9 +201,9 @@ describe('useMaterialDetailDistReturn', () => {
   })
 
   it('isAnyQtyExceedStock', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     expect(result.current.isAnyQtyExceedStock).toBe(false)
-    act(() => {
+    await act(() => {
       result.current.setValue(
         'quantityByStock.1' as any,
         { quantity: '5', stock_quality_id: null } as any
@@ -214,9 +214,9 @@ describe('useMaterialDetailDistReturn', () => {
     )
   })
 
-  it('tanpa data stockByActivity', () => {
+  it('tanpa data stockByActivity', async () => {
     mockStockByActivity = undefined
-    const { result } = setup()
+    const { result } = await setup()
     expect(result.current.stockOtherActivity).toBeUndefined()
   })
 })

@@ -101,7 +101,7 @@ beforeEach(() => {
 describe('useRelocationFinalReview', () => {
   it('membuat relokasi, mengosongkan draft, dan menavigasi ke detail', async () => {
     mockUnwrap.mockResolvedValue({ createdOrderId: 77 })
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
@@ -136,7 +136,7 @@ describe('useRelocationFinalReview', () => {
   it('tanggal kosong tidak mengirim required_date dan tanpa respons tidak apa-apa', async () => {
     mockRouteParams = { date: '', comment: 'c' }
     mockUnwrap.mockResolvedValue(null)
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
@@ -154,7 +154,7 @@ describe('useRelocationFinalReview', () => {
       relocations: [],
     }
     mockUnwrap.mockResolvedValue(null)
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
@@ -166,20 +166,20 @@ describe('useRelocationFinalReview', () => {
 
   it('bahan pendamping hilang dan setuju: buka dialog, tidak submit', async () => {
     mockMissing.value = { uniqueMissingCompanions: [{ id: 1 }], message: 'm' }
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation(true)
     })
     expect(result.current.dialogOpen).toBe(true)
     expect(mockCreate).not.toHaveBeenCalled()
-    act(() => result.current.toggleCancelDialog())
+    await act(() => result.current.toggleCancelDialog())
     expect(result.current.dialogOpen).toBe(false)
   })
 
   it('bahan pendamping hilang tanpa setuju tetap submit', async () => {
     mockMissing.value = { uniqueMissingCompanions: [{ id: 1 }], message: 'm' }
     mockUnwrap.mockResolvedValue(null)
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation(false)
     })
@@ -188,7 +188,7 @@ describe('useRelocationFinalReview', () => {
 
   it('sedang loading tidak submit ganda', async () => {
     mockLoading.value = true
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
@@ -197,7 +197,7 @@ describe('useRelocationFinalReview', () => {
 
   it('error API menampilkan pesan', async () => {
     mockUnwrap.mockRejectedValue(new Error('x'))
-    const { result } = renderHook(() => useRelocationFinalReview())
+    const { result } = await renderHook(() => useRelocationFinalReview())
     await act(async () => {
       await result.current.handleCreateRelocation()
     })
@@ -206,9 +206,9 @@ describe('useRelocationFinalReview', () => {
 })
 
 describe('useActivityNavigation', () => {
-  const run = (type: any, activities: any = {}) => {
+  const run = async (type: any, activities: any = {}) => {
     mockState.order = { activities }
-    return renderHook(() => useActivityNavigation(type))
+    return await renderHook(() => useActivityNavigation(type))
   }
 
   it.each([
@@ -216,7 +216,7 @@ describe('useActivityNavigation', () => {
     [ORDER_KEY.DISTRIBUTION, 'DistributionCustomerSelect'],
     [ORDER_KEY.RETURN, 'ReturnCustomerSelect'],
   ])('tipe %s menavigasi ke %s', async (type, screen) => {
-    const { result } = run(type)
+    const { result } = await run(type)
     await act(async () => {
       await result.current.handleSelectActivity({ id: 1 } as any)
     })
@@ -228,7 +228,7 @@ describe('useActivityNavigation', () => {
   })
 
   it('tipe tak dikenal hanya menyimpan aktivitas', async () => {
-    const { result } = run('lain')
+    const { result } = await run('lain')
     await act(async () => {
       await result.current.handleSelectActivity({ id: 1 } as any)
     })
@@ -237,7 +237,7 @@ describe('useActivityNavigation', () => {
 
   it('tanpa workspace tidak melakukan apa pun', async () => {
     mockState.workspace = { selectedWorkspace: undefined }
-    const { result } = run(ORDER_KEY.REGULAR)
+    const { result } = await run(ORDER_KEY.REGULAR)
     await act(async () => {
       await result.current.handleSelectActivity({ id: 1 } as any)
     })
@@ -245,26 +245,28 @@ describe('useActivityNavigation', () => {
   })
 
   it('draft dari aktivitas lain membuka modal dan bisa ditutup', async () => {
-    const { result } = run(ORDER_KEY.REGULAR, {
+    const { result } = await run(ORDER_KEY.REGULAR, {
       [ORDER_KEY.REGULAR]: { 5: { id: 99 } },
     })
     await act(async () => {
       await result.current.handleSelectActivity({ id: 1 } as any)
     })
     expect(result.current.isOpenModalExistOrder).toBe(true)
-    act(() => result.current.closeModalExistOrder())
+    await act(() => result.current.closeModalExistOrder())
     expect(result.current.isOpenModalExistOrder).toBe(false)
     expect(mockNavigate).not.toHaveBeenCalled()
   })
 
   it('draft aktivitas sama atau kosong tetap lanjut', async () => {
-    const same = run(ORDER_KEY.REGULAR, {
+    const same = await run(ORDER_KEY.REGULAR, {
       [ORDER_KEY.REGULAR]: { 5: { id: 1 } },
     })
     await act(async () => {
       await same.result.current.handleSelectActivity({ id: 1 } as any)
     })
-    const empty = run(ORDER_KEY.REGULAR, { [ORDER_KEY.REGULAR]: { 5: {} } })
+    const empty = await run(ORDER_KEY.REGULAR, {
+      [ORDER_KEY.REGULAR]: { 5: {} },
+    })
     await act(async () => {
       await empty.result.current.handleSelectActivity({ id: 1 } as any)
     })
@@ -273,9 +275,9 @@ describe('useActivityNavigation', () => {
 })
 
 describe('useActivityDraft', () => {
-  it('tanpa programId tidak memuat apa pun', () => {
+  it('tanpa programId tidak memuat apa pun', async () => {
     mockProgramId.value = 0
-    renderHook(() => useActivityDraft(ORDER_KEY.REGULAR as any))
+    await renderHook(() => useActivityDraft(ORDER_KEY.REGULAR as any))
     expect(helpers.loadExistingRegularActivity).not.toHaveBeenCalled()
   })
 
@@ -287,7 +289,7 @@ describe('useActivityDraft', () => {
       { a: 1 },
       { a: 2 },
     ])
-    renderHook(() => useActivityDraft(ORDER_KEY.REGULAR as any))
+    await renderHook(() => useActivityDraft(ORDER_KEY.REGULAR as any))
     await waitFor(() => expect(mockDispatch).toHaveBeenCalledTimes(3))
   })
 
@@ -296,7 +298,7 @@ describe('useActivityDraft', () => {
       null
     )
     ;(helpers.loadExistingDistributionDraft as jest.Mock).mockResolvedValue({})
-    renderHook(() => useActivityDraft(ORDER_KEY.DISTRIBUTION as any))
+    await renderHook(() => useActivityDraft(ORDER_KEY.DISTRIBUTION as any))
     await waitFor(() =>
       expect(helpers.loadExistingDistributionDraft).toHaveBeenCalled()
     )

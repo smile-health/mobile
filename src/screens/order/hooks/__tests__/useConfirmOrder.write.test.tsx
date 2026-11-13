@@ -56,9 +56,9 @@ const makeData = () => ({
   ],
 })
 
-const setup = (navigation: any = { navigate: jest.fn() }) => {
+const setup = async (navigation: any = { navigate: jest.fn() }) => {
   const data = makeData()
-  const hook = renderHook(() =>
+  const hook = await renderHook(() =>
     useConfirmOrder({ data: data as any, orderId: 5, t: t as any, navigation })
   )
   return { ...hook, navigation, data }
@@ -71,45 +71,45 @@ beforeEach(() => {
 })
 
 describe('useConfirmOrder', () => {
-  it('state awal: tanggal dari created_at dan flag loading', () => {
-    const { result } = setup()
+  it('state awal: tanggal dari created_at dan flag loading', async () => {
+    const { result } = await setup()
     expect(result.current.formattedDate).toBeInstanceOf(Date)
     expect(result.current.isLoadingValidate ?? true).toBe(true)
   })
 
-  it('updateItem mengubah item dan mengabaikan nilai sama', () => {
-    const { result } = setup()
+  it('updateItem mengubah item dan mengabaikan nilai sama', async () => {
+    const { result } = await setup()
     const before = result.current.orderItems
-    act(() => result.current.updateItem(0, 'qty', 4))
+    await act(() => result.current.updateItem(0, 'qty', 4))
     expect(result.current.orderItems).toBe(before)
-    act(() => result.current.updateItem(0, 'qty', 9))
+    await act(() => result.current.updateItem(0, 'qty', 9))
     expect(result.current.orderItems[0].qty).toBe(9)
   })
 
-  it('updateChildrenQty menghitung ulang ordered_qty parent; non-parent diabaikan', () => {
-    const { result } = setup()
-    act(() => result.current.updateChildrenQty(1, 21, '7'))
+  it('updateChildrenQty menghitung ulang ordered_qty parent; non-parent diabaikan', async () => {
+    const { result } = await setup()
+    await act(() => result.current.updateChildrenQty(1, 21, '7'))
     expect(result.current.orderItems[1].ordered_qty).toBe(12)
-    act(() => result.current.updateChildrenQty(0, 1, '3'))
+    await act(() => result.current.updateChildrenQty(0, 1, '3'))
     expect(result.current.orderItems[0].ordered_qty).toBe(4)
   })
 
-  it('handleDateChange mengubah tanggal form', () => {
-    const { result } = setup()
-    act(() => result.current.handleDateChange(new Date(2025, 5, 1)))
+  it('handleDateChange mengubah tanggal form', async () => {
+    const { result } = await setup()
+    await act(() => result.current.handleDateChange(new Date(2025, 5, 1)))
     expect(result.current.formattedDate?.getMonth()).toBe(5)
   })
 
-  it('toggle dialog', () => {
-    const { result } = setup()
+  it('toggle dialog', async () => {
+    const { result } = await setup()
     const open = () => result.current.dialogOpen
     expect(open()).toBe(false)
-    act(() => result.current.toggleConfirmOrderDialog())
+    await act(() => result.current.toggleConfirmOrderDialog())
     expect(open()).toBe(true)
   })
 
   it('confirm sukses mengirim payload confirm dan reset navigasi', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.onPressConfirmOrder()
     })
@@ -133,7 +133,7 @@ describe('useConfirmOrder', () => {
 
   it('confirm dengan error response memanggil showFormattedError', async () => {
     mockConfirm.mockResolvedValue({ error: { message: 'bad' } })
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.onPressConfirmOrder()
     })
@@ -143,7 +143,7 @@ describe('useConfirmOrder', () => {
 
   it('confirm exception: pesan error dan dialog tertutup (dengan/ tanpa message)', async () => {
     mockConfirm.mockRejectedValueOnce(new Error('net'))
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.onPressConfirmOrder()
     })
@@ -156,7 +156,7 @@ describe('useConfirmOrder', () => {
   })
 
   it('validate sukses, error response, dan exception', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.onPressValidateOrder()
     })
@@ -184,9 +184,9 @@ describe('useConfirmOrder', () => {
     expect(mockShowError).toHaveBeenCalledWith('x')
   })
 
-  it('review menavigasi dengan data ter-map', () => {
-    const { result, navigation, data } = setup()
-    act(() => result.current.onPressReviewOrder())
+  it('review menavigasi dengan data ter-map', async () => {
+    const { result, navigation, data } = await setup()
+    await act(() => result.current.onPressReviewOrder())
     const [route, params] = navigation.navigate.mock.calls[0]
     expect(route).toBe('EditOrderReview')
     expect(params.orderId).toBe(data.id)

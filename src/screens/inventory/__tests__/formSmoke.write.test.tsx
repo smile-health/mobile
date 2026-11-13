@@ -373,7 +373,7 @@ describe('inventory: komponen & layar dalam konteks form', () => {
             t: (k: string) => k,
           })
           try {
-            const screen = render(
+            const screen = await render(
               <Harness C={C} props={props} capture={(f: any) => (form = f)} />
             )
             await act(async () => {

@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default
@@ -33,20 +30,20 @@ const detailItem = {
 }
 
 describe('DisposalMaterialList', () => {
-  it('menampilkan item dan memanggil onPressMaterial', () => {
+  it('menampilkan item dan memanggil onPressMaterial', async () => {
     const onPress = jest.fn()
     const data = [stockItem(1, 'Alpha'), stockItem(2, 'Beta')]
-    render(
+    await render(
       <DisposalMaterialList data={data as any} onPressMaterial={onPress} />
     )
-    fireEvent.press(screen.getByText('Alpha'))
+    await fireEvent.press(screen.getByText('Alpha'))
     expect(onPress).toHaveBeenCalledWith(data[0])
     expect(screen.getByText('Beta')).toBeTruthy()
   })
 
-  it('mendukung item detail tanpa nama dan item tanpa material_id', () => {
+  it('mendukung item detail tanpa nama dan item tanpa material_id', async () => {
     const onPress = jest.fn()
-    render(
+    await render(
       <DisposalMaterialList
         data={
           [
@@ -63,9 +60,9 @@ describe('DisposalMaterialList', () => {
     expect(screen.toJSON()).toBeTruthy()
   })
 
-  it('menampilkan teks kosong dan memicu onEndReach', () => {
+  it('menampilkan teks kosong dan memicu onEndReach', async () => {
     const onEnd = jest.fn()
-    render(
+    await render(
       <DisposalMaterialList
         data={[]}
         onPressMaterial={jest.fn()}
@@ -79,8 +76,8 @@ describe('DisposalMaterialList', () => {
     list.props.onEndReached()
   })
 
-  it('onEndReached aman tanpa callback', () => {
-    render(
+  it('onEndReached aman tanpa callback', async () => {
+    await render(
       <DisposalMaterialList
         data={[stockItem(1, 'A')] as any}
         onPressMaterial={jest.fn()}
@@ -114,8 +111,8 @@ const batchStock: any = {
 }
 
 describe('DisposalStockBatchItem', () => {
-  it('menampilkan detail batch dan alasan', () => {
-    render(
+  it('menampilkan detail batch dan alasan', async () => {
+    await render(
       <DisposalStockBatchItem disposalStock={batchStock} isManagedInBatch />
     )
     expect(screen.getByText('BX1')).toBeTruthy()
@@ -123,8 +120,8 @@ describe('DisposalStockBatchItem', () => {
     expect(screen.getAllByText('disposal.reason_qty').length).toBe(2)
   })
 
-  it('tanpa batch dan qty 0 menampilkan placeholder', () => {
-    render(
+  it('tanpa batch dan qty 0 menampilkan placeholder', async () => {
+    await render(
       <DisposalStockBatchItem
         disposalStock={{
           ...batchStock,
@@ -139,8 +136,8 @@ describe('DisposalStockBatchItem', () => {
     expect(screen.getAllByText('-').length).toBe(2)
   })
 
-  it('batch ada tetapi tidak dikelola per batch dan tanpa manufaktur', () => {
-    render(
+  it('batch ada tetapi tidak dikelola per batch dan tanpa manufaktur', async () => {
+    await render(
       <DisposalStockBatchItem
         disposalStock={{
           ...batchStock,
@@ -155,8 +152,8 @@ describe('DisposalStockBatchItem', () => {
 
 describe('DisposalStockDetailBatchSection', () => {
   const detail: any = { material_id: 1, material: { name: 'M' } }
-  it('render section batch dengan header section', () => {
-    render(
+  it('render section batch dengan header section', async () => {
+    await render(
       <DisposalStockDetailBatchSection
         isBatch
         detail={detail}
@@ -172,8 +169,8 @@ describe('DisposalStockDetailBatchSection', () => {
     expect(screen.queryByText('empty')).toBeNull()
   })
 
-  it('bukan batch tidak menampilkan header section', () => {
-    render(
+  it('bukan batch tidak menampilkan header section', async () => {
+    await render(
       <DisposalStockDetailBatchSection
         isBatch={false}
         detail={detail}
@@ -197,26 +194,26 @@ describe('DisposalMaterialBatchItem', () => {
   }
   beforeEach(() => jest.clearAllMocks())
 
-  it('tanpa quantities: tombol tambah menavigasi ke AddDisposal', () => {
-    render(<DisposalMaterialBatchItem {...base} />)
-    fireEvent.press(screen.getByTestId('btn-add-disposal-qty-5'))
+  it('tanpa quantities: tombol tambah menavigasi ke AddDisposal', async () => {
+    await render(<DisposalMaterialBatchItem {...base} />)
+    await fireEvent.press(screen.getByTestId('btn-add-disposal-qty-5'))
     expect(navMock.navigate).toHaveBeenCalledWith(
       'AddDisposal',
       expect.objectContaining({ disposalStock: batchStock })
     )
   })
 
-  it('tombol tambah memakai onEdit jika ada', () => {
+  it('tombol tambah memakai onEdit jika ada', async () => {
     const onEdit = jest.fn()
-    render(<DisposalMaterialBatchItem {...base} onEdit={onEdit} />)
-    fireEvent.press(screen.getByTestId('btn-add-disposal-qty-5'))
+    await render(<DisposalMaterialBatchItem {...base} onEdit={onEdit} />)
+    await fireEvent.press(screen.getByTestId('btn-add-disposal-qty-5'))
     expect(onEdit).toHaveBeenCalled()
     expect(navMock.navigate).not.toHaveBeenCalled()
   })
 
-  it('dengan quantities menampilkan discard dan received serta tombol edit', () => {
+  it('dengan quantities menampilkan discard dan received serta tombol edit', async () => {
     const onEdit = jest.fn()
-    render(
+    await render(
       <DisposalMaterialBatchItem
         {...base}
         onEdit={onEdit}
@@ -240,12 +237,12 @@ describe('DisposalMaterialBatchItem', () => {
         }
       />
     )
-    fireEvent.press(screen.getByTestId('btn-edit-disposal-qty-5'))
+    await fireEvent.press(screen.getByTestId('btn-edit-disposal-qty-5'))
     expect(onEdit).toHaveBeenCalled()
   })
 
-  it('quantities kosong tidak menampilkan section dan toggle expand bekerja', () => {
-    render(
+  it('quantities kosong tidak menampilkan section dan toggle expand bekerja', async () => {
+    await render(
       <DisposalMaterialBatchItem
         {...base}
         expanded={false}
@@ -258,7 +255,7 @@ describe('DisposalMaterialBatchItem', () => {
         quantities={{ discard: [], received: [] } as any}
       />
     )
-    fireEvent.press(screen.getByText('Rutin'))
+    await fireEvent.press(screen.getByText('Rutin'))
     expect(onToggle).toHaveBeenCalledWith(5)
     expect(screen.queryByTestId('btn-edit-disposal-qty-5')).toBeTruthy()
   })

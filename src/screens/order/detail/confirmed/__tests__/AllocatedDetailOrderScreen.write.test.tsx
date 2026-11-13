@@ -11,13 +11,13 @@ const stub = (name: string, render?: (p: any) => any) => {
   const { Pressable, Text } = require('react-native')
   return {
     __esModule: true,
-    default: (p: any) => {
+    default: async (p: any) => {
       captured[name] = p
-      return render ? render(p) : <Text>{name}</Text>
+      return render ? await render(p) : <Text>{name}</Text>
     },
-    [name]: (p: any) => {
+    [name]: async (p: any) => {
       captured[name] = p
-      return render ? render(p) : <Text>{name}</Text>
+      return render ? await render(p) : <Text>{name}</Text>
     },
   }
 }
@@ -110,8 +110,8 @@ const makeHook = (over: any = {}) => ({
   status: { isBatch: false, isHierarchy: false, isLoadingMaterial: false },
   ...over,
 })
-const renderScreen = (data: any) =>
-  render(
+const renderScreen = async (data: any) =>
+  await render(
     <AllocatedDetailOrderScreen
       route={{ params: { detail, data } } as any}
       navigation={{} as any}
@@ -124,7 +124,7 @@ beforeEach(() => {
 })
 
 describe('AllocatedDetailOrderScreen', () => {
-  it('non-hierarki memakai stok material sendiri', () => {
+  it('non-hierarki memakai stok material sendiri', async () => {
     mockHook = makeHook({
       datas: {
         materialList: [
@@ -137,13 +137,13 @@ describe('AllocatedDetailOrderScreen', () => {
         draftData: [],
       },
     })
-    const { getByText } = renderScreen(makeData())
+    const { getByText } = await renderScreen(makeData())
     getByText('nonhier-8')
     getByText('nonhier-9')
     expect(captured.NonHier.isBatch).toBe(false)
   })
 
-  it('hierarki memfilter detail berdasar child dan memperkaya item', () => {
+  it('hierarki memfilter detail berdasar child dan memperkaya item', async () => {
     mockHook = makeHook({
       status: { isBatch: true, isHierarchy: true, isLoadingMaterial: true },
       datas: {
@@ -160,7 +160,7 @@ describe('AllocatedDetailOrderScreen', () => {
         draftData: [],
       },
     })
-    const { getByText, queryByText } = renderScreen(
+    const { getByText, queryByText } = await renderScreen(
       makeData({
         children: [
           {
@@ -185,7 +185,7 @@ describe('AllocatedDetailOrderScreen', () => {
     expect(captured.LoadingDialog.modalVisible).toBe(true)
   })
 
-  it('hierarki tanpa child yang cocok menghasilkan null di field tambahan', () => {
+  it('hierarki tanpa child yang cocok menghasilkan null di field tambahan', async () => {
     mockHook = makeHook({
       status: { isBatch: false, isHierarchy: true, isLoadingMaterial: false },
       datas: {
@@ -199,14 +199,14 @@ describe('AllocatedDetailOrderScreen', () => {
         draftData: [],
       },
     })
-    renderScreen(makeData({ children: [] }))
+    await renderScreen(makeData({ children: [] }))
     expect(captured.Hier.item).toMatchObject({
       qty: null,
       recommended_stock: null,
     })
   })
 
-  it('tanpa material cocok hanya menampilkan stok tambahan', () => {
+  it('tanpa material cocok hanya menampilkan stok tambahan', async () => {
     mockHook = makeHook({
       datas: {
         materialList: [{ material: { id: 77 } }],
@@ -214,15 +214,15 @@ describe('AllocatedDetailOrderScreen', () => {
         draftData: [],
       },
     })
-    const { queryByText } = renderScreen(makeData())
+    const { queryByText } = await renderScreen(makeData())
     expect(queryByText(/nonhier/)).toBeNull()
   })
 
-  it('tombol simpan, aktivitas stok, dan modal info memanggil aksi hook', () => {
-    const { getByText } = renderScreen(makeData())
-    fireEvent.press(getByText('button.save'))
+  it('tombol simpan, aktivitas stok, dan modal info memanggil aksi hook', async () => {
+    const { getByText } = await renderScreen(makeData())
+    await fireEvent.press(getByText('button.save'))
     expect(mockHook.actions.handleSaveAllocateStock).toHaveBeenCalled()
-    fireEvent.press(getByText('stock-activity'))
+    await fireEvent.press(getByText('stock-activity'))
     expect(mockHook.uiState.setIsActivitySheetOpen).toHaveBeenCalledWith(true)
     captured.SelectSheet.toggleSheet()
     expect(mockHook.uiState.setIsActivitySheetOpen).toHaveBeenCalledWith(false)

@@ -128,8 +128,8 @@ const makeState = (hier: any = 1) => ({
   },
 })
 
-const setup = (type = 'regular', params: any = {}) =>
-  renderHook(() =>
+const setup = async (type = 'regular', params: any = {}) =>
+  await renderHook(() =>
     useOrderFinalReview(
       {
         params: {
@@ -159,7 +159,7 @@ beforeEach(() => {
 
 describe('useOrderFinalReview', () => {
   it('buat order reguler: payload hierarkis, reset draft, navigasi', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleCreateOrder()
     })
@@ -202,7 +202,7 @@ describe('useOrderFinalReview', () => {
 
   it('tanpa hierarki: payload tidak memuat is_hierarchy', async () => {
     mockState = makeState(0)
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleCreateOrder()
     })
@@ -211,7 +211,7 @@ describe('useOrderFinalReview', () => {
   })
 
   it('respons kosong tidak melakukan apa-apa; error ditampilkan', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     mockM.createOrder.mockReturnValueOnce({
       unwrap: () => Promise.resolve(null),
     })
@@ -230,7 +230,7 @@ describe('useOrderFinalReview', () => {
 
   it('loading mencegah submit ganda untuk semua jenis order', async () => {
     mockLoading = { create: true, edit: false, dist: true, ret: true }
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleCreateOrder()
       await result.current.handleCreateDistributionOrder()
@@ -244,16 +244,16 @@ describe('useOrderFinalReview', () => {
 
   it('proses order: dialog bila ada material pendamping hilang, langsung buat bila tidak', async () => {
     mockMissing = { uniqueMissingCompanions: [{ id: 1 }], message: 'kurang' }
-    const { result } = setup()
-    act(() => result.current.handleProcessOrder())
+    const { result } = await setup()
+    await act(() => result.current.handleProcessOrder())
     expect(result.current.dialogOpen).toBe(true)
     expect(result.current.message).toBe('kurang')
     expect(mockM.createOrder).not.toHaveBeenCalled()
-    act(() => result.current.toogleCancelOrderDialog())
+    await act(() => result.current.toogleCancelOrderDialog())
     expect(result.current.dialogOpen).toBe(false)
 
     mockMissing = { uniqueMissingCompanions: [], message: '' }
-    const second = setup()
+    const second = await setup()
     await act(async () => {
       second.result.current.handleProcessOrder()
     })
@@ -261,7 +261,7 @@ describe('useOrderFinalReview', () => {
   })
 
   it('distribusi: payload dari orders, reset state, sales filter', async () => {
-    const { result } = setup('distribution')
+    const { result } = await setup('distribution')
     await act(async () => {
       await result.current.handleCreateDistributionOrder()
     })
@@ -291,7 +291,7 @@ describe('useOrderFinalReview', () => {
   })
 
   it('distribusi: respons kosong dan error', async () => {
-    const { result } = setup('distribution')
+    const { result } = await setup('distribution')
     mockM.dist.mockReturnValueOnce({ unwrap: () => Promise.resolve() })
     await act(async () => {
       await result.current.handleCreateDistributionOrder()
@@ -307,7 +307,7 @@ describe('useOrderFinalReview', () => {
   })
 
   it('retur: sukses, kosong, error, tanpa activeActivity', async () => {
-    const { result } = setup('return')
+    const { result } = await setup('return')
     await act(async () => {
       await result.current.handleCreateReturnOrder()
     })
@@ -334,7 +334,7 @@ describe('useOrderFinalReview', () => {
     expect(mockShowError).toHaveBeenCalledWith('msg:r')
 
     mockState.activity = { activeActivity: undefined }
-    const again = setup('return')
+    const again = await setup('return')
     await act(async () => {
       await again.result.current.handleCreateReturnOrder()
     })
@@ -342,7 +342,7 @@ describe('useOrderFinalReview', () => {
   })
 
   it('edit item order: sukses, error respons, exception', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleEditOrderItem()
     })
@@ -367,7 +367,7 @@ describe('useOrderFinalReview', () => {
   })
 
   it('tanpa datas memakai default order_items kosong', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useOrderFinalReview({ params: { orderId: 1 } }, 'regular')
     )
     await act(async () => {

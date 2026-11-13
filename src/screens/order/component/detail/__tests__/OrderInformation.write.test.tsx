@@ -51,51 +51,53 @@ const base: any = {
   customer: {},
 }
 
-const open = (order: any) => {
-  const r = render(<OrderInformation order={order} />)
-  fireEvent.press(r.getByTestId('btn-toggle-show-detail'))
+const open = async (order: any) => {
+  const r = await render(<OrderInformation order={order} />)
+  await fireEvent.press(r.getByTestId('btn-toggle-show-detail'))
   return r
 }
 
 describe('OrderInformation', () => {
-  it('judul memuat id; detail tersembunyi sebelum toggle', () => {
-    const { getByText, queryByText } = render(<OrderInformation order={base} />)
+  it('judul memuat id; detail tersembunyi sebelum toggle', async () => {
+    const { getByText, queryByText } = await render(
+      <OrderInformation order={base} />
+    )
     getByText(/55/)
     getByText('vendor-customer')
     getByText('button.show_all')
     expect(queryByText('history')).toBeNull()
   })
 
-  it('badge integrasi tampil bila client_key ada', () => {
-    const { getByText } = render(
+  it('badge integrasi tampil bila client_key ada', async () => {
+    const { getByText } = await render(
       <OrderInformation order={{ ...base, metadata: { client_key: 'sap' } }} />
     )
     getByText('badge-sap')
   })
 
-  it('toggle menampilkan detail lalu menyembunyikannya', () => {
-    const { getByText, queryByText, getByTestId } = open(base)
+  it('toggle menampilkan detail lalu menyembunyikannya', async () => {
+    const { getByText, queryByText, getByTestId } = await open(base)
     getByText('history')
     getByText('button.show_less')
-    fireEvent.press(getByTestId('btn-toggle-show-detail'))
+    await fireEvent.press(getByTestId('btn-toggle-show-detail'))
     expect(queryByText('history')).toBeNull()
   })
 
-  it('status pending: tanggal pengiriman/penerimaan tetap tampil karena kondisi OR', () => {
-    const { getByText } = open(base)
+  it('status pending: tanggal pengiriman/penerimaan tetap tampil karena kondisi OR', async () => {
+    const { getByText } = await open(base)
     getByText('label.delivery_type=Truck')
     getByText(/label.actual_shipment_date=/)
     getByText(/label.actual_receipt_date=/)
   })
 
-  it('status fulfilled: ada estimasi tiba dan pengambilan customer (ya/tidak)', () => {
-    const { getByText } = open({ ...base, status: 5 })
+  it('status fulfilled: ada estimasi tiba dan pengambilan customer (ya/tidak)', async () => {
+    const { getByText } = await open({ ...base, status: 5 })
     getByText(/label.estimated_arrival_date=/)
     getByText('label.customer_picked_up=common.yes')
   })
 
-  it('fulfilled tanpa pengambilan customer dan tanpa tanggal memakai "-"', () => {
-    const { getByText } = open({
+  it('fulfilled tanpa pengambilan customer dan tanpa tanggal memakai "-"', async () => {
+    const { getByText } = await open({
       ...base,
       status: 5,
       delivery_type: undefined,
@@ -111,12 +113,12 @@ describe('OrderInformation', () => {
     getByText('label.actual_shipment_date=-')
   })
 
-  it('timestamp: tanpa tanggal "-", dengan user diformat, user kosong aman', () => {
-    open({ ...base, user_created_by: undefined })
+  it('timestamp: tanpa tanggal "-", dengan user diformat, user kosong aman', async () => {
+    await open({ ...base, user_created_by: undefined })
     expect(mockHistoryProps.timestamps.confirmedAt).toBe('-')
     expect(mockHistoryProps.timestamps.createdAt).toMatch(/label\.by/)
     expect(mockHistoryProps.timestamps.createdAt).toMatch(/-$/)
-    open(base)
+    await open(base)
     expect(mockHistoryProps.timestamps.createdAt).toMatch(/Ann Lee$/)
   })
 })

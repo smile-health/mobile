@@ -111,7 +111,7 @@ beforeEach(() => {
 })
 
 describe('useAllocatedDetailOrder', () => {
-  it('memisahkan stok aktivitas sendiri dan aktivitas lain, plus merge draft', () => {
+  it('memisahkan stok aktivitas sendiri dan aktivitas lain, plus merge draft', async () => {
     const d = data({
       orderAllocations: [
         {
@@ -121,7 +121,9 @@ describe('useAllocatedDetailOrder', () => {
         },
       ],
     })
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, d))
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, d)
+    )
     expect(result.current.uiState.stockListData).toEqual([
       { id: 11, draft_allocated_qty: 4, draft_material_status: 'ok' },
       { id: 12 },
@@ -132,19 +134,25 @@ describe('useAllocatedDetailOrder', () => {
     expect(result.current.datas.materialList).toEqual(['m'])
   })
 
-  it('toggle info modal', () => {
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
-    act(() => result.current.actions.handleOpenInfoModal())
+  it('toggle info modal', async () => {
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
+    await act(() => result.current.actions.handleOpenInfoModal())
     expect(result.current.uiState.isOpenInfoModal).toBe(true)
-    act(() => result.current.actions.handleCloseInfoModal())
+    await act(() => result.current.actions.handleCloseInfoModal())
     expect(result.current.uiState.isOpenInfoModal).toBe(false)
   })
 
-  it('memilih stok dari aktivitas lain non-hierarki menambah semua detail', () => {
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
+  it('memilih stok dari aktivitas lain non-hierarki menambah semua detail', async () => {
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
     const item = result.current.uiState.activityStockData[0]
-    act(() => result.current.uiState.setIsActivitySheetOpen(true))
-    act(() => result.current.actions.handleSelectStockFromOtherActivity(item))
+    await act(() => result.current.uiState.setIsActivitySheetOpen(true))
+    await act(() =>
+      result.current.actions.handleSelectStockFromOtherActivity(item)
+    )
     expect(result.current.datas.additionalStockDetails).toHaveLength(2)
     expect(result.current.datas.additionalStockDetails[0].activity).toEqual({
       id: 2,
@@ -153,22 +161,28 @@ describe('useAllocatedDetailOrder', () => {
     expect(result.current.uiState.isActivitySheetOpen).toBe(false)
   })
 
-  it('hierarki memfilter detail berdasar children', () => {
+  it('hierarki memfilter detail berdasar children', async () => {
     mockWorkspace = {
       entity_id: 5,
       config: { material: { is_hierarchy_enabled: 1 } },
     }
     const d = data({ children: [{ material: { id: 7 } }] })
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, d))
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, d)
+    )
     expect(result.current.status.isHierarchy).toBe(true)
     const item = result.current.uiState.activityStockData[0]
-    act(() => result.current.actions.handleSelectStockFromOtherActivity(item))
+    await act(() =>
+      result.current.actions.handleSelectStockFromOtherActivity(item)
+    )
     expect(result.current.datas.additionalStockDetails).toHaveLength(1)
   })
 
-  it('item tanpa details hanya menutup sheet', () => {
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
-    act(() =>
+  it('item tanpa details hanya menutup sheet', async () => {
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
+    await act(() =>
       result.current.actions.handleSelectStockFromOtherActivity({
         activity: { id: 2 },
       })
@@ -176,14 +190,16 @@ describe('useAllocatedDetailOrder', () => {
     expect(result.current.datas.additionalStockDetails).toHaveLength(0)
   })
 
-  it('simpan gagal bila tidak ada alokasi valid', () => {
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
-    act(() => result.current.actions.handleSaveAllocateStock())
+  it('simpan gagal bila tidak ada alokasi valid', async () => {
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
+    await act(() => result.current.actions.handleSaveAllocateStock())
     expect(mockShowError).toHaveBeenCalledWith('error.complete_data')
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
-  it('simpan sukses: dispatch draft dan navigasi', () => {
+  it('simpan sukses: dispatch draft dan navigasi', async () => {
     mockForm = {
       order_items: [
         {
@@ -200,8 +216,10 @@ describe('useAllocatedDetailOrder', () => {
         },
       ],
     }
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
-    act(() => result.current.actions.handleSaveAllocateStock())
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
+    await act(() => result.current.actions.handleSaveAllocateStock())
     expect(mockDispatch).toHaveBeenCalledTimes(2)
     const draft = mockDispatch.mock.calls[1][0].payload
     expect(draft.total_draft_allocated_qty).toBe(5)
@@ -212,7 +230,7 @@ describe('useAllocatedDetailOrder', () => {
     })
   })
 
-  it('material sensitif butuh status stok', () => {
+  it('material sensitif butuh status stok', async () => {
     mockForm = {
       order_items: [
         { children: [{ allocations: [{ draft_allocated_qty: 2 }] }] },
@@ -221,27 +239,33 @@ describe('useAllocatedDetailOrder', () => {
     const d = data({
       material: { id: 7, name: 'M', is_temperature_sensitive: 1 },
     })
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, d))
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, d)
+    )
     expect(result.current.status.isMaterialSensitive).toBe(true)
-    act(() => result.current.actions.handleSaveAllocateStock())
+    await act(() => result.current.actions.handleSaveAllocateStock())
     expect(mockShowError).toHaveBeenCalled()
   })
 
-  it('alokasi valid tapi tanpa id lengkap tidak mengubah state', () => {
+  it('alokasi valid tapi tanpa id lengkap tidak mengubah state', async () => {
     mockForm = {
       order_items: [
         { children: [{ allocations: [{ draft_allocated_qty: 2 }] }] },
       ],
     }
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
-    act(() => result.current.actions.handleSaveAllocateStock())
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
+    await act(() => result.current.actions.handleSaveAllocateStock())
     expect(mockDispatch).not.toHaveBeenCalled()
     expect(mockShowError).not.toHaveBeenCalled()
   })
 
-  it('stockCustomerData kosong menghasilkan list kosong', () => {
+  it('stockCustomerData kosong menghasilkan list kosong', async () => {
     mockStockDetails = {}
-    const { result } = renderHook(() => useAllocatedDetailOrder(detail, base))
+    const { result } = await renderHook(() =>
+      useAllocatedDetailOrder(detail, base)
+    )
     expect(result.current.uiState.stockListData).toEqual([])
     expect(result.current.uiState.activityStockData).toEqual([])
   })

@@ -62,17 +62,17 @@ const hierData = {
   ],
 }
 
-const setup = (
+const setup = async (
   data: any = flatData,
   navigation: any = { goBack: jest.fn() }
 ) => {
   const route = { params: { data, orderId: 77 } }
-  const hook = renderHook(() => useReceiveOrder({ navigation, route }))
+  const hook = await renderHook(() => useReceiveOrder({ navigation, route }))
   return { ...hook, navigation }
 }
 
-const setItems = (r: any, items: any[]) =>
-  act(() => r.current.setValue('order_items', items))
+const setItems = async (r: any, items: any[]) =>
+  await act(() => r.current.setValue('order_items', items))
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -83,7 +83,7 @@ beforeEach(() => {
 
 describe('useReceiveOrder', () => {
   it('seed form flat dari order_stocks', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
     expect(result.current.form.order_items[0].receives[1]).toMatchObject({
       allocated_qty: 0,
@@ -96,22 +96,22 @@ describe('useReceiveOrder', () => {
 
   it('seed form hierarki dan flag hierarchy dari workspace', async () => {
     mockWorkspace = { config: { material: { is_hierarchy_enabled: 1 } } }
-    const { result } = setup(hierData)
+    const { result } = await setup(hierData)
     await waitFor(() =>
       expect(result.current.form.order_items[0].children).toHaveLength(1)
     )
     expect(result.current.isHierarchy).toBe(1)
   })
 
-  it('workspace tanpa config => isHierarchy false; tanpa data tidak seed', () => {
+  it('workspace tanpa config => isHierarchy false; tanpa data tidak seed', async () => {
     mockWorkspace = null
-    const { result } = setup(null)
+    const { result } = await setup(null)
     expect(result.current.isHierarchy).toBe(false)
     expect(result.current.data).toBeNull()
   })
 
   it('tombol terima nonaktif tanpa tanggal, aktif setelah tanggal diisi dan qty sesuai', async () => {
-    const { result } = setup({
+    const { result } = await setup({
       order_items: [
         {
           id: 1,
@@ -121,7 +121,7 @@ describe('useReceiveOrder', () => {
     })
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
     expect(result.current.isReceiveDisabled).toBe(true)
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
     await waitFor(() =>
@@ -136,26 +136,26 @@ describe('useReceiveOrder', () => {
     ['incomplete', { allocated_qty: 5, received_qty: '' }],
     ['undefined', { allocated_qty: 5 }],
   ])('qty %s menonaktifkan tombol', async (_n, receive) => {
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
-    setItems(result, [{ id: 1, receives: [{ stock_id: 1, ...receive }] }])
+    await setItems(result, [{ id: 1, receives: [{ stock_id: 1, ...receive }] }])
     await waitFor(() => expect(result.current.isReceiveDisabled).toBe(true))
   })
 
   it('semua nol menonaktifkan tombol (flat dan hierarki)', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
-    setItems(result, [
+    await setItems(result, [
       { id: 1, receives: [{ stock_id: 1, allocated_qty: 0, received_qty: 0 }] },
     ])
     await waitFor(() => expect(result.current.isReceiveDisabled).toBe(true))
-    setItems(result, [
+    await setItems(result, [
       {
         id: 1,
         children: [
@@ -171,7 +171,7 @@ describe('useReceiveOrder', () => {
   })
 
   it('submit tanpa tanggal memunculkan error field dan tidak memanggil API', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
     await act(async () => {
       await result.current.onConfirmReceiveOrder()
@@ -183,14 +183,14 @@ describe('useReceiveOrder', () => {
         'validation.required'
       )
     )
-    act(() => result.current.toggleDialog())
+    await act(() => result.current.toggleDialog())
     expect(result.current.isDialogOpen).toBe(false)
   })
 
   it('submit sukses (flat): payload benar, snackbar, goBack', async () => {
-    const { result, navigation } = setup()
+    const { result, navigation } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
     await waitFor(() => expect(result.current.form.fulfilled_at).toBeTruthy())
@@ -213,11 +213,11 @@ describe('useReceiveOrder', () => {
   })
 
   it('submit sukses (hierarki) membentuk children', async () => {
-    const { result } = setup(hierData)
+    const { result } = await setup(hierData)
     await waitFor(() =>
       expect(result.current.form.order_items[0].children).toBeDefined()
     )
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
     await waitFor(() => expect(result.current.form.fulfilled_at).toBeTruthy())
@@ -234,9 +234,9 @@ describe('useReceiveOrder', () => {
 
   it('response error menampilkan pesan error dan tidak goBack', async () => {
     mockReceive.mockResolvedValue({ error: { status: 500 } })
-    const { result, navigation } = setup()
+    const { result, navigation } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
     await waitFor(() => expect(result.current.form.fulfilled_at).toBeTruthy())
@@ -249,9 +249,9 @@ describe('useReceiveOrder', () => {
 
   it('exception dari mutation ditangani', async () => {
     mockReceive.mockRejectedValue(new Error('boom'))
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
     await waitFor(() => expect(result.current.form.fulfilled_at).toBeTruthy())
@@ -263,9 +263,9 @@ describe('useReceiveOrder', () => {
 
   it('saat loading submit tidak memanggil API', async () => {
     mockLoading = true
-    const { result } = setup()
+    const { result } = await setup()
     await waitFor(() => expect(result.current.form.order_items).toHaveLength(1))
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('fulfilled_at')(new Date(2025, 0, 2))
     )
     await waitFor(() => expect(result.current.form.fulfilled_at).toBeTruthy())

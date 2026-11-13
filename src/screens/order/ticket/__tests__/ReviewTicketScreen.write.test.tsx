@@ -18,8 +18,10 @@ jest.mock('../../hooks/useReviewTicket', () => ({
   useReviewTicket: () => mockHook,
 }))
 jest.mock('react-hook-form', () => ({
-  Controller: ({ render }: any) =>
-    render({ field: { onChange: mockOnChange, value: mockControllerValue } }),
+  Controller: async ({ render }: any) =>
+    await render({
+      field: { onChange: mockOnChange, value: mockControllerValue },
+    }),
 }))
 jest.mock('@/components/buttons', () => {
   const { Pressable, Text } = require('react-native')
@@ -122,65 +124,69 @@ beforeEach(() => {
 })
 
 describe('ReviewTicketScreen', () => {
-  it('render header, item, komentar; tanpa checkbox bila belum ada order', () => {
-    const { getByText, queryByText } = render(<ReviewTicketScreen />)
+  it('render header, item, komentar; tanpa checkbox bila belum ada order', async () => {
+    const { getByText, queryByText } = await render(<ReviewTicketScreen />)
     getByText('review-header')
     getByText('item-1')
     getByText('comment-section')
     expect(queryByText('label.request_to_cancel_the_order')).toBeNull()
   })
 
-  it('hapus material dari item', () => {
-    const { getByText } = render(<ReviewTicketScreen />)
-    fireEvent.press(getByText('item-2'))
+  it('hapus material dari item', async () => {
+    const { getByText } = await render(<ReviewTicketScreen />)
+    await fireEvent.press(getByText('item-2'))
     expect(mockHook.handleDeleteMaterial).toHaveBeenCalledWith({ id: 2 })
   })
 
-  it('tombol hapus semua dan kirim', () => {
-    const { getByText } = render(<ReviewTicketScreen />)
-    fireEvent.press(getByText('button.delete_all'))
+  it('tombol hapus semua dan kirim', async () => {
+    const { getByText } = await render(<ReviewTicketScreen />)
+    await fireEvent.press(getByText('button.delete_all'))
     expect(mockHook.handleDeleteAll).toHaveBeenCalled()
-    fireEvent.press(getByText('button.send'))
+    await fireEvent.press(getByText('button.send'))
     expect(mockHook.setShowConfirm).toHaveBeenCalledWith(true)
   })
 
-  it('dialog kirim: konfirmasi, batal, dismiss', () => {
+  it('dialog kirim: konfirmasi, batal, dismiss', async () => {
     mockHook = makeHook({ showConfirm: true })
-    const { getByText } = render(<ReviewTicketScreen />)
-    fireEvent.press(getByText('ok:dialog.confirm_send_ticket'))
+    const { getByText } = await render(<ReviewTicketScreen />)
+    await fireEvent.press(getByText('ok:dialog.confirm_send_ticket'))
     expect(mockHook.onSend).toHaveBeenCalled()
-    fireEvent.press(getByText('cancel:dialog.confirm_send_ticket'))
-    fireEvent.press(getByText('dismiss:dialog.confirm_send_ticket'))
+    await fireEvent.press(getByText('cancel:dialog.confirm_send_ticket'))
+    await fireEvent.press(getByText('dismiss:dialog.confirm_send_ticket'))
     expect(mockHook.setShowConfirm).toHaveBeenCalledTimes(2)
     expect(mockHook.setShowConfirm).toHaveBeenCalledWith(false)
   })
 
-  it('dialog hapus semua: konfirmasi, batal, dismiss', () => {
+  it('dialog hapus semua: konfirmasi, batal, dismiss', async () => {
     mockHook = makeHook({ showDeleteAllConfirm: true, isLoading: true })
-    const { getByText } = render(<ReviewTicketScreen />)
-    fireEvent.press(getByText('ok:dialog.confirm_delete_all_materials'))
+    const { getByText } = await render(<ReviewTicketScreen />)
+    await fireEvent.press(getByText('ok:dialog.confirm_delete_all_materials'))
     expect(mockHook.confirmDeleteAll).toHaveBeenCalled()
-    fireEvent.press(getByText('cancel:dialog.confirm_delete_all_materials'))
-    fireEvent.press(getByText('dismiss:dialog.confirm_delete_all_materials'))
+    await fireEvent.press(
+      getByText('cancel:dialog.confirm_delete_all_materials')
+    )
+    await fireEvent.press(
+      getByText('dismiss:dialog.confirm_delete_all_materials')
+    )
     expect(mockHook.setShowDeleteAllConfirm).toHaveBeenCalledTimes(2)
     getByText('loading:true')
   })
 
-  it('tiket terkirim: checkbox request cancel dan pesan wajib saat belum dicentang', () => {
+  it('tiket terkirim: checkbox request cancel dan pesan wajib saat belum dicentang', async () => {
     mockSel.formData = { isSubmitted: 1 }
-    const { getByText } = render(<ReviewTicketScreen />)
+    const { getByText } = await render(<ReviewTicketScreen />)
     getByText('validation.required')
-    fireEvent.press(getByText('label.request_to_cancel_the_order'))
+    await fireEvent.press(getByText('label.request_to_cancel_the_order'))
     expect(mockOnChange).toHaveBeenCalledWith(true)
   })
 
-  it('tiket terkirim dan sudah dicentang: tanpa pesan error', () => {
+  it('tiket terkirim dan sudah dicentang: tanpa pesan error', async () => {
     mockSel.formData = { isSubmitted: 1 }
     mockHook = makeHook({ requestCancelValue: true })
     mockControllerValue = true
-    const { queryByText, getByText } = render(<ReviewTicketScreen />)
+    const { queryByText, getByText } = await render(<ReviewTicketScreen />)
     expect(queryByText('validation.required')).toBeNull()
-    fireEvent.press(getByText('label.request_to_cancel_the_order'))
+    await fireEvent.press(getByText('label.request_to_cancel_the_order'))
     expect(mockOnChange).toHaveBeenCalledWith(false)
   })
 })

@@ -53,11 +53,11 @@ const batchData: any = {
 }
 
 describe('useAddMaterialOrBatch', () => {
-  it('mode batch: simpan batch dan kembali ke detail untuk material existing', () => {
-    const { result } = renderHook(() =>
+  it('mode batch: simpan batch dan kembali ke detail untuk material existing', async () => {
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(material, 'batch')
     )
-    act(() => result.current.handleSubmitToStore(batchData))
+    await act(() => result.current.handleSubmitToStore(batchData))
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'addBatch',
       payload: {
@@ -72,7 +72,7 @@ describe('useAddMaterialOrBatch', () => {
       },
     })
     expect(mockDispatch).toHaveBeenCalledWith({ type: 'ignore', payload: true })
-    act(() => {
+    await act(() => {
       jest.runAllTimers()
     })
     expect(mockNavigate).toHaveBeenCalledWith('TicketMaterialDetail', {
@@ -83,10 +83,12 @@ describe('useAddMaterialOrBatch', () => {
     expect(mockGoBack).not.toHaveBeenCalled()
   })
 
-  it('material baru (id timestamp): goBack; qty non-angka jadi 0; alasan kosong default', () => {
+  it('material baru (id timestamp): goBack; qty non-angka jadi 0; alasan kosong default', async () => {
     const fresh = { ...material, id: 1_800_000_000 }
-    const { result } = renderHook(() => useAddMaterialOrBatch(fresh, 'batch'))
-    act(() =>
+    const { result } = await renderHook(() =>
+      useAddMaterialOrBatch(fresh, 'batch')
+    )
+    await act(() =>
       result.current.handleSubmitToStore({
         batch_code: 'X',
         expired_date: 'd',
@@ -98,42 +100,42 @@ describe('useAddMaterialOrBatch', () => {
       reason: '',
       detail_reason: '',
     })
-    act(() => {
+    await act(() => {
       jest.runAllTimers()
     })
     expect(mockGoBack).toHaveBeenCalled()
   })
 
-  it('edit batch dengan kode berubah menghapus batch lama', () => {
-    const { result } = renderHook(() =>
+  it('edit batch dengan kode berubah menghapus batch lama', async () => {
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(material, 'batch', overrideOld)
     )
-    act(() => result.current.handleSubmitToStore(batchData))
+    await act(() => result.current.handleSubmitToStore(batchData))
     expect(mockDispatch.mock.calls[0][0]).toEqual({
       type: 'removeBatch',
       payload: { materialId: 5, batchCode: 'OLD' },
     })
   })
 
-  it('edit batch dengan kode sama tidak menghapus', () => {
-    const { result } = renderHook(() =>
+  it('edit batch dengan kode sama tidak menghapus', async () => {
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(material, 'batch', overrideSame)
     )
-    act(() => result.current.handleSubmitToStore(batchData))
+    await act(() => result.current.handleSubmitToStore(batchData))
     expect(mockDispatch.mock.calls[0][0].type).toBe('addBatch')
   })
 
-  it('mode non-batch: simpan material dengan data form tiket', () => {
+  it('mode non-batch: simpan material dengan data form tiket', async () => {
     const plain = {
       id: 6,
       name: 'P',
       is_managed_in_batch: false,
       batches: [],
     } as any
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(plain, 'non-batch')
     )
-    act(() => result.current.handleSubmitToStore({ qty: 9 } as any))
+    await act(() => result.current.handleSubmitToStore({ qty: 9 } as any))
     expect(mockDispatch.mock.calls[0][0].payload).toMatchObject({
       id: 6,
       qty: 9,
@@ -141,19 +143,19 @@ describe('useAddMaterialOrBatch', () => {
       arrivalDate: '2025-01-01',
       isSubmitted: 1,
     })
-    act(() => {
+    await act(() => {
       jest.runAllTimers()
     })
     expect(mockNavigate).toHaveBeenCalledWith('CreateTicket', { section: 2 })
   })
 
-  it('non-batch tanpa form data memakai string kosong', () => {
+  it('non-batch tanpa form data memakai string kosong', async () => {
     mockFormData = undefined
     const plain = { id: 6, name: 'P', is_managed_in_batch: false } as any
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(plain, 'non-batch')
     )
-    act(() => result.current.handleSubmitToStore({ qty: 1 } as any))
+    await act(() => result.current.handleSubmitToStore({ qty: 1 } as any))
     expect(mockDispatch.mock.calls[0][0].payload).toMatchObject({
       doNumber: '',
       arrivalDate: '',
@@ -161,10 +163,10 @@ describe('useAddMaterialOrBatch', () => {
   })
 
   it('tanggal diubah menjadi string terformat; getFieldError', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(material, 'batch')
     )
-    act(() =>
+    await act(() =>
       result.current.handleDateChange('expired_date')(new Date(2030, 0, 15))
     )
     await waitFor(() =>
@@ -185,7 +187,7 @@ describe('useAddMaterialOrBatch', () => {
       reason: '',
       detail_reason: '',
     }
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(material, 'batch', override)
     )
     await waitFor(() => expect(result.current.watch('batch_code')).toBe('Z'))
@@ -193,7 +195,7 @@ describe('useAddMaterialOrBatch', () => {
 
   it('mode non-batch memakai schema non-batch', async () => {
     const plain = { id: 6, name: 'P' } as any
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddMaterialOrBatch(plain, 'non-batch')
     )
     await act(async () => {

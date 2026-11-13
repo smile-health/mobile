@@ -35,11 +35,11 @@ let backCb: any
 let removeSpy: jest.Mock
 
 const makeNav = () => ({ navigate: jest.fn(), goBack: jest.fn() })
-const setup = (material: any, nav: any = makeNav()) => ({
+const setup = async (material: any, nav: any = makeNav()) => ({
   nav,
-  ...renderHook(() =>
+  ...(await renderHook(() =>
     useTicketMaterialDetail({ material, navigation: nav as any })
-  ),
+  )),
 })
 
 beforeEach(() => {
@@ -58,85 +58,89 @@ beforeEach(() => {
 })
 
 describe('useTicketMaterialDetail', () => {
-  it('material belum ada di store: ditambahkan dengan batches kosong', () => {
+  it('material belum ada di store: ditambahkan dengan batches kosong', async () => {
     const material = { id: 1, name: 'M', is_managed_in_batch: false }
-    setup(material)
+    await setup(material)
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'add',
       payload: { ...material, batches: [] },
     })
   })
 
-  it('material sudah ada: tidak ditambahkan lagi', () => {
+  it('material sudah ada: tidak ditambahkan lagi', async () => {
     const material = { id: 1, name: 'M' }
     mockMaterials = [material]
-    setup(material)
+    await setup(material)
     expect(mockDispatch).not.toHaveBeenCalled()
   })
 
-  it('konfigurasi field: non-batch punya reason/detail, batch tidak', () => {
-    const a = setup({ id: 1, name: 'M', is_managed_in_batch: false })
+  it('konfigurasi field: non-batch punya reason/detail, batch tidak', async () => {
+    const a = await setup({ id: 1, name: 'M', is_managed_in_batch: false })
     expect(a.result.current.fieldConfigs.reasonField?.data).toEqual([
       { value: 'r' },
     ])
     expect(a.result.current.fieldConfigs.detailReasonField?.data).toEqual([
       { value: 'd' },
     ])
-    const b = setup({ id: 2, name: 'B', is_managed_in_batch: true })
+    const b = await setup({ id: 2, name: 'B', is_managed_in_batch: true })
     expect(b.result.current.fieldConfigs.reasonField).toBeUndefined()
     expect(a.result.current.QUANTITY_FIELD_CONFIG.name).toBe('qty')
   })
 
-  it('getFieldError mengembalikan pesan atau string kosong', () => {
+  it('getFieldError mengembalikan pesan atau string kosong', async () => {
     mockErrors = { qty: { message: 'wajib' } }
-    const { result } = setup({ id: 1, name: 'M' })
+    const { result } = await setup({ id: 1, name: 'M' })
     expect(result.current.getFieldError('qty')).toBe('wajib')
     expect(result.current.getFieldError('reason')).toBe('')
     mockErrors = { qty: undefined }
   })
 
-  it('tombol nonaktif non-batch sampai qty, alasan, detail terisi', () => {
+  it('tombol nonaktif non-batch sampai qty, alasan, detail terisi', async () => {
     const material = { id: 1, name: 'M', is_managed_in_batch: false }
     mockMaterials = [material]
-    expect(setup(material).result.current.isButtonDisabled).toBeTruthy()
+    expect((await setup(material)).result.current.isButtonDisabled).toBeTruthy()
     mockWatched = { qty: 0, reason: 'r', detail_reason: 'd' }
-    expect(setup(material).result.current.isButtonDisabled).toBeTruthy()
+    expect((await setup(material)).result.current.isButtonDisabled).toBeTruthy()
     mockWatched = { qty: 2, reason: '', detail_reason: 'd' }
-    expect(setup(material).result.current.isButtonDisabled).toBeTruthy()
+    expect((await setup(material)).result.current.isButtonDisabled).toBeTruthy()
     mockWatched = { qty: 2, reason: 'r', detail_reason: '' }
-    expect(setup(material).result.current.isButtonDisabled).toBeTruthy()
+    expect((await setup(material)).result.current.isButtonDisabled).toBeTruthy()
     mockWatched = { qty: 2, reason: 'r', detail_reason: 'd' }
-    expect(setup(material).result.current.isButtonDisabled).toBeFalsy()
+    expect((await setup(material)).result.current.isButtonDisabled).toBeFalsy()
   })
 
-  it('tombol batch aktif bila ada batch di store', () => {
+  it('tombol batch aktif bila ada batch di store', async () => {
     const material = { id: 3, name: 'B', is_managed_in_batch: true }
     mockMaterials = [{ ...material, batches: [{ batch_code: 'a' }] }]
-    expect(setup(material).result.current.isButtonDisabled).toBe(false)
+    expect((await setup(material)).result.current.isButtonDisabled).toBe(false)
     mockMaterials = [{ ...material, batches: [] }]
-    expect(setup(material).result.current.isButtonDisabled).toBe(true)
+    expect((await setup(material)).result.current.isButtonDisabled).toBe(true)
     mockMaterials = []
-    expect(setup(material).result.current.currentMaterial).toBe(material)
+    expect((await setup(material)).result.current.currentMaterial).toBe(
+      material
+    )
   })
 
-  it('navigasi tambah/ubah batch dan hapus batch', () => {
+  it('navigasi tambah/ubah batch dan hapus batch', async () => {
     const material = { id: 3, name: 'B', is_managed_in_batch: true }
-    const { result, nav } = setup(material)
-    act(() => result.current.handleAddBatch())
+    const { result, nav } = await setup(material)
+    await act(() => result.current.handleAddBatch())
     expect(nav.navigate).toHaveBeenLastCalledWith('AddMaterialOrBatchScreen', {
       material,
       mode: 'batch',
       isEdit: false,
     })
-    act(() => result.current.handleEditBatch({ batch_code: 'x' } as any))
+    await act(() => result.current.handleEditBatch({ batch_code: 'x' } as any))
     expect(nav.navigate).toHaveBeenLastCalledWith('AddMaterialOrBatchScreen', {
       material,
       mode: 'batch',
       isEdit: true,
       batch: { batch_code: 'x' },
     })
-    act(() => result.current.handleDeleteBatch({ batch_code: 'x' } as any))
-    act(() => result.current.handleDeleteBatch({} as any))
+    await act(() =>
+      result.current.handleDeleteBatch({ batch_code: 'x' } as any)
+    )
+    await act(() => result.current.handleDeleteBatch({} as any))
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'removeBatch',
       payload: { materialId: 3, batchCode: 'x' },
@@ -146,25 +150,25 @@ describe('useTicketMaterialDetail', () => {
       payload: { materialId: 3, batchCode: '' },
     })
 
-    const plain = setup({ id: 4, name: 'P', is_managed_in_batch: false })
-    act(() => plain.result.current.handleAddBatch())
+    const plain = await setup({ id: 4, name: 'P', is_managed_in_batch: false })
+    await act(() => plain.result.current.handleAddBatch())
     expect(plain.nav.navigate).toHaveBeenLastCalledWith(
       'AddMaterialOrBatchScreen',
       expect.objectContaining({ mode: 'non-batch' })
     )
-    act(() => plain.result.current.handleEditBatch({} as any))
+    await act(() => plain.result.current.handleEditBatch({} as any))
     expect(plain.nav.navigate).toHaveBeenLastCalledWith(
       'AddMaterialOrBatchScreen',
       expect.objectContaining({ mode: 'non-batch', isEdit: true })
     )
   })
 
-  it('back hardware: batch kosong menghapus material, lalu ke CreateTicket', () => {
+  it('back hardware: batch kosong menghapus material, lalu ke CreateTicket', async () => {
     const material = { id: 3, name: 'B', is_managed_in_batch: true }
     mockMaterials = [{ ...material, batches: [] }]
-    const { nav } = setup(material)
+    const { nav } = await setup(material)
     let handled: any
-    act(() => {
+    await act(() => {
       handled = backCb()
     })
     expect(handled).toBe(true)
@@ -172,11 +176,11 @@ describe('useTicketMaterialDetail', () => {
     expect(nav.navigate).toHaveBeenCalledWith('CreateTicket', { section: 2 })
   })
 
-  it('back: batch berisi tidak dihapus; non-batch tanpa nama/qty dihapus', () => {
+  it('back: batch berisi tidak dihapus; non-batch tanpa nama/qty dihapus', async () => {
     const batch = { id: 3, name: 'B', is_managed_in_batch: true }
     mockMaterials = [{ ...batch, batches: [{ batch_code: 'a' }] }]
-    setup(batch)
-    act(() => backCb())
+    await setup(batch)
+    await act(() => backCb())
     expect(mockDispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: 'remove' })
     )
@@ -184,8 +188,8 @@ describe('useTicketMaterialDetail', () => {
     mockWatched = { qty: 5 }
     const ok = { id: 5, name: 'Ok', is_managed_in_batch: false }
     mockMaterials = [ok]
-    setup(ok)
-    act(() => backCb())
+    await setup(ok)
+    await act(() => backCb())
     expect(mockDispatch).not.toHaveBeenCalledWith(
       expect.objectContaining({ type: 'remove' })
     )
@@ -193,40 +197,40 @@ describe('useTicketMaterialDetail', () => {
     mockWatched = { qty: 0 }
     const blank = { id: 6, name: '  ', is_managed_in_batch: false }
     mockMaterials = [blank]
-    setup(blank)
-    act(() => backCb())
+    await setup(blank)
+    await act(() => backCb())
     expect(mockDispatch).toHaveBeenCalledWith({ type: 'remove', payload: 6 })
   })
 
-  it('non-batch dengan nama ada tapi qty nol juga dihapus; nama kosong (undefined)', () => {
+  it('non-batch dengan nama ada tapi qty nol juga dihapus; nama kosong (undefined)', async () => {
     mockWatched = { qty: 0 }
     const m = { id: 7, name: 'Ada', is_managed_in_batch: false }
     mockMaterials = [m]
-    setup(m)
-    act(() => backCb())
+    await setup(m)
+    await act(() => backCb())
     expect(mockDispatch).toHaveBeenCalledWith({ type: 'remove', payload: 7 })
     const n = { id: 8, is_managed_in_batch: false } as any
     mockMaterials = [n]
-    setup(n)
-    act(() => backCb())
+    await setup(n)
+    await act(() => backCb())
     expect(mockDispatch).toHaveBeenCalledWith({ type: 'remove', payload: 8 })
   })
 
-  it('goBack navigasi dioverride dan dikembalikan saat unmount', () => {
+  it('goBack navigasi dioverride dan dikembalikan saat unmount', async () => {
     const material = { id: 9, name: 'N', is_managed_in_batch: false }
     mockMaterials = [material]
     const nav = makeNav()
     const original = nav.goBack
-    const { unmount } = setup(material, nav)
+    const { unmount } = await setup(material, nav)
     expect(nav.goBack).not.toBe(original)
-    act(() => nav.goBack())
+    await act(() => nav.goBack())
     expect(nav.navigate).toHaveBeenCalledWith('CreateTicket', { section: 2 })
-    unmount()
+    await unmount()
     expect(nav.goBack).toBe(original)
     expect(removeSpy).toHaveBeenCalled()
   })
 
-  it('simpan batch: qty dijumlah dan alasan dikosongkan', () => {
+  it('simpan batch: qty dijumlah dan alasan dikosongkan', async () => {
     const material = { id: 3, name: 'B', is_managed_in_batch: true }
     mockMaterials = [
       {
@@ -234,8 +238,8 @@ describe('useTicketMaterialDetail', () => {
         batches: [{ batch_code: 'a', qty: 2 }, { batch_code: 'b' }],
       },
     ]
-    const { result, nav } = setup(material)
-    act(() => result.current.handleSaveMaterial())
+    const { result, nav } = await setup(material)
+    await act(() => result.current.handleSaveMaterial())
     const saved = mockDispatch.mock.calls.at(-1)[0].payload
     expect(saved).toMatchObject({
       qty: 2,
@@ -245,24 +249,24 @@ describe('useTicketMaterialDetail', () => {
     expect(nav.navigate).toHaveBeenCalledWith('CreateTicket', { section: 2 })
   })
 
-  it('simpan batch tanpa batches memakai array kosong', () => {
+  it('simpan batch tanpa batches memakai array kosong', async () => {
     const material = { id: 3, name: 'B', is_managed_in_batch: true }
     mockMaterials = [{ ...material }]
-    const { result } = setup(material)
-    act(() => result.current.handleSaveMaterial())
+    const { result } = await setup(material)
+    await act(() => result.current.handleSaveMaterial())
     expect(mockDispatch.mock.calls.at(-1)[0].payload).toMatchObject({
       qty: 0,
       batches: [],
     })
   })
 
-  it('simpan non-batch: qty bukan nol disimpan, qty nol hanya navigasi', () => {
+  it('simpan non-batch: qty bukan nol disimpan, qty nol hanya navigasi', async () => {
     const material = { id: 5, name: 'N', is_managed_in_batch: false }
     mockMaterials = [material]
     mockWatched = { qty: 4, reason: 'r', detail_reason: 'd' }
-    const a = setup(material)
+    const a = await setup(material)
     jest.clearAllMocks()
-    act(() => a.result.current.handleSaveMaterial())
+    await act(() => a.result.current.handleSaveMaterial())
     expect(mockDispatch.mock.calls.at(-1)[0].payload).toMatchObject({
       qty: 4,
       reason: 'r',
@@ -271,21 +275,21 @@ describe('useTicketMaterialDetail', () => {
     })
 
     mockWatched = { qty: 0 }
-    const b = setup(material)
+    const b = await setup(material)
     jest.clearAllMocks()
-    act(() => b.result.current.handleSaveMaterial())
+    await act(() => b.result.current.handleSaveMaterial())
     expect(mockDispatch).not.toHaveBeenCalled()
     expect(b.nav.navigate).toHaveBeenCalledWith('CreateTicket', { section: 2 })
   })
 
-  it('simpan tanpa material di store hanya navigasi', () => {
-    const { result, nav } = setup({
+  it('simpan tanpa material di store hanya navigasi', async () => {
+    const { result, nav } = await setup({
       id: 99,
       name: 'x',
       is_managed_in_batch: false,
     })
     jest.clearAllMocks()
-    act(() => result.current.handleSaveMaterial())
+    await act(() => result.current.handleSaveMaterial())
     expect(mockDispatch).not.toHaveBeenCalled()
     expect(nav.navigate).toHaveBeenCalledWith('CreateTicket', { section: 2 })
   })

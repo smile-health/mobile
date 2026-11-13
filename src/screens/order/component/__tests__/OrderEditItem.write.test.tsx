@@ -63,9 +63,9 @@ const item = (over: any = {}): any => ({
   ...over,
 })
 
-const setup = (h: any = {}, it: any = {}, props: any = {}) => {
+const setup = async (h: any = {}, it: any = {}, props: any = {}) => {
   mockHook.value = hook(h)
-  return render(
+  return await render(
     <OrderEditItem
       item={item(it)}
       index={0}
@@ -80,8 +80,8 @@ const setup = (h: any = {}, it: any = {}, props: any = {}) => {
 }
 
 describe('OrderEditItem', () => {
-  it('tampilan non-hierarki: qty, stok vendor, dan dropdown alasan', () => {
-    setup()
+  it('tampilan non-hierarki: qty, stok vendor, dan dropdown alasan', async () => {
+    await setup()
     expect(screen.getByText('Vaksin')).toBeTruthy()
     expect(screen.getByText('field:qty')).toBeTruthy()
     expect(screen.getByText('dropdown')).toBeTruthy()
@@ -89,44 +89,44 @@ describe('OrderEditItem', () => {
     expect(screen.queryByText('label.active_ingredient_material')).toBeNull()
   })
 
-  it('min/max null tampil tanda -', () => {
-    setup({ min: null, max: null })
+  it('min/max null tampil tanda -', async () => {
+    await setup({ min: null, max: null })
     expect(screen.getByText('range:-:-')).toBeTruthy()
   })
 
-  it('tipe validate memakai stok customer dan label validasi', () => {
-    setup({ isValidate: true }, {}, { type: ORDER_EDIT_TYPE.VALIDATE })
+  it('tipe validate memakai stok customer dan label validasi', async () => {
+    await setup({ isValidate: true }, {}, { type: ORDER_EDIT_TYPE.VALIDATE })
     expect(screen.getByText('field:qty')).toBeTruthy()
   })
 
-  it('mode edit memakai label order dan menyembunyikan error', () => {
-    setup({ isEdit: true, errors: { qty: { message: 'x' } } })
+  it('mode edit memakai label order dan menyembunyikan error', async () => {
+    await setup({ isEdit: true, errors: { qty: { message: 'x' } } })
     expect(screen.getByText('field:qty')).toBeTruthy()
   })
 
-  it('alasan lainnya menampilkan field teks', () => {
-    setup({ reason: OTHER_REASON_ID })
+  it('alasan lainnya menampilkan field teks', async () => {
+    await setup({ reason: OTHER_REASON_ID })
     expect(screen.getByText('field:other_reason_text')).toBeTruthy()
   })
 
-  it('tanpa dropdown alasan dan alasan item kosong', () => {
-    setup(
+  it('tanpa dropdown alasan dan alasan item kosong', async () => {
+    await setup(
       { shouldShowReasonDropdown: false, qty: 0 },
       { reason: undefined, stock_vendor: undefined }
     )
     expect(screen.queryByText('dropdown')).toBeNull()
   })
 
-  it('stok null diganti tanda -', () => {
-    setup(
+  it('stok null diganti tanda -', async () => {
+    await setup(
       {},
       { stock_vendor: { total_available_qty: null }, ordered_qty: null }
     )
     expect(screen.getByText('field:qty')).toBeTruthy()
   })
 
-  it('hierarki dengan anak: mode edit menampilkan dropdown dan anak', () => {
-    setup(
+  it('hierarki dengan anak: mode edit menampilkan dropdown dan anak', async () => {
+    await setup(
       { isMaterialHierarchy: true, isEdit: true },
       { children: [{ id: 11 }, { id: 12 }] }
     )
@@ -135,8 +135,8 @@ describe('OrderEditItem', () => {
     expect(screen.getByText('dropdown')).toBeTruthy()
   })
 
-  it('hierarki edit dengan alasan lainnya menampilkan field teks', () => {
-    setup(
+  it('hierarki edit dengan alasan lainnya menampilkan field teks', async () => {
+    await setup(
       { isMaterialHierarchy: true, isEdit: true, reason: OTHER_REASON_ID },
       { children: [{ id: 11 }] },
       { dataReason: [{ value: 'x', reason_id: 2 }] }
@@ -144,8 +144,8 @@ describe('OrderEditItem', () => {
     expect(screen.getByText('field:other_reason_text')).toBeTruthy()
   })
 
-  it('hierarki non-edit menampilkan baris alasan saja', () => {
-    setup(
+  it('hierarki non-edit menampilkan baris alasan saja', async () => {
+    await setup(
       { isMaterialHierarchy: true, isEdit: false, reason: OTHER_REASON_ID },
       { children: [{ id: 11 }] }
     )
@@ -153,8 +153,8 @@ describe('OrderEditItem', () => {
     expect(screen.queryByText('dropdown')).toBeNull()
   })
 
-  it('hierarki tanpa anak jatuh ke tampilan biasa', () => {
-    setup({ isMaterialHierarchy: true }, { children: undefined })
+  it('hierarki tanpa anak jatuh ke tampilan biasa', async () => {
+    await setup({ isMaterialHierarchy: true }, { children: undefined })
     expect(screen.getByText('field:qty')).toBeTruthy()
   })
 })

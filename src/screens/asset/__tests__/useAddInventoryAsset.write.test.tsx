@@ -90,8 +90,10 @@ beforeEach(() => {
 })
 
 describe('useAddInventoryAsset', () => {
-  it('nilai default dari data, entity dari program aktif', () => {
-    const { result } = renderHook(() => useAddInventoryAsset({ data: asset }))
+  it('nilai default dari data, entity dari program aktif', async () => {
+    const { result } = await renderHook(() =>
+      useAddInventoryAsset({ data: asset })
+    )
     expect(result.current.form).toMatchObject({
       asset_type_id: 1,
       ownership_status: 2,
@@ -103,8 +105,8 @@ describe('useAddInventoryAsset', () => {
     expect(result.current.form.warranty_start_date).toBeInstanceOf(Date)
   })
 
-  it('nilai default tanpa data & other_* menjadi 0', () => {
-    const { result } = renderHook(() => useAddInventoryAsset({}))
+  it('nilai default tanpa data & other_* menjadi 0', async () => {
+    const { result } = await renderHook(() => useAddInventoryAsset({}))
     expect(result.current.form.ownership_qty).toBe(1)
     expect(result.current.form.warranty_start_date).toBeNull()
     const other: any = {
@@ -114,7 +116,7 @@ describe('useAddInventoryAsset', () => {
       other_budget_source_name: 'b',
       other_borrowed_from_entity_name: 'c',
     }
-    const r2 = renderHook(() => useAddInventoryAsset({ data: other }))
+    const r2 = await renderHook(() => useAddInventoryAsset({ data: other }))
     expect(r2.result.current.form).toMatchObject({
       asset_type_id: 0,
       asset_model_id: 0,
@@ -124,9 +126,9 @@ describe('useAddInventoryAsset', () => {
     })
   })
 
-  it('handleSelect & handleDateChange mengisi form', () => {
-    const { result } = renderHook(() => useAddInventoryAsset({}))
-    act(() => {
+  it('handleSelect & handleDateChange mengisi form', async () => {
+    const { result } = await renderHook(() => useAddInventoryAsset({}))
+    await act(() => {
       result.current.handleSelect('asset_type_id')({
         label: 'a',
         value: 12,
@@ -141,7 +143,9 @@ describe('useAddInventoryAsset', () => {
 
   it('create sukses mengarahkan ke detail', async () => {
     mockCreate.mockReturnValue(unwrap({ id: 55 }))
-    const { result } = renderHook(() => useAddInventoryAsset({ data: asset }))
+    const { result } = await renderHook(() =>
+      useAddInventoryAsset({ data: asset })
+    )
     await act(async () => {
       await result.current.onSubmit({
         ...result.current.form,
@@ -164,7 +168,7 @@ describe('useAddInventoryAsset', () => {
 
   it('create tanpa tanggal & gagal menampilkan error; saat loading diabaikan', async () => {
     mockCreate.mockReturnValue(reject('boom'))
-    const { result } = renderHook(() => useAddInventoryAsset({}))
+    const { result } = await renderHook(() => useAddInventoryAsset({}))
     await act(async () => {
       await result.current.onSubmit({
         ...result.current.form,
@@ -177,7 +181,7 @@ describe('useAddInventoryAsset', () => {
     expect(mockCreate.mock.calls[0][0].warranty_end_date).toBeNull()
     expect(showError).toHaveBeenCalledWith('ERR:boom')
     mockLoading.create = true
-    const r2 = renderHook(() => useAddInventoryAsset({}))
+    const r2 = await renderHook(() => useAddInventoryAsset({}))
     await act(async () => {
       await r2.result.current.onSubmit({ ...r2.result.current.form } as any)
     })
@@ -187,7 +191,7 @@ describe('useAddInventoryAsset', () => {
 
   it('edit membersihkan field other_* sesuai pilihan', async () => {
     mockEdit.mockReturnValue(unwrap({}))
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddInventoryAsset({ data: asset, isEdit: true })
     )
     await act(async () => {
@@ -228,7 +232,9 @@ describe('useAddInventoryAsset', () => {
 
   it('edit dengan pilihan "lainnya" mempertahankan nilai other_*, dan peminjam non-nol membersihkan nama lain', async () => {
     mockEdit.mockReturnValue(unwrap({}))
-    const { result } = renderHook(() => useAddInventoryAsset({ isEdit: true }))
+    const { result } = await renderHook(() =>
+      useAddInventoryAsset({ isEdit: true })
+    )
     await act(async () => {
       await result.current.onSubmit({
         ...result.current.form,
@@ -267,13 +273,15 @@ describe('useAddInventoryAsset', () => {
 
   it('edit gagal & saat loading diabaikan', async () => {
     mockEdit.mockReturnValue(reject('nope'))
-    const { result } = renderHook(() => useAddInventoryAsset({ isEdit: true }))
+    const { result } = await renderHook(() =>
+      useAddInventoryAsset({ isEdit: true })
+    )
     await act(async () => {
       await result.current.onSubmit({ ...result.current.form } as any)
     })
     expect(showError).toHaveBeenCalledWith('ERR:nope')
     mockLoading.edit = true
-    const r2 = renderHook(() => useAddInventoryAsset({ isEdit: true }))
+    const r2 = await renderHook(() => useAddInventoryAsset({ isEdit: true }))
     await act(async () => {
       await r2.result.current.onSubmit({ ...r2.result.current.form } as any)
     })

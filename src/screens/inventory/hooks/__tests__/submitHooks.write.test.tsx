@@ -22,20 +22,20 @@ beforeEach(() => {
 })
 
 describe('useSubmitConsumption', () => {
-  it('menolak bila customer atau tanggal aktual kosong', () => {
-    const { result } = renderHook(() => useSubmitConsumption())
+  it('menolak bila customer atau tanggal aktual kosong', async () => {
+    const { result } = await renderHook(() => useSubmitConsumption())
     expect(() =>
       result.current.submitConsumption(program, [], activity, customer)
     ).toThrow()
-    act(() => result.current.setActualConsumptionDate('2025-01-01'))
+    await act(() => result.current.setActualConsumptionDate('2025-01-01'))
     expect(() =>
       result.current.submitConsumption(program, [], activity, undefined as any)
     ).toThrow()
   })
 
   it('membangun payload: stok biasa, open vial, pasien dengan urutan, pasien tanpa urutan', async () => {
-    const { result } = renderHook(() => useSubmitConsumption())
-    act(() => result.current.setActualConsumptionDate('2025-01-01'))
+    const { result } = await renderHook(() => useSubmitConsumption())
+    await act(() => result.current.setActualConsumptionDate('2025-01-01'))
     const trx: any[] = [
       { material_id: 1, change_qty: 2, stock_id: 5 },
       {
@@ -119,7 +119,7 @@ describe('useSubmitConsumption', () => {
 
 describe('useSubmitAddStock', () => {
   it('membangun payload batch baru, stok lama, dan nilai default', async () => {
-    const { result } = renderHook(() => useSubmitAddStock())
+    const { result } = await renderHook(() => useSubmitAddStock())
     const trx: any[] = [
       {
         material_id: 1,

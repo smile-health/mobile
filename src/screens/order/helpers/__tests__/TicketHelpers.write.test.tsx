@@ -38,30 +38,30 @@ describe('useCalculateTotalLeadTime', () => {
   )
   afterEach(() => jest.useRealTimers())
 
-  it('tanpa createdAt atau tanggal invalid', () => {
-    expect(renderHook(() => useCalculateTotalLeadTime()).result.current).toBe(
-      '00:00:00'
-    )
+  it('tanpa createdAt atau tanggal invalid', async () => {
     expect(
-      renderHook(() => useCalculateTotalLeadTime('bukan-tanggal')).result
-        .current
+      (await renderHook(() => useCalculateTotalLeadTime())).result.current
+    ).toBe('00:00:00')
+    expect(
+      (await renderHook(() => useCalculateTotalLeadTime('bukan-tanggal')))
+        .result.current
     ).toBe('00:00:00')
   })
 
-  it('tiket berjalan: durasi dihitung dari sekarang dan bertambah tiap detik', () => {
-    const { result } = renderHook(() =>
+  it('tiket berjalan: durasi dihitung dari sekarang dan bertambah tiap detik', async () => {
+    const { result } = await renderHook(() =>
       useCalculateTotalLeadTime('2025-01-01T00:00:00Z', undefined, 1)
     )
     const first = result.current
     expect(first).not.toBe('00:00:00')
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(2000)
     })
     expect(result.current).not.toBe(first)
   })
 
-  it('tiket selesai/batal memakai updatedAt dan tidak berdetak', () => {
-    const { result } = renderHook(() =>
+  it('tiket selesai/batal memakai updatedAt dan tidak berdetak', async () => {
+    const { result } = await renderHook(() =>
       useCalculateTotalLeadTime(
         '2025-01-01T00:00:00Z',
         '2025-01-01T00:00:30Z',
@@ -69,24 +69,28 @@ describe('useCalculateTotalLeadTime', () => {
       )
     )
     const v = result.current
-    act(() => {
+    await act(() => {
       jest.advanceTimersByTime(5000)
     })
     expect(result.current).toBe(v)
     expect(
-      renderHook(() =>
-        useCalculateTotalLeadTime('2025-01-01T00:00:00Z', undefined, 10)
+      (
+        await renderHook(() =>
+          useCalculateTotalLeadTime('2025-01-01T00:00:00Z', undefined, 10)
+        )
       ).result.current
     ).toBe('00:00:00')
     expect(
-      renderHook(() =>
-        useCalculateTotalLeadTime('2025-01-01T00:00:00Z', 'x', 10)
+      (
+        await renderHook(() =>
+          useCalculateTotalLeadTime('2025-01-01T00:00:00Z', 'x', 10)
+        )
       ).result.current
     ).toBe('00:00:00')
   })
 
-  it('createdAt di masa depan memberi 00:00:00', () => {
-    const { result } = renderHook(() =>
+  it('createdAt di masa depan memberi 00:00:00', async () => {
+    const { result } = await renderHook(() =>
       useCalculateTotalLeadTime('2030-01-01T00:00:00Z', undefined, 1)
     )
     expect(result.current).toBe('00:00:00')

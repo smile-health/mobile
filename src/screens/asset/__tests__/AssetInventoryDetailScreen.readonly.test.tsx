@@ -78,26 +78,26 @@ const sparse: any = {
 describe('AssetInventoryDetailScreen', () => {
   beforeEach(() => jest.clearAllMocks())
 
-  it('loading', () => {
+  it('loading', async () => {
     mockHook = { ...base, isLoadingDetail: true }
-    render(<AssetInventoryDetailScreen {...props} />)
+    await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.queryByText('Asset not found')).toBeNull()
     expect(mockRefetch).toHaveBeenCalled()
   })
 
-  it('error / tidak ada data', () => {
+  it('error / tidak ada data', async () => {
     mockHook = { ...base, isError: true, assetDetail: full }
-    render(<AssetInventoryDetailScreen {...props} />)
+    await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getByText('Asset not found')).toBeTruthy()
     mockHook = { ...base, assetDetail: undefined }
     cleanup()
-    render(<AssetInventoryDetailScreen {...props} />)
+    await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getByText('Asset not found')).toBeTruthy()
   })
 
-  it('data lengkap menampilkan nilai', () => {
+  it('data lengkap menampilkan nilai', async () => {
     mockHook = { ...base, assetDetail: full }
-    render(<AssetInventoryDetailScreen {...props} />)
+    await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getByText('TypeA')).toBeTruthy()
     expect(screen.getByText('ModelA')).toBeTruthy()
     expect(screen.getByText('Working')).toBeTruthy()
@@ -105,15 +105,15 @@ describe('AssetInventoryDetailScreen', () => {
     expect(screen.getByText('Borrow')).toBeTruthy()
   })
 
-  it('data minim memakai fallback other_* dan "-"', () => {
+  it('data minim memakai fallback other_* dan "-"', async () => {
     mockHook = { ...base, assetDetail: sparse }
-    render(<AssetInventoryDetailScreen {...props} />)
+    await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getByText('OtherType')).toBeTruthy()
     expect(screen.getByText('OtherModel')).toBeTruthy()
     expect(screen.getAllByText('-').length).toBeGreaterThan(3)
   })
 
-  it('varian kepemilikan, kontak & status berbeda', () => {
+  it('varian kepemilikan, kontak & status berbeda', async () => {
     mockHook = {
       ...base,
       assetDetail: {
@@ -128,7 +128,7 @@ describe('AssetInventoryDetailScreen', () => {
         status: 0,
       },
     }
-    render(<AssetInventoryDetailScreen {...props} />)
+    await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getAllByText('-').length).toBeGreaterThan(3)
   })
 })

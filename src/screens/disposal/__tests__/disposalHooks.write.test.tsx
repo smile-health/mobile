@@ -63,8 +63,8 @@ describe('useAddDisposalForm', () => {
     store.dispatch(clearDisposal())
   })
 
-  it('membangun section dan nilai default dari stok', () => {
-    const { result } = renderHook(() =>
+  it('membangun section dan nilai default dari stok', async () => {
+    const { result } = await renderHook(() =>
       useAddDisposalForm({ disposalStock: stock, type: 'self' as any })
     )
     expect(result.current.sections).toHaveLength(2)
@@ -82,8 +82,8 @@ describe('useAddDisposalForm', () => {
     expect(result.current.isSaveEnabled).toBe(false)
   })
 
-  it('stok tanpa disposals menghasilkan section kosong', () => {
-    const { result } = renderHook(() =>
+  it('stok tanpa disposals menghasilkan section kosong', async () => {
+    const { result } = await renderHook(() =>
       useAddDisposalForm({
         disposalStock: { id: 1 } as any,
         type: 'self' as any,
@@ -94,7 +94,7 @@ describe('useAddDisposalForm', () => {
   })
 
   it('menyimpan hanya qty > 0 ke store lalu kembali', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddDisposalForm({ disposalStock: stock, type: 'self' as any })
     )
     await act(async () => {
@@ -114,7 +114,7 @@ describe('useAddDisposalForm', () => {
   })
 
   it('qty melebihi max membuat save tidak aktif dan tidak tersimpan', async () => {
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddDisposalForm({ disposalStock: stock, type: 'self' as any })
     )
     await act(async () => {
@@ -147,7 +147,7 @@ describe('useAddDisposalForm', () => {
         },
       } as any)
     )
-    const { result } = renderHook(() =>
+    const { result } = await renderHook(() =>
       useAddDisposalForm({ disposalStock: stock, type: 'self' as any })
     )
     await act(async () => {})
@@ -196,7 +196,7 @@ describe('useReviewSelfDisposal', () => {
     )
     store.dispatch(saveMaterialDisposal({ selectedActivityStocks: [] }))
     mockCreate.mockReturnValue({ unwrap: () => Promise.resolve({}) })
-    const { result } = renderHook(() => useReviewSelfDisposal())
+    const { result } = await renderHook(() => useReviewSelfDisposal())
     expect(result.current.disposalItems).toHaveLength(2)
     await act(async () => {
       await result.current.submitData('RPT-1', '')
@@ -225,7 +225,7 @@ describe('useReviewSelfDisposal', () => {
     mockCreate.mockReturnValue({
       unwrap: () => Promise.reject(new Error('gagal')),
     })
-    const { result } = renderHook(() => useReviewSelfDisposal())
+    const { result } = await renderHook(() => useReviewSelfDisposal())
     await act(async () => {
       await result.current.submitData('R', 'catatan')
     })
@@ -235,7 +235,7 @@ describe('useReviewSelfDisposal', () => {
 
   it('tidak mengirim saat masih loading', async () => {
     mockCreate.isLoadingFlag = true
-    const { result } = renderHook(() => useReviewSelfDisposal())
+    const { result } = await renderHook(() => useReviewSelfDisposal())
     await act(async () => {
       await result.current.submitData('R', 'c')
     })
@@ -272,8 +272,8 @@ describe('useSelfDisposalList', () => {
     mockInfinite.mockReturnValue(base)
   })
 
-  it('mengelompokkan per tanggal dan mengurutkan menurun', () => {
-    const { result } = renderHook(() => useSelfDisposalList())
+  it('mengelompokkan per tanggal dan mengurutkan menurun', async () => {
+    const { result } = await renderHook(() => useSelfDisposalList())
     const titles = result.current.sections.map((s) => s.title)
     expect(titles).toHaveLength(3)
     expect(titles).toContain('Unknown Date')
@@ -282,36 +282,36 @@ describe('useSelfDisposalList', () => {
     expect(result.current.shouldShowLoading).toBe(false)
   })
 
-  it('tanpa data menghasilkan section kosong dan page 1', () => {
+  it('tanpa data menghasilkan section kosong dan page 1', async () => {
     mockInfinite.mockReturnValue({ ...base, data: undefined, isLoading: true })
-    const { result } = renderHook(() => useSelfDisposalList())
+    const { result } = await renderHook(() => useSelfDisposalList())
     expect(result.current.sections).toEqual([])
     expect(result.current.page).toBe(1)
     expect(result.current.shouldShowLoading).toBe(true)
   })
 
-  it('handler filter, refresh, dan load more', () => {
-    const { result } = renderHook(() => useSelfDisposalList())
-    act(() => result.current.handleToggleFilter())
+  it('handler filter, refresh, dan load more', async () => {
+    const { result } = await renderHook(() => useSelfDisposalList())
+    await act(() => result.current.handleToggleFilter())
     expect(result.current.isOpenFilter).toBe(true)
-    act(() => result.current.handleApplyFilter({ material_id: 1 } as any))
+    await act(() => result.current.handleApplyFilter({ material_id: 1 } as any))
     expect(result.current.isOpenFilter).toBe(false)
     expect(result.current.filter).toEqual({ material_id: 1 })
-    act(() => result.current.handleResetFilter())
+    await act(() => result.current.handleResetFilter())
     expect(result.current.filter).toEqual({})
-    act(() => result.current.handleRefreshList())
+    await act(() => result.current.handleRefreshList())
     expect(refetch).toHaveBeenCalled()
-    act(() => result.current.handleLoadMore())
+    await act(() => result.current.handleLoadMore())
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
   })
 
-  it('load more tidak jalan saat tidak ada halaman berikut atau sedang fetch', () => {
+  it('load more tidak jalan saat tidak ada halaman berikut atau sedang fetch', async () => {
     mockInfinite.mockReturnValue({ ...base, hasNextPage: false })
-    const { result, rerender } = renderHook(() => useSelfDisposalList())
-    act(() => result.current.handleLoadMore())
+    const { result, rerender } = await renderHook(() => useSelfDisposalList())
+    await act(() => result.current.handleLoadMore())
     mockInfinite.mockReturnValue({ ...base, isFetchingNextPage: true })
-    rerender({})
-    act(() => result.current.handleLoadMore())
+    await rerender({})
+    await act(() => result.current.handleLoadMore())
     expect(fetchNextPage).not.toHaveBeenCalled()
   })
 })

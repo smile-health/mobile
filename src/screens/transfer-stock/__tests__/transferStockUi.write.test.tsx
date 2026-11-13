@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default
@@ -67,25 +64,25 @@ describe('TransferStockProgramScreen', () => {
 
   beforeEach(() => jest.clearAllMocks())
 
-  it('menampilkan daftar program dan memanggil handleSelectProgram', () => {
-    render(<Wrapper hook={base} />)
-    fireEvent.press(screen.getByText('Prog A'))
+  it('menampilkan daftar program dan memanggil handleSelectProgram', async () => {
+    await render(<Wrapper hook={base} />)
+    await fireEvent.press(screen.getByText('Prog A'))
     expect(base.handleSelectProgram).toHaveBeenCalled()
     expect(screen.getByText('Prog B')).toBeTruthy()
   })
 
-  it('mendaftarkan toolbar dengan judul dan aksi refresh', () => {
-    render(<Wrapper hook={base} />)
+  it('mendaftarkan toolbar dengan judul dan aksi refresh', async () => {
+    await render(<Wrapper hook={base} />)
     expect((useToolbar as jest.Mock).mock.calls[0][0].title).toBe('Transfer')
   })
 
-  it('dialog transaksi draft tampil dan bisa ditutup', () => {
-    render(
+  it('dialog transaksi draft tampil dan bisa ditutup', async () => {
+    await render(
       <Wrapper
         hook={{ ...base, isOpenModalExistTrx: true, draftProgram: undefined }}
       />
     )
-    fireEvent.press(screen.getByText('button.ok'))
+    await fireEvent.press(screen.getByText('button.ok'))
     expect(base.closeModalExistTrx).toHaveBeenCalled()
   })
 })
@@ -108,8 +105,8 @@ const item: any = {
 }
 
 describe('TransferStockFormItem', () => {
-  const renderItem = (it: any, props: any = {}, onForm?: any) =>
-    render(
+  const renderItem = async (it: any, props: any = {}, onForm?: any) =>
+    await render(
       <FormWrapper
         defaultValues={{ items: { activeBatch: [it], expiredBatch: [] } }}
         onForm={onForm}>
@@ -122,31 +119,31 @@ describe('TransferStockFormItem', () => {
       </FormWrapper>
     )
 
-  it('menampilkan detail batch dan toggle', () => {
+  it('menampilkan detail batch dan toggle', async () => {
     const onToggle = jest.fn()
-    renderItem(item, { onToggleDetail: onToggle })
+    await renderItem(item, { onToggleDetail: onToggle })
     expect(screen.getByText('BC')).toBeTruthy()
     expect(screen.getByText('APBN')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('stock-5'))
+    await fireEvent.press(screen.getByTestId('stock-5'))
     expect(onToggle).toHaveBeenCalled()
   })
 
   it('mengubah qty: nilai terisi, lalu dikosongkan', async () => {
     let methods: any
-    renderItem(item, {}, (m: any) => (methods = m))
+    await renderItem(item, {}, (m: any) => (methods = m))
     const input = screen.getByTestId('textfield-transfer-stock-qty-5')
     await act(async () => {
-      fireEvent.changeText(input, '7')
+      await fireEvent.changeText(input, '7')
     })
     expect(methods.getValues('items.activeBatch.0.change_qty')).toBe(7)
     await act(async () => {
-      fireEvent.changeText(input, '')
+      await fireEvent.changeText(input, '')
     })
     expect(methods.getValues('items.activeBatch.0.change_qty')).toBeNull()
   })
 
-  it('tanpa batch, tanpa anggaran, collapse dinonaktifkan', () => {
-    renderItem(
+  it('tanpa batch, tanpa anggaran, collapse dinonaktifkan', async () => {
+    await renderItem(
       {
         ...item,
         batch: null,
@@ -204,25 +201,25 @@ describe('CreateTransferStockScreen', () => {
     )
   }
 
-  it('tombol simpan dan next material memanggil handler', () => {
-    render(<Harness />)
+  it('tombol simpan dan next material memanggil handler', async () => {
+    await render(<Harness />)
     const hook = (Harness as any).hook
-    fireEvent.press(screen.getByTestId('btn-save-transfer-stock'))
+    await fireEvent.press(screen.getByTestId('btn-save-transfer-stock'))
     expect(hook.handleSaveTransferStock).toHaveBeenCalled()
-    fireEvent.press(screen.getByTestId('btn-next-material-tranfer-stock'))
+    await fireEvent.press(screen.getByTestId('btn-next-material-tranfer-stock'))
     expect(hook.handleNextMaterial).toHaveBeenCalled()
     expect(screen.getByText('active_batch')).toBeTruthy()
   })
 
-  it('toggle detail stok batch memilih lalu menutup item', () => {
-    render(<Harness />)
-    fireEvent.press(screen.getByTestId('stock-5'))
-    fireEvent.press(screen.getByTestId('stock-5'))
+  it('toggle detail stok batch memilih lalu menutup item', async () => {
+    await render(<Harness />)
+    await fireEvent.press(screen.getByTestId('stock-5'))
+    await fireEvent.press(screen.getByTestId('stock-5'))
     expect(screen.getByText('BC')).toBeTruthy()
   })
 
-  it('tanpa batch, tanpa next material, dan data kosong', () => {
-    render(
+  it('tanpa batch, tanpa next material, dan data kosong', async () => {
+    await render(
       <Harness
         over={{ isBatch: false, hasNextMaterial: false, sections: [] }}
       />
@@ -231,14 +228,14 @@ describe('CreateTransferStockScreen', () => {
     expect(screen.getByText('empty_state.no_data_available')).toBeTruthy()
   })
 
-  it('toggle diabaikan jika bukan batch', () => {
-    render(<Harness over={{ isBatch: false }} />)
-    fireEvent.press(screen.getByTestId('stock-5'))
+  it('toggle diabaikan jika bukan batch', async () => {
+    await render(<Harness over={{ isBatch: false }} />)
+    await fireEvent.press(screen.getByTestId('stock-5'))
     expect(screen.getByText('BC')).toBeTruthy()
   })
 
-  it('memilih aktivitas tujuan lewat picker', () => {
-    render(<Harness />)
+  it('memilih aktivitas tujuan lewat picker', async () => {
+    await render(<Harness />)
     const picker = screen.getByTestId('pickerselect-destination-activity')
     expect(picker).toBeTruthy()
   })

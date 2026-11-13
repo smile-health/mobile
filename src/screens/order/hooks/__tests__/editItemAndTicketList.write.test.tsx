@@ -39,16 +39,18 @@ const base = (over: any = {}): any => ({
 })
 
 describe('useOrderEditItem', () => {
-  const setup = (
+  const setup = async (
     item: any,
     type: any = 'confirm',
     cbs: any = {},
     show = true
   ) =>
-    renderHook(() => useOrderEditItem(item, 0, cbs.q, cbs.r, cbs.o, show, type))
+    await renderHook(() =>
+      useOrderEditItem(item, 0, cbs.q, cbs.r, cbs.o, show, type)
+    )
 
-  it('tipe confirm memakai stok vendor dan tanpa helper saat qty sama dengan rekomendasi', () => {
-    const { result } = setup(base())
+  it('tipe confirm memakai stok vendor dan tanpa helper saat qty sama dengan rekomendasi', async () => {
+    const { result } = await setup(base())
     expect(result.current.availableQty).toBe(100)
     expect(result.current.min).toBe(1)
     expect(result.current.max).toBe(50)
@@ -58,23 +60,23 @@ describe('useOrderEditItem', () => {
     expect(result.current.isEdit).toBe(false)
   })
 
-  it('tipe edit memakai stok customer dan helper rekomendasi bila qty berbeda', () => {
-    const { result } = setup(base({ qty: 3 }), 'edit')
+  it('tipe edit memakai stok customer dan helper rekomendasi bila qty berbeda', async () => {
+    const { result } = await setup(base({ qty: 3 }), 'edit')
     expect(result.current.availableQty).toBe(30)
     expect(result.current.isEdit).toBe(true)
     expect(result.current.qtyHelperMessage).toContain('Recommended')
     expect(result.current.shouldShowReasonDropdown).toBe(true)
   })
 
-  it('validate menandai isValidate dan dropdown bisa dimatikan', () => {
-    const { result } = setup(base({ qty: 3 }), 'validate', {}, false)
+  it('validate menandai isValidate dan dropdown bisa dimatikan', async () => {
+    const { result } = await setup(base({ qty: 3 }), 'validate', {}, false)
     expect(result.current.isValidate).toBe(true)
     expect(result.current.shouldShowReasonDropdown).toBe(false)
   })
 
   it('memanggil callback pembaruan qty, alasan, dan alasan lain (ditrim)', async () => {
     const cbs = { q: jest.fn(), r: jest.fn(), o: jest.fn() }
-    setup(base({ qty: 3, reason_id: '2' }), 'confirm', cbs)
+    await setup(base({ qty: 3, reason_id: '2' }), 'confirm', cbs)
     await waitFor(() => expect(cbs.q).toHaveBeenCalledWith(0, 3))
     expect(cbs.r).toHaveBeenCalled()
     expect(cbs.o).toHaveBeenCalledWith(0, 'alasan')
@@ -82,18 +84,20 @@ describe('useOrderEditItem', () => {
 
   it('tanpa alasan lain callback alasan lain tidak dipanggil', async () => {
     const cbs = { q: jest.fn(), r: jest.fn(), o: jest.fn() }
-    setup(base({ qty: 3, other_reason: '' }), 'confirm', cbs)
+    await setup(base({ qty: 3, other_reason: '' }), 'confirm', cbs)
     await waitFor(() => expect(cbs.q).toHaveBeenCalled())
     expect(cbs.o).not.toHaveBeenCalled()
   })
 
   it('reason dipulihkan dari item bila kosong', async () => {
-    const { result } = setup(base({ qty: 3, reason: { id: 'R', name: 'x' } }))
+    const { result } = await setup(
+      base({ qty: 3, reason: { id: 'R', name: 'x' } })
+    )
     await waitFor(() => expect(result.current.reason).toBeDefined())
   })
 
-  it('qty kosong dan tanpa stok memakai default', () => {
-    const { result } = setup(
+  it('qty kosong dan tanpa stok memakai default', async () => {
+    const { result } = await setup(
       base({
         qty: '',
         stock_vendor: undefined,
@@ -106,9 +110,9 @@ describe('useOrderEditItem', () => {
     expect(result.current.min).toBeNull()
   })
 
-  it('tanpa workspace hierarki tidak aktif', () => {
+  it('tanpa workspace hierarki tidak aktif', async () => {
     mockState.workspace = { selectedWorkspace: undefined }
-    const { result } = setup(base())
+    const { result } = await setup(base())
     expect(result.current.isMaterialHierarchy).toBeUndefined()
     mockState.workspace = {
       selectedWorkspace: {
@@ -118,7 +122,7 @@ describe('useOrderEditItem', () => {
   })
 
   it('updateChildrenQty mengubah qty anak terpilih', async () => {
-    const { result } = setup(base())
+    const { result } = await setup(base())
     await act(async () => {
       result.current.updateChildrenQty(1, '9')
     })
@@ -139,71 +143,77 @@ describe('useTicketList', () => {
     mockState.ticket = { ticketList: undefined, isLoading: false }
   })
 
-  it('tanpa data: kosong dan tidak memuat lagi', () => {
-    const { result } = renderHook(() => useTicketList({ filter }))
+  it('tanpa data: kosong dan tidak memuat lagi', async () => {
+    const { result } = await renderHook(() => useTicketList({ filter }))
     expect(result.current.isEmpty).toBe(true)
     expect(result.current.tickets).toEqual([])
-    act(() => result.current.handleEndReached())
+    await act(() => result.current.handleEndReached())
   })
 
-  it('sedang memuat bukan kosong', () => {
+  it('sedang memuat bukan kosong', async () => {
     mockState.ticket = { ticketList: undefined, isLoading: true }
-    const { result } = renderHook(() => useTicketList({ filter }))
+    const { result } = await renderHook(() => useTicketList({ filter }))
     expect(result.current.isEmpty).toBe(false)
     expect(result.current.isFetching).toBe(true)
   })
 
   it('menampilkan data halaman pertama dan memuat halaman berikutnya', async () => {
     mockState.ticket = { ticketList: list(1, 3), isLoading: false }
-    const { result, rerender } = renderHook(() => useTicketList({ filter }))
+    const { result, rerender } = await renderHook(() =>
+      useTicketList({ filter })
+    )
     // efek filter pertama mengosongkan daftar; data baru (referensi baru) mengisinya lagi
     mockState.ticket = { ticketList: list(1, 3), isLoading: false }
-    rerender({})
+    await rerender({})
     await waitFor(() => expect(result.current.tickets).toHaveLength(2))
     expect(result.current.isEmpty).toBe(false)
-    act(() => result.current.handleEndReached())
+    await act(() => result.current.handleEndReached())
     expect(result.current.isFetchingMore).toBe(true)
     mockState.ticket = { ticketList: list(2, 3), isLoading: false }
-    rerender({})
+    await rerender({})
     await waitFor(() =>
       expect(result.current.tickets.length).toBeGreaterThanOrEqual(2)
     )
-    act(() => result.current.handleMomentumScrollBegin())
-    act(() => result.current.handleEndReached())
+    await act(() => result.current.handleMomentumScrollBegin())
+    await act(() => result.current.handleEndReached())
   })
 
   it('end reached ganda dan halaman terakhir tidak memuat lagi', async () => {
     mockState.ticket = { ticketList: list(1, 1), isLoading: false }
-    const { result, rerender } = renderHook(() => useTicketList({ filter }))
+    const { result, rerender } = await renderHook(() =>
+      useTicketList({ filter })
+    )
     mockState.ticket = { ticketList: list(1, 1), isLoading: false }
-    rerender({})
+    await rerender({})
     await waitFor(() => expect(result.current.tickets).toHaveLength(2))
-    act(() => result.current.handleEndReached())
-    act(() => result.current.handleEndReached())
+    await act(() => result.current.handleEndReached())
+    await act(() => result.current.handleEndReached())
     expect(result.current.isFetchingMore).toBe(false)
   })
 
   it('data tanpa total_page dan daftar kosong', async () => {
     mockState.ticket = { ticketList: { data: [] }, isLoading: false }
-    const { result } = renderHook(() => useTicketList({ filter }))
+    const { result } = await renderHook(() => useTicketList({ filter }))
     expect(result.current.isEmpty).toBe(true)
-    act(() => result.current.handleEndReached())
+    await act(() => result.current.handleEndReached())
   })
 
   it('filter berubah mereset daftar', async () => {
     mockState.ticket = { ticketList: list(1, 2), isLoading: false }
     let f: any = { status: 1 }
-    const { result, rerender } = renderHook(() => useTicketList({ filter: f }))
+    const { result, rerender } = await renderHook(() =>
+      useTicketList({ filter: f })
+    )
     mockState.ticket = { ticketList: list(1, 2), isLoading: false }
-    rerender({})
+    await rerender({})
     await waitFor(() => expect(result.current.tickets).toHaveLength(2))
     f = { status: 2 }
-    rerender({})
+    await rerender({})
     expect(result.current.tickets).toBeDefined()
   })
 
-  it('onPressItem menavigasi dan keyExtractor menyusun kunci', () => {
-    const { result } = renderHook(() => useTicketList({ filter }))
+  it('onPressItem menavigasi dan keyExtractor menyusun kunci', async () => {
+    const { result } = await renderHook(() => useTicketList({ filter }))
     result.current.onPressItem({ id: 4 } as any)
     expect(mockNavigate).toHaveBeenCalledWith('TicketDetail', { id: 4 })
     expect(result.current.keyExtractor({ id: 4 } as any, 2)).toBe('4-2')

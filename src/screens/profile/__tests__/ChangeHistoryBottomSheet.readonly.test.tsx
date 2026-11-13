@@ -24,8 +24,8 @@ const history = (nv: any): any => ({
 })
 
 describe('ChangeHistoryBottomSheet', () => {
-  it('tanpa data tidak merender apa pun', () => {
-    const { toJSON } = render(
+  it('tanpa data tidak merender apa pun', async () => {
+    const { toJSON } = await render(
       <ChangeHistoryBottomSheet
         toggleSheet={jest.fn()}
         isOpen
@@ -36,9 +36,9 @@ describe('ChangeHistoryBottomSheet', () => {
     expect(toJSON()).toBeNull()
   })
 
-  it('menampilkan hanya field yang berubah dan menutup sheet', () => {
+  it('menampilkan hanya field yang berubah dan menutup sheet', async () => {
     const toggle = jest.fn()
-    render(
+    await render(
       <ChangeHistoryBottomSheet
         {...({ toggleSheet: toggle, isOpen: true } as any)}
         data={history({
@@ -56,12 +56,12 @@ describe('ChangeHistoryBottomSheet', () => {
     expect(screen.getByText('common.yes')).toBeTruthy()
     expect(screen.getByText('label.lastname')).toBeTruthy() // string kosong tetap tampil
     expect(screen.getByText('common.change_history')).toBeTruthy()
-    fireEvent.press(screen.getByText('button.close'))
+    await fireEvent.press(screen.getByText('button.close'))
     expect(toggle).toHaveBeenCalled()
   })
 
-  it('password 0 => no, gender tidak dikenal/kosong disembunyikan', () => {
-    render(
+  it('password 0 => no, gender tidak dikenal/kosong disembunyikan', async () => {
+    await render(
       <ChangeHistoryBottomSheet
         {...({ toggleSheet: jest.fn(), isOpen: true } as any)}
         data={history({ password: 0, gender: 0 })}
@@ -72,8 +72,8 @@ describe('ChangeHistoryBottomSheet', () => {
     expect(screen.queryByText('label.email')).toBeNull()
   })
 
-  it('password bukan angka disembunyikan', () => {
-    render(
+  it('password bukan angka disembunyikan', async () => {
+    await render(
       <ChangeHistoryBottomSheet
         {...({ toggleSheet: jest.fn(), isOpen: true } as any)}
         data={history({ email: 'x@y.z', password: undefined })}

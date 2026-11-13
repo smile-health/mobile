@@ -57,8 +57,8 @@ const materials: any[] = [
   { id: 3, name: 'Empty batches', is_managed_in_batch: true, batches: [] },
 ]
 
-const setup = (extra: any = {}) =>
-  renderHook(() =>
+const setup = async (extra: any = {}) =>
+  await renderHook(() =>
     useTicketSubmission({
       ticketMaterials: materials,
       ticketFormData: {
@@ -79,7 +79,7 @@ beforeEach(() => {
 
 describe('useTicketSubmission', () => {
   it('membangun payload: batch valid, non-batch, material baru', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleSend()
     })
@@ -118,7 +118,7 @@ describe('useTicketSubmission', () => {
 
   it('sukses: bersihkan state, ignore confirm, panggil onSuccess', async () => {
     const onSuccess = jest.fn()
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleSend(onSuccess)
     })
@@ -131,7 +131,7 @@ describe('useTicketSubmission', () => {
   })
 
   it('sukses tanpa onSuccess dan tanpa id respons tidak membersihkan', async () => {
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleSend()
     })
@@ -145,7 +145,7 @@ describe('useTicketSubmission', () => {
   })
 
   it('terkirim dengan order: order_id dan request_cancel', async () => {
-    const { result } = setup({
+    const { result } = await setup({
       ticketFormData: { isSubmitted: 1, doNumber: '15' },
       requestCancel: true,
       comment: 'override',
@@ -164,7 +164,7 @@ describe('useTicketSubmission', () => {
   })
 
   it('tanpa form data: nilai default', async () => {
-    const { result } = setup({ ticketFormData: undefined })
+    const { result } = await setup({ ticketFormData: undefined })
     await act(async () => {
       await result.current.handleSend()
     })
@@ -180,7 +180,7 @@ describe('useTicketSubmission', () => {
     const err = { message: 'x' }
     mockSend.mockReturnValue({ unwrap: () => Promise.reject(err) })
     const onError = jest.fn()
-    const { result } = setup()
+    const { result } = await setup()
     await act(async () => {
       await result.current.handleSend(undefined, onError)
     })
@@ -193,7 +193,7 @@ describe('useTicketSubmission', () => {
 
   it('loading mencegah kirim ganda', async () => {
     mockLoading = true
-    const { result } = setup()
+    const { result } = await setup()
     expect(result.current.isLoading).toBe(true)
     await act(async () => {
       await result.current.handleSend()

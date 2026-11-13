@@ -46,9 +46,9 @@ import DiscardedSection from '../DiscardedSection'
 
 const Text = require('react-native').Text
 
-const setup = (trx: any = {}) => {
+const setup = async (trx: any = {}) => {
   let methods: any
-  render(
+  await render(
     <FormWrapper
       defaultValues={{
         selectedTrx: [
@@ -65,24 +65,24 @@ const setup = (trx: any = {}) => {
 }
 
 describe('DiscardedSection', () => {
-  it('qty kembali 0 menyembunyikan tombol pertanyaan', () => {
-    setup({ change_qty: 0 })
+  it('qty kembali 0 menyembunyikan tombol pertanyaan', async () => {
+    await setup({ change_qty: 0 })
     expect(screen.queryByTestId('btn-is-any-discarded')).toBeNull()
   })
 
   it('menekan tombol menandai ada yang dibuang dan menampilkan input', async () => {
-    const m = setup()
+    const m = await setup()
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-is-any-discarded'))
+      await fireEvent.press(screen.getByTestId('btn-is-any-discarded'))
     })
     expect(m().getValues('selectedTrx.0.is_any_discard')).toBe(true)
     expect(screen.getByTestId('in:selectedTrx.0.broken_qty')).toBeTruthy()
   })
 
   it('mengubah jumlah rusak dan mengosongkannya', async () => {
-    const m = setup({ is_any_discard: true })
+    const m = await setup({ is_any_discard: true })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('in:selectedTrx.0.broken_qty'))
+      await fireEvent.press(screen.getByTestId('in:selectedTrx.0.broken_qty'))
     })
     expect(m().getValues('selectedTrx.0.broken_qty')).toBe(3)
     await act(async () => {
@@ -92,15 +92,15 @@ describe('DiscardedSection', () => {
   })
 
   it('hapus menandai tidak ada yang dibuang', async () => {
-    const m = setup({ is_any_discard: true, broken_qty: 2 })
+    const m = await setup({ is_any_discard: true, broken_qty: 2 })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-remove-is-any-discarded'))
+      await fireEvent.press(screen.getByTestId('btn-remove-is-any-discarded'))
     })
     expect(m().getValues('selectedTrx.0.is_any_discard')).toBeUndefined()
   })
 
-  it('open vial menampilkan dua input dan total retur', () => {
-    setup({
+  it('open vial menampilkan dua input dan total retur', async () => {
+    await setup({
       is_any_discard: true,
       is_open_vial: true,
       open_vial_qty: 4,
@@ -115,8 +115,8 @@ describe('DiscardedSection', () => {
     expect(screen.getByText(/7/)).toBeTruthy()
   })
 
-  it('open vial tanpa nilai memakai nol', () => {
-    setup({
+  it('open vial tanpa nilai memakai nol', async () => {
+    await setup({
       is_any_discard: true,
       is_open_vial: true,
       open_vial_qty: undefined,
@@ -128,9 +128,9 @@ describe('DiscardedSection', () => {
   })
 
   it('memilih alasan lainnya menampilkan field teks', async () => {
-    const m = setup({ is_any_discard: true, broken_qty: 4 })
+    const m = await setup({ is_any_discard: true, broken_qty: 4 })
     await act(async () => {
-      fireEvent.press(screen.getByTestId('dd-reason'))
+      await fireEvent.press(screen.getByTestId('dd-reason'))
     })
     expect(m().getValues('selectedTrx.0.transaction_reason')).toMatchObject({
       is_other: true,

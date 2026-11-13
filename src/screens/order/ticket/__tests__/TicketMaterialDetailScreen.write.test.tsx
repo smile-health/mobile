@@ -66,8 +66,8 @@ const makeHook = (over: any = {}) => ({
   handleSaveMaterial: jest.fn(),
   ...over,
 })
-const renderScreen = (material: any) =>
-  render(
+const renderScreen = async (material: any) =>
+  await render(
     <TicketMaterialDetailScreen
       route={{ params: { material } } as any}
       navigation={{} as any}
@@ -80,8 +80,8 @@ beforeEach(() => {
 })
 
 describe('TicketMaterialDetailScreen', () => {
-  it('non-batch: BaseForm menerima konfigurasi dan error', () => {
-    const { getByText } = renderScreen({
+  it('non-batch: BaseForm menerima konfigurasi dan error', async () => {
+    const { getByText } = await renderScreen({
       id: 1,
       name: 'Mat',
       is_managed_in_batch: false,
@@ -96,35 +96,35 @@ describe('TicketMaterialDetailScreen', () => {
     })
   })
 
-  it('batch: daftar batch dengan edit, hapus, dan tambah batch', () => {
-    const { getByText } = renderScreen({
+  it('batch: daftar batch dengan edit, hapus, dan tambah batch', async () => {
+    const { getByText } = await renderScreen({
       id: 1,
       name: 'Mat',
       is_managed_in_batch: true,
       isSubmitted: 0,
     })
-    fireEvent.press(getByText('edit-A'))
-    fireEvent.press(getByText('del-A'))
-    fireEvent.press(getByText('+ ticket.add_batch'))
+    await fireEvent.press(getByText('edit-A'))
+    await fireEvent.press(getByText('del-A'))
+    await fireEvent.press(getByText('+ ticket.add_batch'))
     expect(mockHook.handleEditBatch).toHaveBeenCalledWith({ batch_code: 'A' })
     expect(mockHook.handleDeleteBatch).toHaveBeenCalledWith({ batch_code: 'A' })
     expect(mockHook.handleAddBatch).toHaveBeenCalled()
   })
 
-  it('simpan dan status nonaktif', () => {
+  it('simpan dan status nonaktif', async () => {
     mockHook = makeHook({ isButtonDisabled: true })
-    const { getByText } = renderScreen({
+    const { getByText } = await renderScreen({
       id: 1,
       name: 'Mat',
       is_managed_in_batch: false,
     })
-    fireEvent.press(getByText('button.save:disabled'))
+    await fireEvent.press(getByText('button.save:disabled'))
     expect(mockHook.handleSaveMaterial).toHaveBeenCalled()
   })
 
-  it('currentMaterial tanpa batches aman pada mode batch', () => {
+  it('currentMaterial tanpa batches aman pada mode batch', async () => {
     mockHook = makeHook({ currentMaterial: undefined })
-    const { queryByText } = renderScreen({
+    const { queryByText } = await renderScreen({
       id: 1,
       name: 'Mat',
       is_managed_in_batch: true,

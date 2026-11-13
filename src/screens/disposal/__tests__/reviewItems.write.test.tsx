@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 
 import React from 'react'
 import { fireEvent, render, screen, act } from '@testing-library/react-native'
@@ -41,8 +38,8 @@ const stockOf = (extra: any = {}) => ({
 })
 
 describe('ReviewDisposalStockItem', () => {
-  it('menampilkan batch, discard dan received', () => {
-    render(
+  it('menampilkan batch, discard dan received', async () => {
+    await render(
       <ReviewDisposalStockItem
         stock={stockOf() as any}
         qty={2}
@@ -55,8 +52,8 @@ describe('ReviewDisposalStockItem', () => {
     expect(screen.getByText('received')).toBeTruthy()
   })
 
-  it('tanpa batch dan tanpa qty tidak menampilkan blok terkait', () => {
-    render(
+  it('tanpa batch dan tanpa qty tidak menampilkan blok terkait', async () => {
+    await render(
       <ReviewDisposalStockItem
         stock={
           stockOf({ batch: undefined, discard: [], received: undefined }) as any
@@ -71,8 +68,8 @@ describe('ReviewDisposalStockItem', () => {
     expect(screen.queryByText('received')).toBeNull()
   })
 
-  it('manufaktur kosong menampilkan strip', () => {
-    render(
+  it('manufaktur kosong menampilkan strip', async () => {
+    await render(
       <ReviewDisposalStockItem
         stock={stockOf({ batch: { code: 'B', manufacture: null } }) as any}
         qty={1}
@@ -85,32 +82,32 @@ describe('ReviewDisposalStockItem', () => {
 })
 
 describe('ReviewItemDisposal', () => {
-  it('menjumlahkan qty dan menampilkan label batch jika dikelola per batch', () => {
+  it('menjumlahkan qty dan menampilkan label batch jika dikelola per batch', async () => {
     const item: any = {
       material: { name: 'Vaksin', is_managed_in_batch: 1 },
       disposal: [stockOf(), stockOf({ stock_id: 2 })],
     }
-    render(<ReviewItemDisposal item={item} type={'self' as any} />)
+    await render(<ReviewItemDisposal item={item} type={'self' as any} />)
     expect(screen.getByText('Vaksin')).toBeTruthy()
     expect(screen.getByText('disposal.material_batch')).toBeTruthy()
     expect(screen.getByText('4')).toBeTruthy()
   })
 
-  it('tanpa batch tidak menampilkan label batch', () => {
+  it('tanpa batch tidak menampilkan label batch', async () => {
     const item: any = {
       material: { name: 'V', is_managed_in_batch: 0 },
       disposal: [],
     }
-    render(<ReviewItemDisposal item={item} type={'self' as any} />)
+    await render(<ReviewItemDisposal item={item} type={'self' as any} />)
     expect(screen.queryByText('disposal.material_batch')).toBeNull()
   })
 })
 
 describe('DisposalInputItem', () => {
   const sectionItem: any = { title: 'Rusak', disposal_qty: 5 }
-  const setup = (item: any, errors?: string) => {
+  const setup = async (item: any, errors?: string) => {
     let methods: any
-    render(
+    await render(
       <FormWrapper
         defaultValues={{ discard: [{ disposal_qty: 0 }] }}
         onForm={(m: any) => (methods = m)}>
@@ -135,17 +132,17 @@ describe('DisposalInputItem', () => {
   }
 
   it('mengubah qty menjadi angka di form', async () => {
-    const get = setup(sectionItem)
+    const get = await setup(sectionItem)
     expect(screen.getByText('Rusak')).toBeTruthy()
     const input = screen.getByDisplayValue('0')
     await act(async () => {
-      fireEvent.changeText(input, '4')
+      await fireEvent.changeText(input, '4')
     })
     expect(get().getValues('discard.0.disposal_qty')).toBe(4)
   })
 
-  it('input tidak bisa diedit jika qty maksimum 0', () => {
-    setup({ ...sectionItem, disposal_qty: 0 }, 'pesan error')
+  it('input tidak bisa diedit jika qty maksimum 0', async () => {
+    await setup({ ...sectionItem, disposal_qty: 0 }, 'pesan error')
     expect(screen.getByDisplayValue('0').props.editable).toBe(false)
   })
 })
@@ -160,15 +157,17 @@ describe('DisposalShipmentItem', () => {
     created_at: '2025-01-01 10:00:00',
     disposal_items: [{}, {}],
   }
-  it('pengirim melihat nama customer', () => {
+  it('pengirim melihat nama customer', async () => {
     const onPress = jest.fn()
-    render(<DisposalShipmentItem item={item} isSender onPress={onPress} />)
+    await render(
+      <DisposalShipmentItem item={item} isSender onPress={onPress} />
+    )
     expect(screen.getByText('Pelanggan')).toBeTruthy()
-    fireEvent.press(screen.getByTestId('disposal-KPM-12'))
+    await fireEvent.press(screen.getByTestId('disposal-KPM-12'))
     expect(onPress).toHaveBeenCalled()
   })
-  it('penerima melihat vendor; tanpa activity dan item', () => {
-    render(
+  it('penerima melihat vendor; tanpa activity dan item', async () => {
+    await render(
       <DisposalShipmentItem
         item={{ ...item, activity: undefined, disposal_items: undefined }}
         isSender={false}

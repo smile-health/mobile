@@ -46,9 +46,9 @@ const form: any = {
   ],
 }
 
-const setup = (props: any = {}) => {
+const setup = async (props: any = {}) => {
   const setValue = jest.fn()
-  render(
+  await render(
     <BaseOrderItemRenderer
       stocks={stocks}
       index={0}
@@ -63,10 +63,10 @@ const setup = (props: any = {}) => {
 }
 
 describe('BaseOrderItemRenderer', () => {
-  it('non-hierarki memakai receives index stok dan setValue saat diubah', () => {
-    const setValue = setup()
+  it('non-hierarki memakai receives index stok dan setValue saat diubah', async () => {
+    const setValue = await setup()
     expect(screen.getByText(/order_item(?:s.0.receive){2}d_qty=4/)).toBeTruthy()
-    fireEvent.press(
+    await fireEvent.press(
       screen.getByTestId('in:order_items.0.receives.0.received_qty')
     )
     expect(setValue).toHaveBeenCalledWith(
@@ -77,16 +77,16 @@ describe('BaseOrderItemRenderer', () => {
     expect(screen.getByText('act:Tambahan')).toBeTruthy()
   })
 
-  it('hierarki memakai receives milik anak', () => {
-    setup({ isHierarchy: true, childIdx: 0, stocks: [stocks[0]] })
+  it('hierarki memakai receives milik anak', async () => {
+    await setup({ isHierarchy: true, childIdx: 0, stocks: [stocks[0]] })
     expect(
       screen.getByText(/children.0.receives.0.received_qty=2/)
     ).toBeTruthy()
   })
 
-  it('inputProps menggantikan nilai, nama field, dan perubahan', () => {
+  it('inputProps menggantikan nilai, nama field, dan perubahan', async () => {
     const onValueChange = jest.fn()
-    const setValue = setup({
+    const setValue = await setup({
       stocks: [stocks[0]],
       inputProps: {
         getValue: () => 9,
@@ -94,14 +94,14 @@ describe('BaseOrderItemRenderer', () => {
         onValueChange,
       },
     })
-    fireEvent.press(screen.getByTestId('in:custom.field'))
+    await fireEvent.press(screen.getByTestId('in:custom.field'))
     expect(onValueChange).toHaveBeenCalledWith('7', 0, 0)
     expect(setValue).not.toHaveBeenCalled()
     expect(screen.getByText(/custom.field=9/)).toBeTruthy()
   })
 
-  it('material sensitif menampilkan dropdown status dan info tambahan', () => {
-    setup({
+  it('material sensitif menampilkan dropdown status dan info tambahan', async () => {
+    await setup({
       isMaterialSensitive: true,
       stocks: [stocks[0]],
       renderAdditionalInfo: (s: any) => {
@@ -115,8 +115,8 @@ describe('BaseOrderItemRenderer', () => {
     expect(screen.getByText('extra:1')).toBeTruthy()
   })
 
-  it('form tanpa order_items tetap dirender', () => {
-    setup({ form: {}, stocks: [stocks[2]] })
+  it('form tanpa order_items tetap dirender', async () => {
+    await setup({ form: {}, stocks: [stocks[2]] })
     expect(screen.getByText(/received_qty=NaN/)).toBeTruthy()
   })
 })

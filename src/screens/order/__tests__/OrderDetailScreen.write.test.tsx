@@ -88,8 +88,8 @@ const makeHook = (over: any = {}) => ({
   isMaterialHierarchy: false,
   ...over,
 })
-const renderScreen = (type: any = 1) =>
-  render(
+const renderScreen = async (type: any = 1) =>
+  await render(
     <OrderDetailScreen
       route={{ params: { id: 4, type } } as any}
       navigation={{} as any}
@@ -101,8 +101,8 @@ beforeEach(() => {
 })
 
 describe('OrderDetailScreen', () => {
-  it('render header, item, komentar, tombol tambah item; refetch saat fokus', () => {
-    const { getByText, queryByText } = renderScreen()
+  it('render header, item, komentar, tombol tambah item; refetch saat fokus', async () => {
+    const { getByText, queryByText } = await renderScreen()
     getByText('info')
     getByText('item-1')
     getByText('comment-9')
@@ -115,43 +115,43 @@ describe('OrderDetailScreen', () => {
     expect(mockToolbar.title).toBe('order.type.request')
   })
 
-  it('tombol tambah item dan tekan item memanggil handler', () => {
-    const { getByText } = renderScreen()
-    fireEvent.press(getByText('button.add_item'))
+  it('tombol tambah item dan tekan item memanggil handler', async () => {
+    const { getByText } = await renderScreen()
+    await fireEvent.press(getByText('button.add_item'))
     expect(mockHook.handleAddItem).toHaveBeenCalled()
-    fireEvent.press(getByText('item-2'))
+    await fireEvent.press(getByText('item-2'))
     expect(mockHook.handleOrderDetailItem).toHaveBeenCalledWith({ id: 2 })
   })
 
-  it('tanpa tombol tambah dan tipe tidak dikenal memakai judul default', () => {
+  it('tanpa tombol tambah dan tipe tidak dikenal memakai judul default', async () => {
     mockHook = makeHook({ shouldShowAddItemButton: false })
-    const { queryByText } = renderScreen(99)
+    const { queryByText } = await renderScreen(99)
     expect(queryByText('button.add_item')).toBeNull()
     expect(mockToolbar.title).toBe('order.service.regular')
   })
 
-  it('tanpa data order: header kosong dan section kosong aman', () => {
+  it('tanpa data order: header kosong dan section kosong aman', async () => {
     mockHook = makeHook({
       orderDetailData: undefined,
       SECTION_DATA: undefined,
       shouldShowLoading: true,
     })
-    const { queryByText, getByText } = renderScreen()
+    const { queryByText, getByText } = await renderScreen()
     expect(queryByText('info')).toBeNull()
     getByText('loading:true')
   })
 
-  it('footer peringatan untuk customer saat order shipped', () => {
+  it('footer peringatan untuk customer saat order shipped', async () => {
     mockHook = makeHook({
       isCustomer: true,
       orderDetailData: { status: 4, activity: {}, updated_at: null },
     })
-    const { getByText } = renderScreen()
+    const { getByText } = await renderScreen()
     getByText('order.accept_warning_title')
   })
 
-  it('refresh dari toolbar memanggil refetch', () => {
-    renderScreen()
+  it('refresh dari toolbar memanggil refetch', async () => {
+    await renderScreen()
     mockToolbar.actions.props.onRefresh()
     expect(mockHook.refetchOrderDetail.mock.calls.length).toBeGreaterThan(1)
   })

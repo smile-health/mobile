@@ -2,9 +2,6 @@ jest.mock(
   '@react-navigation/native',
   () => require('@/test-utils/misc-nav').navModule
 )
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-)
 jest.mock(
   'react-native-safe-area-context',
   () => require('react-native-safe-area-context/jest/mock').default
@@ -32,8 +29,8 @@ import ReviewStockTakingItem from '../components/ReviewStockTakingItem'
 import ReviewStockTakingScreen from '../ReviewStockTakingScreen'
 
 describe('ReviewStockTakingItem', () => {
-  it('material hirarki menampilkan induk dan label merek tanpa waktu', () => {
-    render(
+  it('material hirarki menampilkan induk dan label merek tanpa waktu', async () => {
+    await render(
       <ReviewStockTakingItem
         parentMaterialName='Induk'
         materialName='Merek A'
@@ -48,8 +45,8 @@ describe('ReviewStockTakingItem', () => {
     expect(screen.getByText('stock-2')).toBeTruthy()
   })
 
-  it('material biasa menampilkan waktu dan tanpa induk', () => {
-    render(
+  it('material biasa menampilkan waktu dan tanpa induk', async () => {
+    await render(
       <ReviewStockTakingItem
         materialName='Biasa'
         totalActualQty={0}
@@ -82,8 +79,8 @@ describe('ReviewStockTakingScreen', () => {
     handleSubmitStockTaking: jest.fn().mockResolvedValue(),
     ...over,
   })
-  const renderScreen = () =>
-    render(
+  const renderScreen = async () =>
+    await render(
       <ReviewStockTakingScreen
         {...({
           route: { params: { data: { items: [] }, createdAt: 'x' } },
@@ -96,10 +93,10 @@ describe('ReviewStockTakingScreen', () => {
   it('langsung mengirim jika belum ada stock opname sebelumnya', async () => {
     const h = hook()
     mockReview.mockReturnValue(h)
-    renderScreen()
+    await renderScreen()
     expect(screen.getByText('Q1')).toBeTruthy()
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-submit-stock-taking'))
+      await fireEvent.press(screen.getByTestId('btn-submit-stock-taking'))
     })
     expect(h.handleSubmitStockTaking).toHaveBeenCalledTimes(1)
     expect(mockReview).toHaveBeenCalledWith({ items: [] }, 'x')
@@ -108,13 +105,15 @@ describe('ReviewStockTakingScreen', () => {
   it('meminta konfirmasi ganti jika sudah ada opname terakhir', async () => {
     const h = hook({ detail: { lastStockOpname: { id: 1 } } })
     mockReview.mockReturnValue(h)
-    renderScreen()
+    await renderScreen()
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-submit-stock-taking'))
+      await fireEvent.press(screen.getByTestId('btn-submit-stock-taking'))
     })
     expect(h.handleSubmitStockTaking).not.toHaveBeenCalled()
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-confirm-replace-stock-taking'))
+      await fireEvent.press(
+        screen.getByTestId('btn-confirm-replace-stock-taking')
+      )
     })
     expect(h.handleSubmitStockTaking).toHaveBeenCalledTimes(1)
   })
@@ -122,19 +121,19 @@ describe('ReviewStockTakingScreen', () => {
   it('batal konfirmasi ganti tidak mengirim', async () => {
     const h = hook({ detail: { lastStockOpname: { id: 1 } } })
     mockReview.mockReturnValue(h)
-    renderScreen()
+    await renderScreen()
     await act(async () => {
-      fireEvent.press(screen.getByTestId('btn-submit-stock-taking'))
+      await fireEvent.press(screen.getByTestId('btn-submit-stock-taking'))
     })
-    fireEvent.press(screen.getByTestId('btn-cancel-replace-stock-taking'))
+    await fireEvent.press(screen.getByTestId('btn-cancel-replace-stock-taking'))
     expect(h.handleSubmitStockTaking).not.toHaveBeenCalled()
   })
 
-  it('hapus semua menavigasi ke CreateStockTaking dengan deleteAll', () => {
+  it('hapus semua menavigasi ke CreateStockTaking dengan deleteAll', async () => {
     mockReview.mockReturnValue(hook())
-    renderScreen()
-    fireEvent.press(screen.getByTestId('btn-delete-all-stock-taking'))
-    fireEvent.press(screen.getByText('button.yes'))
+    await renderScreen()
+    await fireEvent.press(screen.getByTestId('btn-delete-all-stock-taking'))
+    await fireEvent.press(screen.getByText('button.yes'))
     expect(nav.navigate).toHaveBeenCalledWith('CreateStockTaking', {
       deleteAll: true,
     })
