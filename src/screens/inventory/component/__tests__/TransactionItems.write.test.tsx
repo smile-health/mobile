@@ -146,8 +146,8 @@ describe('DefaultChangeQtyInput', () => {
     activeBatch: [{ qty, change_qty: change }],
   })
 
-  it('menampilkan helper stok akhir untuk reduce stock', () => {
-    renderWithForm(
+  it('menampilkan helper stok akhir untuk reduce stock', async () => {
+    await renderWithForm(
       <DefaultChangeQtyInput
         batchType='activeBatch'
         index={0}
@@ -158,8 +158,8 @@ describe('DefaultChangeQtyInput', () => {
     expect(screen.getByText('transaction.helpers.stock_amount')).toBeTruthy()
   })
 
-  it('tanpa helper bila change_qty 0', () => {
-    renderWithForm(
+  it('tanpa helper bila change_qty 0', async () => {
+    await renderWithForm(
       <DefaultChangeQtyInput
         batchType='activeBatch'
         index={0}
@@ -172,7 +172,7 @@ describe('DefaultChangeQtyInput', () => {
 
   it('mengubah nilai memperbarui form; kosong menghapus error', async () => {
     let f: any
-    renderWithForm(
+    await renderWithForm(
       <DefaultChangeQtyInput
         batchType='activeBatch'
         index={0}

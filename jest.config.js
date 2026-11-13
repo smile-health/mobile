@@ -10,7 +10,7 @@ module.exports = {
     '^@/mocks/(.*)$': '<rootDir>/src/__mocks__/$1', // Map to the new mocks directory under src
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(jest-)?react-native|@react-native|expo|expo-localization|expo-modules-core|@expo|@unimodules|unimodules|nativewind|react-native-css-interop|immer|@reduxjs/toolkit|react-native-worklets|@react-navigation)',
+    'node_modules/(?!(jest-)?react-native|@react-native|expo|expo-localization|expo-modules-core|@expo|@unimodules|unimodules|nativewind|react-native-css-interop|immer|@reduxjs/toolkit|react-native-worklets|@react-navigation|@shopify/flash-list)',
   ],
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',

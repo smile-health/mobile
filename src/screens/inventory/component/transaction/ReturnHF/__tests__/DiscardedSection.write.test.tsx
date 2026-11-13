@@ -86,7 +86,10 @@ describe('DiscardedSection', () => {
     })
     expect(m().getValues('selectedTrx.0.broken_qty')).toBe(3)
     await act(async () => {
-      fireEvent(screen.getByTestId('in:selectedTrx.0.broken_qty'), 'longPress')
+      await fireEvent(
+        screen.getByTestId('in:selectedTrx.0.broken_qty'),
+        'longPress'
+      )
     })
     expect(m().getValues('selectedTrx.0.broken_qty')).toBeUndefined()
   })
