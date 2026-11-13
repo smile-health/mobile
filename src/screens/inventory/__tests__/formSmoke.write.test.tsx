@@ -10,6 +10,7 @@ import { act, cleanup, render } from '@testing-library/react-native'
 import { FormProvider, useForm } from 'react-hook-form'
 import fs from 'node:fs'
 import path from 'node:path'
+import { fiberFindAll } from '@/test-utils/fiber'
 import { chaosItem, chaosList, item } from '@/test-utils/fixtures'
 import { route } from '@/test-utils/inventory-render'
 import { setRtkMode } from '@/test-utils/rtkMock'
@@ -245,7 +246,8 @@ const Harness = ({ C, props, capture }: any) => {
 const fire = async (screen: any) => {
   let nodes: any[] = []
   try {
-    nodes = screen.UNSAFE_root.findAll(
+    nodes = fiberFindAll(
+      screen,
       (n: any) =>
         n.props &&
         Object.keys(n.props).some(
@@ -393,7 +395,7 @@ describe('inventory: komponen & layar dalam konteks form', () => {
                   ?.replace(/.*\/src\//, '')}\n`
               )
           }
-          cleanup()
+          await cleanup()
         }
       }
       expect(comps).toBeDefined()

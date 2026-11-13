@@ -90,7 +90,7 @@ describe('AssetInventoryDetailScreen', () => {
     await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getByText('Asset not found')).toBeTruthy()
     mockHook = { ...base, assetDetail: undefined }
-    cleanup()
+    await cleanup()
     await render(<AssetInventoryDetailScreen {...props} />)
     expect(screen.getByText('Asset not found')).toBeTruthy()
   })

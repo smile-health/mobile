@@ -5,6 +5,7 @@ jest.mock(
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
+import { fiberGetByProps } from '@/test-utils/fiber'
 import TransferStockMaterialList from '../components/TransferStockMaterialList'
 
 const mat = (id: number, name: string, extra: any = {}) => ({
@@ -95,7 +96,7 @@ describe('TransferStockMaterialList', () => {
         onSelectMaterial={jest.fn()}
       />
     )
-    screen.UNSAFE_getByProps({ initialNumToRender: 10 }).props.onEndReached()
+    fiberGetByProps(screen, { initialNumToRender: 10 }).props.onEndReached()
     expect(onLoadMore).toHaveBeenCalled()
   })
 })

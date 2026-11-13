@@ -66,7 +66,7 @@ const ReviewItemDisposal: React.FC<Props> = ({ item, type }) => {
         />
       </View>
 
-      {item.material.is_managed_in_batch && (
+      {!!item.material.is_managed_in_batch && (
         <Text className={cn(AppStyles.labelBold)}>
           {t('disposal.material_batch')}
         </Text>

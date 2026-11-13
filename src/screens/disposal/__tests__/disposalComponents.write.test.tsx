@@ -9,6 +9,7 @@ jest.mock(
 
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react-native'
+import { fiberGetByProps } from '@/test-utils/fiber'
 import { navMock } from '@/test-utils/misc-nav'
 import DisposalMaterialList from '../component/DisposalMaterialList'
 import DisposalStockBatchItem from '../component/DisposalStockBatchItem'
@@ -70,7 +71,7 @@ describe('DisposalMaterialList', () => {
       />
     )
     expect(screen.getByText('no_items_found')).toBeTruthy()
-    const list = screen.UNSAFE_getByProps({ onEndReachedThreshold: 0.1 })
+    const list = fiberGetByProps(screen, { onEndReachedThreshold: 0.1 })
     list.props.onEndReached()
     expect(onEnd).toHaveBeenCalled()
     list.props.onEndReached()
@@ -83,7 +84,7 @@ describe('DisposalMaterialList', () => {
         onPressMaterial={jest.fn()}
       />
     )
-    const list = screen.UNSAFE_getByProps({ onEndReachedThreshold: 0.1 })
+    const list = fiberGetByProps(screen, { onEndReachedThreshold: 0.1 })
     expect(() => list.props.onEndReached()).not.toThrow()
   })
 })

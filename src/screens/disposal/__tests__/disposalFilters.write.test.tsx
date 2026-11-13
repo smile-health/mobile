@@ -27,6 +27,7 @@ import {
   screen,
   renderHook,
 } from '@testing-library/react-native'
+import { fiberGetByProps } from '@/test-utils/fiber'
 import { navigate } from '@/utils/NavigationUtils'
 import SelfDisposalListFilterBottomSheet from '../components/SelfDisposalListFilterBottomSheet'
 import DisposalShipmentFilterBottomSheet from '../components/shipment-list/DisposalShipmentFilterBottomsheet'
@@ -252,9 +253,7 @@ describe('DisposalShipmentList', () => {
         onEndReached={onEnd}
       />
     )
-    screen
-      .UNSAFE_getByProps({ onEndReachedThreshold: 0.5 })
-      .props.onEndReached()
+    fiberGetByProps(screen, { onEndReachedThreshold: 0.5 }).props.onEndReached()
     expect(onEnd).toHaveBeenCalled()
   })
 })

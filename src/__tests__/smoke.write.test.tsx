@@ -229,6 +229,7 @@ import React from 'react'
 import { render, renderHook, cleanup, act } from '@testing-library/react-native'
 import fs from 'node:fs'
 import path from 'node:path'
+import { fiberFindAll } from '@/test-utils/fiber'
 import { chaosItem, chaosList, item, listFixture } from '@/test-utils/fixtures'
 import { setRtkMode } from '@/test-utils/rtkMock'
 import { seedStore, schemaSamples } from '@/test-utils/seedStore'
@@ -458,7 +459,8 @@ const exercise = async (obj: any, depth = 0) => {
 const fireHandlers = async (screen: any) => {
   let nodes: any[] = []
   try {
-    nodes = screen.UNSAFE_root.findAll(
+    nodes = fiberFindAll(
+      screen,
       (n: any) =>
         n.props &&
         Object.keys(n.props).some(
@@ -558,7 +560,7 @@ describe.each([
               if (m === 'data' && !NO_FIRE.test(String(_rel)))
                 await fireHandlers(screen)
             })
-            cleanup()
+            await cleanup()
           }
           for (let seed = 0; seed < SEEDS; seed++) {
             setRtkMode('chaos', seed)
@@ -578,7 +580,7 @@ describe.each([
               if (seed % 2 === 0 && !NO_FIRE.test(String(_rel)))
                 await fireHandlers(screen)
             })
-            cleanup()
+            await cleanup()
           }
           // Variasi props: tiap nama prop mendapat nilai deterministik berbeda per seed,
           // sehingga prop selain item/data/items (batch, material, order, ...) ikut bervariasi.
@@ -594,7 +596,7 @@ describe.each([
                   await Promise.resolve()
                 })
               })
-              cleanup()
+              await cleanup()
             }
           }
         } else if (/^use[A-Z]/.test(k) && typeof v === 'function') {
@@ -623,7 +625,7 @@ describe.each([
           await inspectResult(v)
         }
       }
-      cleanup()
+      await cleanup()
       if (
         process.env.SMOKE_DBG &&
         require('@/services/store').store.getState().setting == null
