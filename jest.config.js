@@ -31,6 +31,6 @@ module.exports = {
   // Lantai (ratchet) saat ini; naikkan tiap menambah test. Target akhir 80%
   // ada di jest.coverage-gate.config.js (npm run test:coverage:gate).
   coverageThreshold: {
-    global: { statements: 85, branches: 73, functions: 82, lines: 86 },
+    global: { statements: 88, branches: 79, functions: 84, lines: 88 },
   },
 }
