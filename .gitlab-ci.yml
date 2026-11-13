@@ -3,7 +3,7 @@ include:
     ref: main
     file: 'review.yml'
 
-image: node:20
+image: node:26
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
