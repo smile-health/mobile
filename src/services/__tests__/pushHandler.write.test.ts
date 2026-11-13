@@ -14,25 +14,25 @@ jest.mock('../Notifee', () => ({
 }))
 jest.mock('../push-notification/NotificationChannelManager', () => ({
   notificationChannelManager: {
-    createChannels: jest.fn().mockResolvedValue(),
+    createChannels: jest.fn().mockResolvedValue(undefined),
   },
 }))
 jest.mock('../push-notification/NotificationDisplayManager', () => ({
   notificationDisplayManager: {
-    displayTestNotification: jest.fn().mockResolvedValue(),
+    displayTestNotification: jest.fn().mockResolvedValue(undefined),
   },
 }))
 jest.mock('../push-notification/NotificationStorageManager', () => ({
   notificationStorageManager: {
-    storeTestNotification: jest.fn().mockResolvedValue(),
-    incrementBadgeCount: jest.fn().mockResolvedValue(),
+    storeTestNotification: jest.fn().mockResolvedValue(undefined),
+    incrementBadgeCount: jest.fn().mockResolvedValue(undefined),
   },
 }))
 jest.mock('../push-notification/NotificationEventHandlers', () => ({
   notificationEventHandlers: {
     onForegroundMessage: jest.fn(),
     onNotificationOpened: jest.fn(),
-    onNotificationPress: jest.fn().mockResolvedValue(),
+    onNotificationPress: jest.fn().mockResolvedValue(undefined),
   },
 }))
 import notifee from '../Notifee'

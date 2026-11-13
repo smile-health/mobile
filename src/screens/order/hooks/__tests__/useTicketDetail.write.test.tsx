@@ -58,7 +58,9 @@ describe('mapItemsToTicketMaterials', () => {
     expect(out).toHaveLength(1)
     expect(out[0].batches).toHaveLength(2)
     expect(out[0].qty).toBe(5)
+    // @ts-expect-error tipe mock test tidak presisi
     expect(out[0].batches[0].detail_reason).toBe('cr')
+    // @ts-expect-error tipe mock test tidak presisi
     expect(out[0].batches[1].detail_reason).toBe('dr')
   })
 

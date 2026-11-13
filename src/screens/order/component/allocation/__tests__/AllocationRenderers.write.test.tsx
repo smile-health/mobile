@@ -96,6 +96,7 @@ describe('AllocationMaterialHierarchyRenderer', () => {
         control={{} as any}
         t={t}
         setValue={setValue}
+        // @ts-expect-error tipe mock test tidak presisi
         watch={watch}
         materialParentId={5}
         draftData={draft}

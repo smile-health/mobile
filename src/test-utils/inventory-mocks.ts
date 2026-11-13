@@ -133,6 +133,7 @@ jest.mock('i18next', () => {
     changeLanguage: jest.fn(),
     exists: () => true,
   }
+  // @ts-expect-error tipe mock test tidak presisi
   return { __esModule: true, default: i18n, t, ...i18n }
 })
 jest.mock(

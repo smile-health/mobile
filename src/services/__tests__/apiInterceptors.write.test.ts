@@ -27,7 +27,7 @@ jest.mock('@/utils/NetworkUtils', () => ({
 jest.mock('@/utils/NavigationUtils', () => ({ navigateToLogin: jest.fn() }))
 jest.mock('@/utils/CommonUtils', () => ({ showError: jest.fn() }))
 jest.mock('@/storage', () => ({
-  clearLocalData: jest.fn().mockResolvedValue(),
+  clearLocalData: jest.fn().mockResolvedValue(undefined),
 }))
 jest.mock('@/i18n', () => ({
   __esModule: true,

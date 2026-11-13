@@ -14,6 +14,7 @@ jest.mock('@/services/apis/disposal.api', () => ({
   ...jest.requireActual('@/services/apis/disposal.api'),
   useCreateSelfDisposalMutation: () => [
     mockCreate,
+    // @ts-expect-error tipe mock test tidak presisi
     { isLoading: mockCreate.isLoadingFlag },
   ],
 }))
@@ -68,9 +69,11 @@ describe('useAddDisposalForm', () => {
       useAddDisposalForm({ disposalStock: stock, type: 'self' as any })
     )
     expect(result.current.sections).toHaveLength(2)
+    // @ts-expect-error tipe mock test tidak presisi
     expect(result.current.sections[0].data[0]).toMatchObject({
       disposal_qty: 5,
     })
+    // @ts-expect-error tipe mock test tidak presisi
     expect(result.current.sections[1].data[0]).toMatchObject({
       disposal_qty: 2,
     })
@@ -159,6 +162,7 @@ describe('useAddDisposalForm', () => {
 describe('useReviewSelfDisposal', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    // @ts-expect-error tipe mock test tidak presisi
     mockCreate.isLoadingFlag = false
     store.dispatch(clearDisposal())
     store.dispatch(setActivity({ id: 3, name: 'Rutin' } as any))
@@ -234,6 +238,7 @@ describe('useReviewSelfDisposal', () => {
   })
 
   it('tidak mengirim saat masih loading', async () => {
+    // @ts-expect-error tipe mock test tidak presisi
     mockCreate.isLoadingFlag = true
     const { result } = await renderHook(() => useReviewSelfDisposal())
     await act(async () => {

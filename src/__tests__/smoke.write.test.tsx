@@ -132,15 +132,15 @@ jest.mock('@/services/apis/workspaces.api', () =>
 )
 
 jest.mock('@/storage', () => ({
-  saveLocalData: jest.fn().mockResolvedValue(),
+  saveLocalData: jest.fn().mockResolvedValue(undefined),
   loadLocalData: jest.fn().mockResolvedValue(null),
   loadArrayData: jest.fn().mockResolvedValue([]),
   loadMultipleLocalData: jest.fn().mockResolvedValue({}),
-  updateLocalData: jest.fn().mockResolvedValue(),
-  updateArrayData: jest.fn().mockResolvedValue(),
-  removeLocalData: jest.fn().mockResolvedValue(),
-  removeMultipleLocalData: jest.fn().mockResolvedValue(),
-  clearLocalData: jest.fn().mockResolvedValue(),
+  updateLocalData: jest.fn().mockResolvedValue(undefined),
+  updateArrayData: jest.fn().mockResolvedValue(undefined),
+  removeLocalData: jest.fn().mockResolvedValue(undefined),
+  removeMultipleLocalData: jest.fn().mockResolvedValue(undefined),
+  clearLocalData: jest.fn().mockResolvedValue(undefined),
 }))
 jest.mock('i18next', () => {
   const t = (k: string) => k
@@ -150,6 +150,7 @@ jest.mock('i18next', () => {
     changeLanguage: jest.fn(),
     exists: () => true,
   }
+  // @ts-expect-error tipe mock test tidak presisi
   return { __esModule: true, default: i18n, t, ...i18n }
 })
 jest.mock(

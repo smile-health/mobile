@@ -76,7 +76,7 @@ describe('ReviewStockTakingScreen', () => {
       },
       { materialName: 'N', createdAt: 'c', totalActualQty: 1, items: [] },
     ],
-    handleSubmitStockTaking: jest.fn().mockResolvedValue(),
+    handleSubmitStockTaking: jest.fn().mockResolvedValue(undefined),
     ...over,
   })
   const renderScreen = async () =>

@@ -25,8 +25,10 @@ describe('quantity helpers', () => {
 
   it('format dan qty form', () => {
     expect(getFormattedQuantity({ qty: 1500 } as any)).toBe('1,500')
+    // @ts-expect-error tipe mock test tidak presisi
     expect(getFormQuantity()).toBe(0)
     expect(getFormQuantity(3)).toBe(3)
+    // @ts-expect-error tipe mock test tidak presisi
     expect(getFormattedFormQuantity()).toBe('0')
     expect(getRadioOptions().map((o) => o.value)).toEqual([1, 0])
   })

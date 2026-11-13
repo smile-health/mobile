@@ -101,6 +101,7 @@ describe('DisposalShipmentFilterBottomSheet', () => {
     const onApply = jest.fn()
     const toggleSheet = jest.fn()
     await render(
+      // @ts-expect-error tipe mock test tidak presisi
       <DisposalShipmentFilterBottomSheet
         isOpen
         filter={filter}

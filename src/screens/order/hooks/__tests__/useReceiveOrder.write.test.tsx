@@ -98,6 +98,7 @@ describe('useReceiveOrder', () => {
     mockWorkspace = { config: { material: { is_hierarchy_enabled: 1 } } }
     const { result } = await setup(hierData)
     await waitFor(() =>
+      // @ts-expect-error tipe mock test tidak presisi
       expect(result.current.form.order_items[0].children).toHaveLength(1)
     )
     expect(result.current.isHierarchy).toBe(1)
@@ -215,6 +216,7 @@ describe('useReceiveOrder', () => {
   it('submit sukses (hierarki) membentuk children', async () => {
     const { result } = await setup(hierData)
     await waitFor(() =>
+      // @ts-expect-error tipe mock test tidak presisi
       expect(result.current.form.order_items[0].children).toBeDefined()
     )
     await act(() =>

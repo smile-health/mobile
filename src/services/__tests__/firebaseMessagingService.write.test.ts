@@ -18,10 +18,10 @@ jest.mock('../firebase/NotificationPermissionService', () => ({
 }))
 jest.mock('../push-notification', () => ({
   notificationChannelManager: {
-    createChannels: jest.fn().mockResolvedValue(),
+    createChannels: jest.fn().mockResolvedValue(undefined),
   },
   notificationDisplayManager: {
-    displayNotification: jest.fn().mockResolvedValue(),
+    displayNotification: jest.fn().mockResolvedValue(undefined),
   },
 }))
 import { navigate } from '@/utils/NavigationUtils'

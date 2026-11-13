@@ -481,6 +481,7 @@ describe('materials.slice', () => {
   })
 
   it('activity materials', () => {
+    // @ts-expect-error tipe mock test tidak presisi
     expect(mt.getActivityMaterials(root())).toEqual([])
     expect(
       mt.getActivityMaterials(

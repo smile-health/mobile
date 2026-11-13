@@ -5,7 +5,7 @@ jest.mock('@/services/FirebaseMessaging', () => {
 })
 jest.mock('@/services/Notifee', () => ({
   __esModule: true,
-  default: { setBadgeCount: jest.fn().mockResolvedValue() },
+  default: { setBadgeCount: jest.fn().mockResolvedValue(undefined) },
 }))
 jest.mock('@/services/firebase', () => ({
   firebaseMessagingService: {
