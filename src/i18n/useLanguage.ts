@@ -6,6 +6,7 @@ import { setLanguage } from '@/services/features'
 import { useAppDispatch } from '@/services/store'
 import { removeMultipleLocalData } from '@/storage'
 import { StorageKey } from '@/storage/types'
+import { syncNativeDirection } from './direction'
 import { TxCode } from '.'
 
 export type LanguageOption = { code: TxCode; name: string }
@@ -13,6 +14,7 @@ export type LanguageOption = { code: TxCode; name: string }
 export const languageOptions: LanguageOption[] = [
   { code: 'id', name: 'Indonesia' },
   { code: 'en', name: 'English' },
+  { code: 'ar', name: 'العربية' },
 ]
 
 export const useLanguage = () => {
@@ -33,6 +35,8 @@ export const useLanguage = () => {
     i18n.changeLanguage(code)
     dispatch(setLanguage(code))
     setCurrentLang(languageOptions.find((lang) => lang.code === code))
+    // Switching to/from Arabic flips the layout; React Native needs a reload.
+    await syncNativeDirection(code)
   }
 
   return { t, i18n, currentLang, changeLanguage, options: languageOptions }

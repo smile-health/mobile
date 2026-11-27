@@ -16,7 +16,11 @@
     "home": "Beranda",
     "filter": "Filter",
     "success_update_data": "Berhasil update data",
-    "smile": "SMILE"
+    "smile": "SMILE",
+    "text_direction": "Arah teks",
+    "direction_auto": "Otomatis",
+    "direction_ltr": "Kiri ke kanan",
+    "direction_rtl": "Kanan ke kiri"
   },
   "button": {
     "ok": "Ok",
@@ -1040,7 +1044,7 @@
     "material_notes": "Catatan Material",
     "material_list": "Daftar Material",
     "material_input_guide": "Panduan Input Material",
-    "material_input_guide_subtitle": "\u25CF Tulis sesuai data fisik/packing slip\n \u25CF Saat memilih material, klik \"Material Baru\" jika material fisik yang diterima tidak tersedia dalam daftar",
+    "material_input_guide_subtitle": "● Tulis sesuai data fisik/packing slip\n ● Saat memilih material, klik \"Material Baru\" jika material fisik yang diterima tidak tersedia dalam daftar",
     "add_batch": "Tambah Batch",
     "new_material": "+ Material Baru",
     "add_new_material": "Tambah Material Baru",

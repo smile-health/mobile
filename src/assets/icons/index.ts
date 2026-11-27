@@ -1,3 +1,4 @@
+import { flipInRtl } from './flipInRtl'
 import IcAdd from './ic_add.svg'
 import IcAlertCircle from './ic_alert_circle.svg'
 import IcAlertED from './ic_alert_ed.svg'
@@ -84,7 +85,7 @@ export const Icons = {
   IcVisibilityOn,
   IcDate,
   IcExpandMore,
-  IcBack,
+  IcBack: flipInRtl(IcBack),
   IcBag,
   IcMoreVertical,
   IcRefresh,
@@ -92,8 +93,8 @@ export const Icons = {
   IcSearchSolid,
   IcClearFilter,
   IcBell,
-  IcChevronRight,
-  IcChevronRightActive,
+  IcChevronRight: flipInRtl(IcChevronRight),
+  IcChevronRightActive: flipInRtl(IcChevronRightActive),
   IcHome,
   IcLogout,
   IcEmptyStateWorkspace,
@@ -110,12 +111,12 @@ export const Icons = {
   IcInfo,
   IcMin,
   IcMax,
-  IcArrowForward,
+  IcArrowForward: flipInRtl(IcArrowForward),
   IcFilterOutline,
   IcFlag,
   IcTrash,
   IcSend,
-  IcArrowRight,
+  IcArrowRight: flipInRtl(IcArrowRight),
   IcChecked,
   IcCheckBox,
   IcPartialChecked,
