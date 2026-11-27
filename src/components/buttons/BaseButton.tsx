@@ -130,8 +130,8 @@ const disabledClassName = {
   },
 }
 
-const leftAccessoryClassName = 'mr-1'
-const rightAccessoryClassName = 'ml-1'
+const leftAccessoryClassName = 'me-1'
+const rightAccessoryClassName = 'ms-1'
 
 const buttonPresets = {
   default: {

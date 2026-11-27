@@ -78,7 +78,7 @@ export function Toolbar(props: Readonly<ToolbarProps>) {
             Icon={Icons.IcBack}
             color={backIconColor ?? colors.mainText()}
             onPress={navigation.goBack}
-            className='mr-4'
+            className='me-4'
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             {...getTestID('toolbar-back-button')}
           />

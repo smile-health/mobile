@@ -57,7 +57,7 @@ function AllocatedLabel({ label }: Readonly<{ label?: string }>) {
   return (
     <View className={AppStyles.rowCenterAlign}>
       <Icons.IcFlag />
-      <Text className={cn(AppStyles.textRegularSmall, 'text-scienceBlue ml-1')}>
+      <Text className={cn(AppStyles.textRegularSmall, 'text-scienceBlue ms-1')}>
         {label}
       </Text>
     </View>

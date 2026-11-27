@@ -16,7 +16,11 @@
     "home": "Home",
     "filter": "Filter",
     "success_update_data": "Successful update data",
-    "smile": "SMILE"
+    "smile": "SMILE",
+    "text_direction": "Text direction",
+    "direction_auto": "Auto",
+    "direction_ltr": "Left to right",
+    "direction_rtl": "Right to left"
   },
   "button": {
     "ok": "Ok",
@@ -1031,7 +1035,7 @@
     "ticket_form": "Ticket Form",
     "material_list": "Material List",
     "material_input_guide": "Material Input Guide",
-    "material_input_guide_subtitle": "\u25CF Write according to real data, physical data or packing slip\n\u25CF When selecting material, click \"New Material\" if the physical material received is not available in the list",
+    "material_input_guide_subtitle": "● Write according to real data, physical data or packing slip\n● When selecting material, click \"New Material\" if the physical material received is not available in the list",
     "add_batch": "Add Batch",
     "new_material": "+ New Material(s)",
     "add_new_material": "Add New Material",

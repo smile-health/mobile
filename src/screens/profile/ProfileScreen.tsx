@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Constants from 'expo-constants'
@@ -11,6 +11,14 @@ import {
 } from '@/components/dialog/ConfirmationDialog'
 import LoadingDialog from '@/components/LoadingDialog'
 import { PopupMenu } from '@/components/menu/PopupMenu'
+import {
+  DirectionPreference,
+  getDirectionPreference,
+  nextPreference,
+  resolveDirection,
+  saveDirectionPreference,
+  syncNativeDirection,
+} from '@/i18n/direction'
 import { LanguageOption, useLanguage } from '@/i18n/useLanguage'
 import { AppStackScreenProps } from '@/navigators'
 import { resetApiState } from '@/services/api'
@@ -38,6 +46,23 @@ export default function ProfileScreen({ navigation }: Props) {
   const [logoutUser, { isLoading: isLoggingOut }] = useLogoutMutation()
 
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false)
+  const [direction, setDirection] = useState<DirectionPreference>('auto')
+
+  useEffect(() => {
+    getDirectionPreference().then(setDirection)
+  }, [])
+
+  const handleToggleDirection = async () => {
+    const next = nextPreference(direction)
+    setDirection(next)
+    await saveDirectionPreference(next)
+    await syncNativeDirection(currentLang?.code, next)
+  }
+
+  const directionLabel =
+    direction === 'auto'
+      ? `${t('common.direction_auto')} (${resolveDirection(currentLang?.code).toUpperCase()})`
+      : t(`common.direction_${direction}`)
   const [dialog, setDialog] = useState<
     Omit<ConfirmationDialogProps, 'dismissDialog'>
   >({
@@ -113,10 +138,10 @@ export default function ProfileScreen({ navigation }: Props) {
           Icon={Icons.IcDelete}
           size={24}
           onPress={navigation.goBack}
-          containerClassName='mb-6 ml-4 self-start'
+          containerClassName='mb-6 ms-4 self-start'
           {...getTestID('btn-back-profile')}
         />
-        <Text className={cn('pl-4', AppStyles.labelBold)}>
+        <Text className={cn('ps-4', AppStyles.labelBold)}>
           {t('title.my_account')}
         </Text>
         <View className='flex-row gap-x-3 px-4 items-center py-4'>
@@ -153,7 +178,7 @@ export default function ProfileScreen({ navigation }: Props) {
           itemTestIDPrefix='menu-'
           dismissDialog={handleCloseLanguageMenu}
           modalVisible={isLanguageMenuOpen}
-          containerClassName='right-0 mr-4'
+          containerClassName='end-0 me-4'
           itemContainerClassName='px-4 py-2'
           onPressItem={handleLanguageSelect}>
           <Button
@@ -175,6 +200,23 @@ export default function ProfileScreen({ navigation }: Props) {
             </View>
           </Button>
         </PopupMenu>
+
+        <View className='bg-lightBlueGray h-1' />
+
+        <Button
+          onPress={handleToggleDirection}
+          containerClassName='justify-between w-full p-4'
+          {...getTestID('btn-toggle-direction')}>
+          <View className='flex-row gap-3'>
+            <Icons.IcGlobe />
+            <View>
+              <Text className={AppStyles.textMedium}>
+                {t('common.text_direction')}
+              </Text>
+              <Text className={AppStyles.labelRegular}>{directionLabel}</Text>
+            </View>
+          </View>
+        </Button>
 
         <View className='bg-lightBlueGray h-1' />
       </View>

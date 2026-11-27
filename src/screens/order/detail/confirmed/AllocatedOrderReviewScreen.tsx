@@ -118,7 +118,7 @@ export default function AllocatedOrderReviewScreen({ route }: Props) {
         <Button
           disabled={isLoadingAllocateOrder}
           preset='filled'
-          textClassName={cn(AppStyles.textMedium, 'text-white ml-1')}
+          textClassName={cn(AppStyles.textMedium, 'text-white ms-1')}
           text={t('button.process_allocation')}
           LeftIcon={Icons.IcArrowForward}
           onPress={handleProcessOrder}

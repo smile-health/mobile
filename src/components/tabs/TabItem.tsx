@@ -37,7 +37,7 @@ export function TabItem({
       ),
       text: cn('text-center', textClassName),
       indicator: cn(
-        'h-1 bg-main absolute bottom-0 left-0 right-0',
+        'h-1 bg-main absolute bottom-0 start-0 end-0',
         indicatorClassName
       ),
     }),

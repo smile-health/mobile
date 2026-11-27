@@ -101,7 +101,7 @@ export default function TicketMaterialSection({
       <TouchableOpacity
         onPress={() => setShowPicker(true)}
         className='my-4 flex-row items-center'>
-        <Text className='text-xl text-main mr-1 mt-[-4]'>+</Text>
+        <Text className='text-xl text-main me-1 mt-[-4]'>+</Text>
         <Text className='text-main'>{`${t('ticket.add_material')}(s)`}</Text>
       </TouchableOpacity>
     ),

@@ -96,7 +96,8 @@ export default ({ config }: ConfigContext): CustomExpoConfig => {
           },
         },
       ],
-      'expo-localization',
+      // Arabic is laid out RTL; the direction itself is driven by I18nManager.
+      ['expo-localization', { supportsRTL: true }],
       [
         '@sentry/react-native/expo',
         {

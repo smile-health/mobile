@@ -20,7 +20,7 @@ export const ShippedOrderActions: React.FC<ShippedOrderActionsProps> = ({
     <View className='p-4 border-whiteTwo bg-white border-t mt-auto'>
       <Button
         preset='filled'
-        textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+        textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
         text={t('button.received_order')}
         LeftIcon={Icons.IcArrowForward}
         leftIconColor={colors.white}

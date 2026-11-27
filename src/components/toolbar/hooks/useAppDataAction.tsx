@@ -75,7 +75,7 @@ export const useAppDataAction = (
     popupProps: {
       data,
       labelField: 'label',
-      containerClassName: 'right-0 mr-2 w-1/4',
+      containerClassName: 'end-0 me-2 w-1/4',
       itemContainerClassName: 'px-4 py-2',
       onPressItem: handleNavigation,
     } as Omit<

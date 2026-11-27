@@ -103,7 +103,7 @@ export default function ShipOrderScreen({ route, navigation }: Props) {
         <Button
           disabled={canShipOrder}
           preset='filled'
-          textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+          textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
           text={t('button.ship_order')}
           LeftIcon={Icons.IcArrowForward}
           leftIconColor={colors.white}

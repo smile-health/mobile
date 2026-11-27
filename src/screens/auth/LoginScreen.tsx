@@ -93,14 +93,14 @@ export default function LoginScreen({ navigation }: Props) {
             onPressItem={handleChangeLanguage}
             dismissDialog={toggleShowLanguageMenu}
             itemTextClassName={AppStyles.textRegularLarge}
-            containerClassName='mt-8 left-4'
+            containerClassName='mt-8 start-4'
             data={options}>
             <TouchableOpacity
               onPress={toggleShowLanguageMenu}
               className='flex-row items-center'
               {...getTestID('btn-openlanguage')}>
               <Text
-                className={cn(AppStyles.textRegular, 'mr-[13px]')}
+                className={cn(AppStyles.textRegular, 'me-[13px]')}
                 {...getTestID('text-language')}>
                 {currentLang?.name}
               </Text>

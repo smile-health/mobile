@@ -248,7 +248,7 @@ function AddPatientInfoScreen({ route, navigation }: Props) {
               LeftIcon={Icons.IcCheck}
               leftIconColor={colors.mainText()}
               onPress={handleSubmit(handleSubmitPatient)}
-              textClassName='ml-2'
+              textClassName='ms-2'
               {...getTestID('btn-save')}
             />
           </View>

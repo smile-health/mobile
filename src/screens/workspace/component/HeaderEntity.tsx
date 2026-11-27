@@ -39,7 +39,7 @@ export default function HeaderEntity() {
           RightIcon={Icons.IcChevronRightActive}
           rightIconColor={colors.mainText()}
           rightIconSize={24}
-          containerClassName='flex-row items-center rounded pl-3 pr-1 py-1 bg-white/20'
+          containerClassName='flex-row items-center rounded ps-3 pe-1 py-1 bg-white/20'
           textClassName='text-mainText'
         />
       </View>

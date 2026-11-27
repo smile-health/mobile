@@ -127,7 +127,7 @@ export default function Accordion(props: Readonly<AccordionProps>) {
         <Text className={AppStyles.textRegularMedium}>{name}</Text>
         <View className='flex flex-row items-center'>
           {showAlertIcon && <Icons.IcError />}
-          <Animated.View className='ml-2' style={arrowIconStyle}>
+          <Animated.View className='ms-2' style={arrowIconStyle}>
             <Icons.IcExpandMore height={20} width={20} fill={colors.marine} />
           </Animated.View>
         </View>

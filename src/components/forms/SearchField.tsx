@@ -22,7 +22,7 @@ export function SearchField(props: Readonly<SearchFieldProps>) {
 
   const searchIcon = () => {
     return (
-      <View className='mr-2'>
+      <View className='me-2'>
         <Icons.IcSearchSolid
           height={iconSize}
           width={iconSize}

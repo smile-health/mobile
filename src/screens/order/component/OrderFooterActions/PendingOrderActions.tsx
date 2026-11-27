@@ -51,7 +51,7 @@ export const PendingOrderActions: React.FC<PendingOrderActionsProps> = ({
       <View className='flex-row mt-2'>
         <BaseButton
           preset='outlined'
-          textClassName={cn(AppStyles.textMedium, 'ml-1 text-main')}
+          textClassName={cn(AppStyles.textMedium, 'ms-1 text-main')}
           containerClassName='flex-1 text-center border-main'
           text={t(cancelButtonKey)}
           onPress={onCancel}
@@ -62,7 +62,7 @@ export const PendingOrderActions: React.FC<PendingOrderActionsProps> = ({
             <View className='w-4' />
             <Button
               preset='filled'
-              textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+              textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
               containerClassName='flex-1'
               text={text}
               LeftIcon={icon}

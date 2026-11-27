@@ -29,7 +29,7 @@ const WarningBox: React.FC<WarningBoxProps> = ({
             className={cn(
               AppStyles.textBoldSmall,
               titleClassName,
-              'text-vividOrange ml-1'
+              'text-vividOrange ms-1'
             )}>
             {title}
           </Text>

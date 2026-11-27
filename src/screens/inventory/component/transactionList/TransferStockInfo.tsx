@@ -34,7 +34,7 @@ function TransferStockInfo({
         <InfoRow
           label={t('label.from')}
           value={fromProgram}
-          labelClassName='flex-none mr-1'
+          labelClassName='flex-none me-1'
         />
         <ActivityLabel name={fromActivity} />
       </View>
@@ -42,7 +42,7 @@ function TransferStockInfo({
         <InfoRow
           label={t('label.to')}
           value={toProgram}
-          labelClassName='flex-none mr-1'
+          labelClassName='flex-none me-1'
         />
         <ActivityLabel name={toActivity} />
       </View>

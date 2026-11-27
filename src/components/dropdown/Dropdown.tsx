@@ -214,7 +214,7 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
           <Text
             className={
               (className.label,
-              'absolute text-gray-500 text-sm left-1 mt-[-35] py-2')
+              'absolute text-gray-500 text-sm start-1 mt-[-35] py-2')
             }
             {...getTestID(labelTestID)}>
             {label}

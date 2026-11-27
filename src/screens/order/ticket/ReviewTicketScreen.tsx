@@ -95,7 +95,7 @@ export default function ReviewTicketScreen() {
                   )}
                 />
                 {isShowMessageError && (
-                  <Text className='text-red-500 text-xs mt-1 ml-8'>
+                  <Text className='text-red-500 text-xs mt-1 ms-8'>
                     {t('validation.required')}
                   </Text>
                 )}
@@ -125,8 +125,8 @@ export default function ReviewTicketScreen() {
       <View className='p-4 border-whiteTwo mt-auto border-t bg-white flex-row justify-between'>
         <Button
           preset='outlined'
-          textClassName={cn(AppStyles.textMedium, 'text-primary-dark ml-1')}
-          containerClassName='flex-1 mr-2 border-primary-dark'
+          textClassName={cn(AppStyles.textMedium, 'text-primary-dark ms-1')}
+          containerClassName='flex-1 me-2 border-primary-dark'
           text={t('button.delete_all')}
           LeftIcon={Icons.IcClose}
           onPress={handleDeleteAll}
@@ -134,8 +134,8 @@ export default function ReviewTicketScreen() {
         />
         <Button
           preset='filled'
-          textClassName={cn(AppStyles.textMedium, 'text-white ml-1')}
-          containerClassName='flex-1 ml-2'
+          textClassName={cn(AppStyles.textMedium, 'text-white ms-1')}
+          containerClassName='flex-1 ms-2'
           text={t('button.send')}
           LeftIcon={Icons.IcArrowForward}
           onPress={() => setShowConfirm(true)}

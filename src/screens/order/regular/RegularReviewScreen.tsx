@@ -148,7 +148,7 @@ export default function RegularReviewScreen({ navigation }: Props) {
         <View className='p-4 border-whiteTwo bg-white border-t'>
           <Button
             preset='filled'
-            textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+            textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
             text={t('button.review')}
             LeftIcon={Icons.IcArrowForward}
             leftIconColor={colors.white}

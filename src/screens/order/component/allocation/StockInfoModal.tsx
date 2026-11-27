@@ -61,12 +61,12 @@ function StockInfoModal({
             </Text>
           </Text>
           <View className={AppStyles.rowCenterAlign}>
-            <View className={cn(AppStyles.rowCenterAlign, 'mr-2')}>
+            <View className={cn(AppStyles.rowCenterAlign, 'me-2')}>
               <Icons.IcMin />
               <Text
                 className={cn(
                   AppStyles.textRegularSmall,
-                  'text-mediumGray ml-1'
+                  'text-mediumGray ms-1'
                 )}>
                 {t('label.min')}:{' '}
                 <Text
@@ -76,12 +76,12 @@ function StockInfoModal({
               </Text>
             </View>
             <View className='w-[1px] h-full bg-quillGrey' />
-            <View className={cn(AppStyles.rowCenterAlign, 'ml-2')}>
+            <View className={cn(AppStyles.rowCenterAlign, 'ms-2')}>
               <Icons.IcMax />
               <Text
                 className={cn(
                   AppStyles.textRegularSmall,
-                  'text-mediumGray ml-1'
+                  'text-mediumGray ms-1'
                 )}>
                 {t('label.max')}:{' '}
                 <Text

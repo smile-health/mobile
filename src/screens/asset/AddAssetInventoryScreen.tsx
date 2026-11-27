@@ -195,7 +195,7 @@ export default function AddAssetInventoryScreen({ route }: Props) {
         <Button
           preset='filled'
           text={t('button.save')}
-          textClassName={'ml-2'}
+          textClassName={'ms-2'}
           LeftIcon={Icons.IcCheck}
           leftIconSize={20}
           onPress={handleSubmit(onSubmit)}

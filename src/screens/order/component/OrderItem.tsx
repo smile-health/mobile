@@ -75,7 +75,7 @@ export const OrderItem = memo(function OrderItem({
           {badgeIntegrationType && (
             <BadgeIntegrationOrder
               type={badgeIntegrationType}
-              containerClassName='ml-2'
+              containerClassName='ms-2'
             />
           )}
         </View>

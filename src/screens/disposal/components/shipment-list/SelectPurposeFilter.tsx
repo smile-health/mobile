@@ -28,8 +28,8 @@ function SelectPurposeFilter({ data, purpose, t, onSelect }: Readonly<Props>) {
         dismissDialog={togglePurposePopup}
         onPressItem={onSelect}
         labelField='label'
-        containerClassName='ml-4'
-        itemTextClassName='mr-1'
+        containerClassName='ms-4'
+        itemTextClassName='me-1'
         data={data}
         {...getTestID('popup-disposal-purpose')}>
         <Button

@@ -186,7 +186,7 @@ export function OrderInformation({
     <View className='p-4 bg-white' {...restProps}>
       <View className={cn(AppStyles.card, 'px-0 border-white py-0')}>
         <View className='flex-row items-center mb-2'>
-          <Text className={cn(AppStyles.textBold, 'mr-2')}>{orderTitle}</Text>
+          <Text className={cn(AppStyles.textBold, 'me-2')}>{orderTitle}</Text>
           {badgeIntegrationType && (
             <BadgeIntegrationOrder type={badgeIntegrationType} />
           )}

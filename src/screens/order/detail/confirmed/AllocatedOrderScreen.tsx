@@ -135,7 +135,7 @@ export default function AllocatedOrderScreen({ navigation, route }: Props) {
         <View className='flex-row p-4 border-whiteTwo border-t gap-x-2 bg-white'>
           <Button
             preset='outlined'
-            textClassName={cn(AppStyles.textMedium, 'ml-1 text-main')}
+            textClassName={cn(AppStyles.textMedium, 'ms-1 text-main')}
             containerClassName='flex-1 text-center border-main'
             text={t('button.delete_all')}
             LeftIcon={Icons.IcClose}
@@ -144,7 +144,7 @@ export default function AllocatedOrderScreen({ navigation, route }: Props) {
           />
           <Button
             preset='filled'
-            textClassName={cn(AppStyles.textMedium, 'text-white ml-1')}
+            textClassName={cn(AppStyles.textMedium, 'text-white ms-1')}
             containerClassName='flex-1'
             text={t('button.save_allocation')}
             LeftIcon={Icons.IcArrowForward}

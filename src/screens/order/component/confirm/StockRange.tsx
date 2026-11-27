@@ -17,10 +17,10 @@ const StockRange = ({ min, max, containerClassName }: StockRangeProps) => {
 
   return (
     <View className={cn(AppStyles.rowCenterAlign, containerClassName)}>
-      <View className={cn(AppStyles.rowCenterAlign, 'mr-2')}>
+      <View className={cn(AppStyles.rowCenterAlign, 'me-2')}>
         <Icons.IcMin />
         <Text
-          className={cn(AppStyles.textRegularSmall, 'text-mediumGray ml-1')}>
+          className={cn(AppStyles.textRegularSmall, 'text-mediumGray ms-1')}>
           {t('label.min')}:{' '}
           <Text className={cn(AppStyles.textRegularSmall, 'text-midnightBlue')}>
             {min}
@@ -28,10 +28,10 @@ const StockRange = ({ min, max, containerClassName }: StockRangeProps) => {
         </Text>
       </View>
       <Separator />
-      <View className={cn(AppStyles.rowCenterAlign, 'ml-2')}>
+      <View className={cn(AppStyles.rowCenterAlign, 'ms-2')}>
         <Icons.IcMax />
         <Text
-          className={cn(AppStyles.textRegularSmall, 'text-mediumGray ml-1')}>
+          className={cn(AppStyles.textRegularSmall, 'text-mediumGray ms-1')}>
           {t('label.max')}:{' '}
           <Text className={cn(AppStyles.textRegularSmall, 'text-midnightBlue')}>
             {max}

@@ -43,7 +43,7 @@ function AllocatedOrderHeader({
         />
         <Separator className='my-2' />
         <View className={AppStyles.rowCenterAlign}>
-          <Text className={cn(AppStyles.labelRegular, 'mr-1')}>
+          <Text className={cn(AppStyles.labelRegular, 'me-1')}>
             {t('label.view_stock_customer')}
           </Text>
           <BaseButton
