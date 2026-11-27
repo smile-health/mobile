@@ -5,7 +5,8 @@ import LoadingDialog from '@/components/LoadingDialog'
 import { RefreshHomeAction } from '@/components/toolbar/actions/RefreshHomeAction'
 import { useToolbar } from '@/components/toolbar/hooks/useToolbar'
 import { useLanguage } from '@/i18n/useLanguage'
-import { homeState, useAppSelector } from '@/services/store'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
+import { homeState, useAppSelector, workspaceState } from '@/services/store'
 import TransactionFilterBottomSheet from '../component/transactionList/TransactionFilterBottomSheet'
 import TransactionList from '../component/transactionList/TransactionList'
 import TransactionListFilter from '../component/transactionList/TransactionListFilter'
@@ -14,6 +15,8 @@ import useTransactionList from '../hooks/transactionList/useTransactionList'
 export default function ViewTransactionScreen() {
   const { activeMenu } = useAppSelector(homeState)
   const { t } = useLanguage()
+  const { programName } = useLocalizedName()
+  const { selectedWorkspace } = useAppSelector(workspaceState)
 
   const {
     sections,
@@ -53,7 +56,7 @@ export default function ViewTransactionScreen() {
         sections={sections}
         onEndReach={handleLoadMore}
         isHierarchy={isHierarchy}
-        programName={currentProgramName}
+        programName={programName(selectedWorkspace ?? currentProgramName)}
         isLoading={shouldShowLoading && page > 1}
       />
       <TransactionFilterBottomSheet

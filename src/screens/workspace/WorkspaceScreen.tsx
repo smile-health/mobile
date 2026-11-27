@@ -12,6 +12,7 @@ import CardWorkspace from '@/components/cards/CardWorkspace'
 import EmptyState from '@/components/EmptyState'
 import { SearchField } from '@/components/forms'
 import LoadingDialog from '@/components/LoadingDialog'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { Workspace } from '@/models'
 import { AppStackScreenProps } from '@/navigators'
 import {
@@ -61,6 +62,7 @@ export default function WorkspaceScreen({ navigation }: Props) {
   const isLoadProfile = isLoading || isFetching
 
   const { t } = useTranslation()
+  const { programName } = useLocalizedName()
   const { control, watch } = useForm({ defaultValues: { name: '' } })
   const search = watch('name')
 
@@ -72,7 +74,7 @@ export default function WorkspaceScreen({ navigation }: Props) {
 
   const renderItem: ListRenderItem<Workspace> = ({ item }) => (
     <CardWorkspace
-      name={item.name}
+      name={programName(item)}
       programKey={item.key}
       backgroundColor={item.config.color}
       onPress={() => onPressHome(item)}

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useLanguage } from '@/i18n/useLanguage'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { UserGlobal } from '@/models/shared/EntityUser'
 import useUserEntityList from './hooks/useUserEntityList'
 import UserItem from '../program-entity/components/UserItem'
@@ -8,6 +9,7 @@ import UserListScreenBase from '../shared/component/UserListScreenBase'
 export default function UserEntityListScreen() {
   const hookData = useUserEntityList()
   const { t } = useLanguage()
+  const { roleName } = useLocalizedName()
 
   const renderUserItem = useCallback(
     (item: UserGlobal) => {
@@ -22,12 +24,12 @@ export default function UserEntityListScreen() {
           name={fullName}
           username={item?.username}
           phone={item?.mobile_phone}
-          role={item?.role_label}
+          role={roleName(item?.role_label)}
           t={t}
         />
       )
     },
-    [t]
+    [t, roleName]
   )
 
   return (

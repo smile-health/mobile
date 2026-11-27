@@ -4,6 +4,7 @@ import ActivityLabel from '@/components/ActivityLabel'
 import { Button } from '@/components/buttons'
 import { InfoRow } from '@/components/list/InfoRow'
 import { useLanguage } from '@/i18n/useLanguage'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { IReviewTransferStockItem } from '@/models/transaction/TransferStock'
 import AppStyles, { flexStyle } from '@/theme/AppStyles'
 import { getTestID, numberFormat } from '@/utils/CommonUtils'
@@ -79,6 +80,7 @@ function ReviewTransferStockItem({ index, item, onDelete }: Readonly<Props>) {
   } = item
 
   const { t } = useLanguage()
+  const { programName } = useLocalizedName()
 
   return (
     <View
@@ -92,7 +94,7 @@ function ReviewTransferStockItem({ index, item, onDelete }: Readonly<Props>) {
       <View className='border-b border-lightGreyMinimal' />
       <InfoRow
         label={t('transfer_stock.destination_program')}
-        value={program_name ?? '-'}
+        value={program_name ? programName(program_name) : '-'}
         valueClassName='font-mainMedium'
       />
       <InfoRow

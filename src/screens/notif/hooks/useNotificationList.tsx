@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { NotificationData } from '@/models/notif/NotificationList'
 import {
   useGetNotificationsInfiniteQuery,
@@ -11,11 +12,12 @@ import { showNetworkError } from '@/utils/NetworkUtils'
 
 export default function useNotificationList() {
   const { workspaces } = useAppSelector(workspaceState)
+  const { programName } = useLocalizedName()
   const [filter, setFilter] = useState<number[]>([])
 
   const programOptions = useMemo(() => {
-    return workspaces.map((w) => ({ value: w.id, label: w.name }))
-  }, [workspaces])
+    return workspaces.map((w) => ({ value: w.id, label: programName(w) }))
+  }, [workspaces, programName])
 
   const {
     data,

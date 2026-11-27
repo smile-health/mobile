@@ -4,6 +4,7 @@ import { Icons } from '@/assets/icons'
 import EmptyState from '@/components/EmptyState'
 import LoadingDialog from '@/components/LoadingDialog'
 import { useLanguage } from '@/i18n/useLanguage'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { EntityType } from '@/models'
 import colors from '@/theme/colors'
 import EntityDetailHeader from '../../program-entity/components/EntityDetailHeader'
@@ -37,6 +38,7 @@ export default function UserListScreenBase({
   renderUserItem,
 }: Readonly<UserListScreenBaseProps>) {
   const { t } = useLanguage()
+  const { roleName } = useLocalizedName()
 
   const defaultRenderUserItem = useCallback(
     (item: any) => {
@@ -46,12 +48,12 @@ export default function UserListScreenBase({
           name={`${item?.firstname} ${item?.lastname}`}
           username={item?.username}
           phone={item?.mobile_phone}
-          role={item?.role_label}
+          role={roleName(item?.role_label)}
           t={t}
         />
       )
     },
-    [t]
+    [t, roleName]
   )
 
   const renderItem = useCallback(
