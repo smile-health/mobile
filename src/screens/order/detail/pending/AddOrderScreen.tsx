@@ -135,7 +135,7 @@ export default function AddOrderScreen({ navigation, route }: Props) {
           onPress={handleSubmit(onSubmit)}
           LeftIcon={Icons.IcCheck}
           containerClassName='bg-bluePrimary'
-          textClassName='ml-2 '
+          textClassName='ms-2 '
           disabled={isDisabledSave}
           {...getTestID('btn-save')}
         />

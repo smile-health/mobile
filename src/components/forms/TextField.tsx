@@ -226,7 +226,7 @@ export const TextField = forwardRef(function TextField(
         {showAsterisk && (
           <Text
             className={
-              (className.label, 'absolute text-gray-500 text-sm left-1')
+              (className.label, 'absolute text-gray-500 text-sm start-1')
             }
             {...getTestID(labelTestID)}
             onPress={() => input.current?.focus()}>

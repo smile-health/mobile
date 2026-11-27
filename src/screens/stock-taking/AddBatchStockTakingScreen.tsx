@@ -176,7 +176,7 @@ export default function AddBatchStockTakingScreen({
             onPress={handleSubmit(handleSubmitNewBatch)}
             LeftIcon={Icons.IcCheck}
             leftIconColor={colors.mainText()}
-            textClassName='ml-2'
+            textClassName='ms-2'
             {...getTestID('btn-save')}
           />
         </View>

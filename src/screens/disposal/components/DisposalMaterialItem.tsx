@@ -80,7 +80,7 @@ function DisposalLabel({ label }: Readonly<{ label: string }>) {
         'border-t border-lightGreyMinimal mt-2 pt-2'
       )}>
       <Icons.IcFlag />
-      <Text className={cn(AppStyles.textRegularSmall, 'text-scienceBlue ml-1')}>
+      <Text className={cn(AppStyles.textRegularSmall, 'text-scienceBlue ms-1')}>
         {label}
       </Text>
     </View>

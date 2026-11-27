@@ -360,8 +360,8 @@ export const OrderFilter = forwardRef<OrderStatusRef, OrderFilterProps>(
             modalVisible={purposePopupVisible}
             dismissDialog={togglePurposePopup}
             onPressItem={onSelectPurpose}
-            containerClassName='ml-4'
-            itemTextClassName='mr-1'
+            containerClassName='ms-4'
+            itemTextClassName='me-1'
             data={purposeOptions}
             labelField='label'
             notif={notif}
@@ -384,7 +384,7 @@ export const OrderFilter = forwardRef<OrderStatusRef, OrderFilterProps>(
                 'rounded-sm bg-softPink p-1 mt-2'
               )}>
               <Icons.IcError />
-              <Text className='ml-1 font-mainRegular text-xs text-lavaRed'>
+              <Text className='ms-1 font-mainRegular text-xs text-lavaRed'>
                 {t('order.orders_not_received', { num: notifCount })}
               </Text>
             </View>

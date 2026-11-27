@@ -82,7 +82,7 @@ export default function DisposalMaterialBatchItem({
             <Text className={cn(AppStyles.textRegular, 'flex-1')}>
               {batch?.code}
             </Text>
-            <ActivityLabel name={activity} className='mr-2' />
+            <ActivityLabel name={activity} className='me-2' />
             <Icons.IcExpandMore rotation={expanded ? 180 : 0} />
           </View>
 

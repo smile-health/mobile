@@ -21,7 +21,7 @@ export default function DisposalHistorySection({
         {t('disposal.disposal_history')}
       </Text>
       <View className='flex-row justify-between mt-2'>
-        <View className='w-1/2 pr-1'>
+        <View className='w-1/2 pe-1'>
           <View className='border border-lightGreyMinimal p-3 rounded'>
             <Text className={cn(AppStyles.labelRegular)}>
               {t('disposal.total_disposal_shipment')}
@@ -31,7 +31,7 @@ export default function DisposalHistorySection({
             </Text>
           </View>
         </View>
-        <View className='w-1/2 pl-1'>
+        <View className='w-1/2 ps-1'>
           <View className='border border-lightGreyMinimal p-3 rounded'>
             <Text className={cn(AppStyles.labelRegular)}>
               {t('disposal.total_self_disposal')}

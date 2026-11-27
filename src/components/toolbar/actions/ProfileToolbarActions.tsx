@@ -38,12 +38,12 @@ export function ProfileToolbarActions({ iconColor }: Readonly<Props>) {
     <View className='flex-row items-center'>
       <TouchableOpacity
         onPress={handlePressNotification}
-        className='mr-4'
+        className='me-4'
         {...getTestID('btn-notification')}>
         <Icons.IcBell color={iconColor ?? colors.mainText()} />
       </TouchableOpacity>
       {!!data?.unread && (
-        <View className='bg-red-500 absolute w-[18px] h-4 ml-2.5 bottom-4 rounded-2xl justify-center items-center'>
+        <View className='bg-red-500 absolute w-[18px] h-4 ms-2.5 bottom-4 rounded-2xl justify-center items-center'>
           <Text className='text-[8px] text-white font-mainRegular'>
             {getNotificationCount(data.unread)}
           </Text>

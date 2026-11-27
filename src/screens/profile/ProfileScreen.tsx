@@ -138,10 +138,10 @@ export default function ProfileScreen({ navigation }: Props) {
           Icon={Icons.IcDelete}
           size={24}
           onPress={navigation.goBack}
-          containerClassName='mb-6 ml-4 self-start'
+          containerClassName='mb-6 ms-4 self-start'
           {...getTestID('btn-back-profile')}
         />
-        <Text className={cn('pl-4', AppStyles.labelBold)}>
+        <Text className={cn('ps-4', AppStyles.labelBold)}>
           {t('title.my_account')}
         </Text>
         <View className='flex-row gap-x-3 px-4 items-center py-4'>
@@ -178,7 +178,7 @@ export default function ProfileScreen({ navigation }: Props) {
           itemTestIDPrefix='menu-'
           dismissDialog={handleCloseLanguageMenu}
           modalVisible={isLanguageMenuOpen}
-          containerClassName='right-0 mr-4'
+          containerClassName='end-0 me-4'
           itemContainerClassName='px-4 py-2'
           onPressItem={handleLanguageSelect}>
           <Button

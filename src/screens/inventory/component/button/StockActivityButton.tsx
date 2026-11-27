@@ -13,7 +13,7 @@ function StockActivityButton({ onPress }: Readonly<StockActivityButtonProps>) {
   const { t } = useLanguage()
   return (
     <Button
-      containerClassName='gap-x-2 self-start ml-4 mt-2'
+      containerClassName='gap-x-2 self-start ms-4 mt-2'
       LeftIcon={Icons.IcAdd}
       leftIconSize={20}
       leftIconColor={colors.main()}

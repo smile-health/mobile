@@ -189,7 +189,7 @@ export default function AllocatedDetailOrderScreen({ route }: Props) {
       <View className='flex-row p-4 border-whiteTwo border-t bg-white'>
         <Button
           preset='filled'
-          textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+          textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
           containerClassName='flex-1'
           text={t('button.save')}
           LeftIcon={Icons.IcCheck}

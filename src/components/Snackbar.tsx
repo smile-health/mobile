@@ -26,7 +26,7 @@ interface Props {
 
 const baseBottomPosition = 8
 
-const snackbarBaseStyle = 'flex absolute right-2 left-2 rounded px-4 py-[14px]'
+const snackbarBaseStyle = 'flex absolute end-2 start-2 rounded px-4 py-[14px]'
 
 const SnackbarTypeStyle = {
   success: cn(snackbarBaseStyle, 'bg-greenPrimary'),

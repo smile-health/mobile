@@ -21,6 +21,10 @@ export const resolveDirection = (
   return isRtlLanguage(language) ? 'rtl' : 'ltr'
 }
 
+// Arabic keeps Latin digits (decision BA-949) so stock numbers stay familiar.
+export const toIntlLocale = (language?: string | null) =>
+  isRtlLanguage(language) ? `${language}-u-nu-latn` : (language ?? undefined)
+
 export const parsePreference = (
   value: string | null | undefined
 ): DirectionPreference =>

@@ -78,7 +78,7 @@ export default function CreateTicketScreen() {
       <View className='flex-1 flex-row items-center'>
         <View className={'h-1.5 rounded bg-main flex-1 transition-all'} />
         <View
-          className={`h-1.5 rounded ${step === 2 ? 'bg-main' : 'bg-lightBlueGray'} flex-1 transition-all ml-1`}
+          className={`h-1.5 rounded ${step === 2 ? 'bg-main' : 'bg-lightBlueGray'} flex-1 transition-all ms-1`}
         />
       </View>
     </View>

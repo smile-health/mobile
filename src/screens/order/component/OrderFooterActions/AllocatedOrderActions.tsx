@@ -23,7 +23,7 @@ export const AllocatedOrderActions: React.FC<AllocatedOrderActionsProps> = ({
       <View className='flex-row mt-2'>
         <BaseButton
           preset='outlined'
-          textClassName={cn(AppStyles.textMedium, 'ml-1 text-main')}
+          textClassName={cn(AppStyles.textMedium, 'ms-1 text-main')}
           containerClassName='flex-1 text-center border-main'
           text={t('button.cancel_order')}
           onPress={onCancel}
@@ -32,7 +32,7 @@ export const AllocatedOrderActions: React.FC<AllocatedOrderActionsProps> = ({
         <View className='w-4' />
         <Button
           preset='filled'
-          textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+          textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
           containerClassName='flex-1'
           text={t('button.ship_order')}
           LeftIcon={Icons.IcArrowForward}

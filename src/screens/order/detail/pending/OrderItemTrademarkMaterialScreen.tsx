@@ -114,7 +114,7 @@ export default function OrderItemTrademarkMaterialScreen({
           />
           <Button
             preset='filled'
-            textClassName={cn(AppStyles.textMedium, 'text-mainText ml-1')}
+            textClassName={cn(AppStyles.textMedium, 'text-mainText ms-1')}
             text={t('button.save')}
             containerClassName='flex-1 bg-main gap-x-2'
             LeftIcon={Icons.IcArrowForward}

@@ -101,7 +101,7 @@ export default function HomeScreen({ navigation }: Props) {
         data={languageOptions}
         labelField='label'
         modalVisible={showMenu}
-        containerClassName='right-4'
+        containerClassName='end-4'
         dismissDialog={() => {
           setShowMenu(false)
         }}>

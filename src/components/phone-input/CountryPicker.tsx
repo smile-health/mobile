@@ -73,7 +73,7 @@ function CountryPicker({
           <Text>{country?.emoji}</Text>
           <Icons.IcExpandMore fill={colors.mediumGray} />
         </View>
-        <View className='h-6 border-l border-quillGrey' />
+        <View className='h-6 border-s border-quillGrey' />
         <Text className={cn(AppStyles.labelRegular, 'text-sm')}>
           +{country?.dialCode}
         </Text>

@@ -24,7 +24,7 @@ function TransferStockProgramItem({
   return (
     <TouchableOpacity
       activeOpacity={0.7}
-      className='flex-row items-center mb-1.5 py-0.5 pl-0.5 pr-2 border border-lightGreyMinimal rounded-sm gap-x-2'
+      className='flex-row items-center mb-1.5 py-0.5 ps-0.5 pe-2 border border-lightGreyMinimal rounded-sm gap-x-2'
       onPress={handlePressItem}
       {...getTestID(`program-item-${item.key}`)}>
       <ProgramCard

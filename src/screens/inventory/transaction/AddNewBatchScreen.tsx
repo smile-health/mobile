@@ -195,7 +195,7 @@ export default function AddNewBatchScreen({ route, navigation }: Props) {
             onPress={handleSubmit(onSubmit)}
             leftIconColor={colors.mainText()}
             LeftIcon={Icons.IcCheck}
-            textClassName='ml-2'
+            textClassName='ms-2'
             disabled={isDisabledSave}
             {...getTestID('btn-save')}
           />

@@ -14,7 +14,7 @@ export const TicketCommentSection = ({
   return (
     <View>
       <View className='mt-4 h-2 bg-[#F1F5F9] mx-[-14px]' />
-      <Text className='text-base font-semibold mb-2 ml-4 mt-3'>
+      <Text className='text-base font-semibold mb-2 ms-4 mt-3'>
         Comment ({comments.length})
       </Text>
       {comments.length > 0 ? (

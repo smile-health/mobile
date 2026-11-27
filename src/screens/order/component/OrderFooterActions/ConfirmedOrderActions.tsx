@@ -32,7 +32,7 @@ export const ConfirmedOrderActions: React.FC<ConfirmedOrderActionsProps> = ({
         <View className='w-4' />
         <Button
           preset='filled'
-          textClassName={cn(AppStyles.textMedium, 'text-white ml-2')}
+          textClassName={cn(AppStyles.textMedium, 'text-white ms-2')}
           containerClassName='flex-1'
           text={t('button.allocate_stock')}
           LeftIcon={Icons.IcArrowForward}

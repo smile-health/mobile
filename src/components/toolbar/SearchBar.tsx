@@ -39,7 +39,7 @@ export function SearchBar(props: Readonly<SearchBarProps>) {
           Icon={Icons.IcBack}
           color={colors.mainText()}
           onPress={onPressBack}
-          className='mr-2'
+          className='me-2'
           {...getTestID('btn-back-searchbar')}
         />
         <TextField

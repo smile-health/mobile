@@ -6,6 +6,7 @@ import * as Localization from 'expo-localization'
 import { ParseKeys, TFunction } from 'i18next'
 import { ShowSnackbarPropType, SnackbarAction } from '@/components/Snackbar'
 import i18n from '@/i18n'
+import { toIntlLocale } from '@/i18n/direction'
 import { HomeMenuItem } from '@/models'
 import { IOptions } from '@/models/Common'
 import { COLOR_BRIGHTNESS_THRESHOLD } from '@/theme/theme.constant'
@@ -67,7 +68,7 @@ export function numberFormat(value?: number | null, format?: string) {
     return ''
   }
 
-  return Intl.NumberFormat(format ?? i18n.language).format(value)
+  return Intl.NumberFormat(format ?? toIntlLocale(i18n.language)).format(value)
 }
 
 export function parseNumber(value?: string | null) {
@@ -104,7 +105,7 @@ export function numberToString(value?: number | null) {
 }
 
 export function currencyFormat(num: number = 0, currency: string = 'IDR') {
-  const locale = Localization.getLocales()[0].languageTag
+  const locale = toIntlLocale(Localization.getLocales()[0].languageTag)
 
   return new Intl.NumberFormat(locale, {
     style: 'currency',

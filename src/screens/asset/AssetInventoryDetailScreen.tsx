@@ -328,7 +328,7 @@ export default function AssetInventoryDetailScreen({
       <View className='bg-white p-4'>
         <Button
           preset='outlined-primary'
-          textClassName={cn(AppStyles.textMedium, 'ml-2 text-main')}
+          textClassName={cn(AppStyles.textMedium, 'ms-2 text-main')}
           text={t('button.edit_asset')}
           LeftIcon={Icons.IcEdit}
           leftIconColor={colors.main()}

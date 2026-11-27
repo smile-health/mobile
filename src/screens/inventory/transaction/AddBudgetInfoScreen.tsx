@@ -202,7 +202,7 @@ function AddBudgetInfoScreen({ route, navigation }: Props) {
         <View className='flex-row px-4 py-5  border-whiteTwo border-t gap-x-2'>
           <Button
             preset='outlined'
-            textClassName='text-main font-mainMedium text-sm ml-s1'
+            textClassName='text-main font-mainMedium text-sm ms-s1'
             containerClassName='flex-1 text-center border-main'
             text={t('button.cancel')}
             LeftIcon={Icons.IcDelete}

@@ -116,8 +116,8 @@ const itemContainerClassName = 'flex-row items-center self-start mt-3'
 
 const horizontalClassName = 'flex-row items-center'
 
-const labelBaseClassName = cn(AppStyles.textRegular, 'mr-2')
+const labelBaseClassName = cn(AppStyles.textRegular, 'me-2')
 
 const radioContainerBaseClassName = 'gap-x-10'
 
-const labelRadioClassName = cn(AppStyles.textRegular, 'ml-2')
+const labelRadioClassName = cn(AppStyles.textRegular, 'ms-2')

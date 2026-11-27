@@ -176,7 +176,7 @@ export default function EditPasswordScreen({ navigation }: Props) {
             LeftIcon={Icons.IcCheck}
             leftIconSize={20}
             containerClassName='bg-deepBlue'
-            textClassName='ml-2 text-white'
+            textClassName='ms-2 text-white'
             disabled={isSavingDisabled}
             {...getTestID('btn-edit-password')}
           />

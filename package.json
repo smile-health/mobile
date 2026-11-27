@@ -18,6 +18,8 @@
     "test": "jest --config jest.config.js --coverage",
     "prepare": "husky",
     "lint": "eslint ./src --quiet",
+    "i18n:pull": "node scripts/i18n-pull.mjs",
+    "test:scripts": "node --test scripts/__tests__/*.test.mjs",
     "lint:fix": "eslint ./src --fix --quiet",
     "lint:pre-commit": "eslint $(git diff --staged --name-only | grep -E '.ts$|.tsx$' | xargs)",
     "lint:pre-commit--fix": "eslint $(git diff --staged --name-only | grep -E '.ts$|.tsx$' | xargs) --fix",

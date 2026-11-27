@@ -149,7 +149,7 @@ export default function AddReconciliationTypeScreen() {
               LeftIcon={Icons.IcCheck}
               onPress={handleSave}
               leftIconColor={colors.mainText()}
-              textClassName='ml-2'
+              textClassName='ms-2'
               {...getTestID('btn-save')}
             />
           </View>

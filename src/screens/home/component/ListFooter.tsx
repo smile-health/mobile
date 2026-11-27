@@ -24,7 +24,7 @@ export default function ListFooter(props: Readonly<ListFooterProps>) {
       {...getTestID(testID)}>
       <View className={cn(AppStyles.rowCenter)}>
         <Icon height={24} width={24} fill={colors.marine} />
-        <Text className={cn(AppStyles.textMedium, 'ml-2')}>{name}</Text>
+        <Text className={cn(AppStyles.textMedium, 'ms-2')}>{name}</Text>
       </View>
       <Icons.IcChevronRight height={16} width={16} />
     </TouchableOpacity>
