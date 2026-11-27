@@ -15,6 +15,9 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   mergeItem: jest.fn(),
   clear: jest.fn(),
   getAllKeys: jest.fn(),
+  multiRemove: jest.fn().mockResolvedValue(undefined),
+  multiSet: jest.fn().mockResolvedValue(undefined),
+  multiGet: jest.fn().mockResolvedValue([]),
 }))
 
 jest.mock('react-redux', () => ({

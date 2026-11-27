@@ -107,8 +107,8 @@ jest.mock('@/storage', () => ({
 const mockNavigation: any = { replace: jest.fn() }
 const mockRoute: any = {}
 
-const renderLoginScreen = () => {
-  return render(
+const renderLoginScreen = async () => {
+  return await render(
     <PortalProvider>
       <LoginScreen navigation={mockNavigation} route={mockRoute} />
     </PortalProvider>

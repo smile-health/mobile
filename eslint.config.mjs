@@ -27,4 +27,19 @@ export default [
       'unicorn/expiring-todo-comments': 'off',
     },
   },
+  {
+    // Helper dan stub di file test sering memanggil hook di fungsi biasa dan
+    // memakai default object; aturan ini tidak relevan untuk kode test.
+    files: ['**/__tests__/**', 'src/test-utils/**'],
+    rules: {
+      'react-hooks/rules-of-hooks': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'unicorn/no-object-as-default-parameter': 'off',
+      'unicorn/prefer-code-point': 'off',
+      'unicorn/prefer-spread': 'off',
+      'unicorn/no-await-expression-member': 'off',
+      'unicorn/no-useless-undefined': 'off',
+      'unicorn/prefer-logical-operator-over-ternary': 'off',
+    },
+  },
 ]
