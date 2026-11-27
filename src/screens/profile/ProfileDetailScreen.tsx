@@ -32,7 +32,7 @@ interface Props extends AppStackScreenProps<'ProfileDetail'> {}
 const itemSeparator = () => <ItemSeparator className='h-4' />
 
 export default function ProfileDetailScreen({ navigation }: Props) {
-  const { t } = useLanguage()
+  const { t, i18n } = useLanguage()
   const { data, isError, isLoading } = useFetchProfileQuery()
 
   const navigateToEditProfile = () => {
@@ -58,7 +58,7 @@ export default function ProfileDetailScreen({ navigation }: Props) {
   }
 
   const { firstname, lastname, programs } = data
-  const SECTION_DATA = getDetailSection(data, t)
+  const SECTION_DATA = getDetailSection(data, t, i18n?.language)
 
   const renderListHeader = () => (
     <View className='h-16 w-16 rounded-full bg-aquaHaze items-center justify-center self-center mb-4'>

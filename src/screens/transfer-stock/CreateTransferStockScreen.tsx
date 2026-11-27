@@ -15,6 +15,7 @@ import HeaderMaterial from '@/components/header/HeaderMaterial'
 import LoadingDialog from '@/components/LoadingDialog'
 import { RefreshHomeAction } from '@/components/toolbar/actions/RefreshHomeAction'
 import { useToolbar } from '@/components/toolbar/hooks/useToolbar'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { AppStackScreenProps } from '@/navigators'
 import AppStyles, { flexStyle } from '@/theme/AppStyles'
 import colors from '@/theme/colors'
@@ -45,6 +46,7 @@ export default function CreateTransferStockScreen({ route }: Props) {
     handleSaveTransferStock,
     handleRefreshActivities,
   } = useTransferStockForm(materials, material)
+  const { programName } = useLocalizedName()
 
   const [selectedStock, setSelectedStock] = useState<number | null>(null)
 
@@ -109,7 +111,7 @@ export default function CreateTransferStockScreen({ route }: Props) {
           items={[
             {
               label: t('transfer_stock.destination_program'),
-              value: program?.name,
+              value: program && programName(program),
             },
           ]}
         />

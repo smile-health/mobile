@@ -9,6 +9,7 @@ import {
   LONG_DATE_FORMAT,
 } from '@/utils/Constants'
 import { convertString } from '@/utils/DateFormatUtils'
+import { getLocalizedRoleName } from '@/utils/LocalizedNameUtils'
 
 export type SectionData = {
   label: string
@@ -20,7 +21,11 @@ export type SectionHeader = (info: {
   section: SectionListData<SectionData, Section>
 }) => React.ReactElement
 
-export const getDetailSection = (data: ProfileResponse, t: TFunction) => {
+export const getDetailSection = (
+  data: ProfileResponse,
+  t: TFunction,
+  language?: string
+) => {
   const {
     username,
     firstname,
@@ -50,7 +55,7 @@ export const getDetailSection = (data: ProfileResponse, t: TFunction) => {
         },
         {
           label: t('label.role'),
-          value: role_label,
+          value: getLocalizedRoleName(role_label, language),
           id: 'role',
         },
         {

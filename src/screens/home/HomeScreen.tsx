@@ -12,6 +12,7 @@ import { ProfileToolbarActions } from '@/components/toolbar/actions/ProfileToolb
 import { useToolbar } from '@/components/toolbar/hooks/useToolbar'
 import { useOrderNotif } from '@/hooks/useOrderNotif'
 import { useLanguage } from '@/i18n/useLanguage'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { HomeMenuChildItem } from '@/models'
 import { useLazyGetNotificationCountQuery } from '@/services/apis'
 import { removeOrdersState } from '@/services/features'
@@ -79,6 +80,7 @@ export default function HomeScreen() {
   ].some(Boolean)
 
   const { t } = useLanguage()
+  const { programName } = useLocalizedName()
   const [dialog, setDialog] = useState<
     Omit<ConfirmationDialogProps, 'dismissDialog'>
   >({
@@ -121,7 +123,7 @@ export default function HomeScreen() {
   }
 
   useToolbar({
-    title: selectedWorkspace?.name ?? '',
+    title: programName(selectedWorkspace),
     withDefaultSubtitle: false,
     actions: <ProfileToolbarActions />,
   })

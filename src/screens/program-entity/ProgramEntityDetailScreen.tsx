@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useToolbar } from '@/components/toolbar/hooks/useToolbar'
 import { useLanguage } from '@/i18n/useLanguage'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { ENTITY_TYPE } from '@/models'
 import { AppStackScreenProps } from '@/navigators'
 import UserItem from './components/UserItem'
@@ -17,6 +18,7 @@ const title = {
 export default function ProgramEntityDetailScreen({ route }: Props) {
   const { data, type } = route.params
   const { t } = useLanguage()
+  const { roleName } = useLocalizedName()
   const hookData = useEntityDetail(data)
 
   useToolbar({ title: t(title[type]) })
@@ -29,12 +31,12 @@ export default function ProgramEntityDetailScreen({ route }: Props) {
           name={full_name}
           username={username}
           phone={phone_number}
-          role={role}
+          role={roleName(role)}
           t={t}
         />
       )
     },
-    [t]
+    [t, roleName]
   )
 
   return (

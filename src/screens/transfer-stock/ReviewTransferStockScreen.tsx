@@ -5,6 +5,7 @@ import HeaderMaterial from '@/components/header/HeaderMaterial'
 import ListTitle from '@/components/list/ListTitle'
 import LoadingDialog from '@/components/LoadingDialog'
 import ScreenFooterActions from '@/components/view/ScreenFooterActions'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import ReviewTransferStockMaterialItem from './components/ReviewTransferStockMaterialItem'
 import useReviewTransferStock from './hooks/useReviewTransferStock'
 
@@ -22,6 +23,7 @@ export default function ReviewTransferStockScreen() {
     handleDeleteItem,
     handleSubmitTransferStock,
   } = useReviewTransferStock()
+  const { programName } = useLocalizedName()
 
   const renderHeader = useCallback(() => {
     return (
@@ -47,7 +49,9 @@ export default function ReviewTransferStockScreen() {
 
   return (
     <View className='flex-1 flex-col bg-lightBlueGray'>
-      <HeaderMaterial items={[{ label: headerLabel, value: program?.name }]} />
+      <HeaderMaterial
+        items={[{ label: headerLabel, value: program && programName(program) }]}
+      />
       <FlatList
         data={reviewItems}
         renderItem={renderItem}

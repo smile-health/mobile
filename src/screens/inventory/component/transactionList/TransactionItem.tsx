@@ -7,6 +7,7 @@ import ActivityLabel from '@/components/ActivityLabel'
 import { FieldValue } from '@/components/list/FieldValue'
 import { InfoRow } from '@/components/list/InfoRow'
 import { useLanguage } from '@/i18n/useLanguage'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { Transaction } from '@/models/transaction/Transaction'
 import AppStyles from '@/theme/AppStyles'
 import { cn } from '@/theme/theme-config'
@@ -59,6 +60,7 @@ function TransactionItem({
   } = item
 
   const { t } = useLanguage()
+  const { programName: localizeProgram } = useLocalizedName()
 
   const isTransferStock = transaction_type.id == TRANSACTION_TYPE.TRANSFER_STOCK
 
@@ -90,7 +92,9 @@ function TransactionItem({
         <TransferStockInfo
           programName={programName}
           activityName={activity?.name}
-          companionProgramName={companion_program?.name}
+          companionProgramName={
+            companion_program?.name && localizeProgram(companion_program)
+          }
           companionActivityName={companion_activity?.name}
           changeQty={change_qty}
           t={t}

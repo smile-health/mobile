@@ -6,6 +6,7 @@ import MaterialListHeader from '@/components/list/MaterialListHeader'
 import { RefreshHomeAction } from '@/components/toolbar/actions/RefreshHomeAction'
 import { useToolbar } from '@/components/toolbar/hooks/useToolbar'
 import ScreenFooterActions from '@/components/view/ScreenFooterActions'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { clearTransaction } from '@/services/features/transaction.slice'
 import TransferStockMaterialList from './components/TransferStockMaterialList'
 import { useTransferStockMaterial } from './hooks/useTransferStockMaterial'
@@ -28,6 +29,7 @@ export default function TransferStockMaterialScreen() {
     handleSelectMaterial,
     navigateToReviewTransferStock,
   } = useTransferStockMaterial()
+  const { programName } = useLocalizedName()
 
   const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false)
   const shouldShowFooter = transactions.length > 0
@@ -53,7 +55,7 @@ export default function TransferStockMaterialScreen() {
         items={[
           {
             label: t('transfer_stock.destination_program'),
-            value: program?.name,
+            value: program && programName(program),
           },
         ]}
       />

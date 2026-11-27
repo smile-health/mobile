@@ -1,6 +1,7 @@
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import ProgramCard from '@/components/cards/ProgramCard'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { NotificationData } from '@/models/notif/NotificationList'
 import AppStyles from '@/theme/AppStyles'
 import { cn } from '@/theme/theme-config'
@@ -25,6 +26,8 @@ function NotificationItem({ item, testID, onPress }: Readonly<Props>) {
     program,
     mobile_phone,
   } = item
+
+  const { programName } = useLocalizedName()
 
   const handlePressNotification = () => {
     onPress(item)
@@ -67,7 +70,7 @@ function NotificationItem({ item, testID, onPress }: Readonly<Props>) {
             textClassName='text-[10px]'
           />
           <Text className={cn(AppStyles.textMediumSmall, 'text-[10px]')}>
-            {program.name}
+            {programName(program)}
           </Text>
         </View>
       )}

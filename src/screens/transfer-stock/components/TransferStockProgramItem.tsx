@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { TouchableOpacity, Text } from 'react-native'
 import { Icons } from '@/assets/icons'
 import ProgramCard from '@/components/cards/ProgramCard'
+import { useLocalizedName } from '@/i18n/useLocalizedName'
 import { TransferStockProgram } from '@/models/transaction/TransferStock'
 import AppStyles, { flexStyle } from '@/theme/AppStyles'
 import { getTestID } from '@/utils/CommonUtils'
@@ -17,6 +18,7 @@ function TransferStockProgramItem({
   showFlag,
   onPress,
 }: Readonly<Props>) {
+  const { programName } = useLocalizedName()
   const handlePressItem = useCallback(() => {
     onPress(item)
   }, [item, onPress])
@@ -36,7 +38,7 @@ function TransferStockProgramItem({
         textClassName='text-sm'
       />
       <Text className={AppStyles.textMedium} style={flexStyle}>
-        {item.name}
+        {programName(item)}
       </Text>
       {showFlag && <Icons.IcFlag height={16} width={16} />}
       <Icons.IcChevronRight height={16} width={16} />
