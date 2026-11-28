@@ -4,6 +4,7 @@ import * as ExpoSplashScreen from 'expo-splash-screen'
 import { useTranslation } from 'react-i18next'
 import { TxCode } from '@/i18n'
 import { syncNativeDirection } from '@/i18n/direction'
+import { resolveAppLanguage } from '@/i18n/language'
 import { AppStackScreenProps } from '@/navigators/types'
 import { setApiLanguage, setAuthToken } from '@/services/api'
 import { setLanguage, setUserData } from '@/services/features'
@@ -37,18 +38,24 @@ export default function SplashScreen({ navigation }: Props) {
 
     const loadLanguage = async () => {
       const setting = await loadLocalData(STORAGE_KEY.SETTINGS)
-      const language: TxCode = setting?.language ?? 'en'
+      const language: TxCode = resolveAppLanguage(setting?.language)
 
       i18n.changeLanguage(language)
       setApiLanguage(language)
       dispatch(setLanguage(language))
-      // Reloads once when the stored language/override disagrees with the
+      // Reloads at most once when the language/override disagrees with the
       // native layout direction (e.g. Arabic device locale, English app).
       await syncNativeDirection(language)
     }
 
-    loadUserData()
-    loadLanguage()
+    // Language first, so the next screen mounts with the saved language
+    // instead of the device default.
+    const init = async () => {
+      await loadLanguage()
+      await loadUserData()
+    }
+
+    init()
   }, [dispatch, navigation, i18n])
   return <View />
 }

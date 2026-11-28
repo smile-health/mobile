@@ -7,6 +7,8 @@ export type DirectionPreference = 'auto' | TextDirection
 
 export const RTL_LANGUAGES = ['ar']
 export const DIRECTION_STORAGE_KEY = 'textDirection'
+// Direction we last reloaded for; caps direction reloads to one per target.
+export const DIRECTION_RELOAD_KEY = 'textDirectionReload'
 
 const PREFERENCES: DirectionPreference[] = ['auto', 'ltr', 'rtl']
 
@@ -63,16 +65,29 @@ const reloadApp = async () => {
 /**
  * React Native only applies a layout direction change after a JS reload.
  * Returns true when a reload was triggered.
+ *
+ * On Android `isRTL` is `allowRTL && (forceRTL || device locale is RTL)`, so an
+ * LTR app must also disallow RTL. Otherwise a device in Arabic stays RTL after
+ * `forceRTL(false)` and the app reloads forever.
  */
 export const syncNativeDirection = async (
   language: string | null | undefined,
   preference?: DirectionPreference
 ) => {
   const pref = preference ?? (await getDirectionPreference())
-  const wantRtl = resolveDirection(language, pref) === 'rtl'
-  I18nManager.allowRTL(true)
-  if (I18nManager.isRTL === wantRtl) return false
+  const target = resolveDirection(language, pref)
+  const wantRtl = target === 'rtl'
+  I18nManager.allowRTL(wantRtl)
   I18nManager.forceRTL(wantRtl)
+  const reloadedFor = await AsyncStorage.getItem(DIRECTION_RELOAD_KEY)
+  if (I18nManager.isRTL === wantRtl) {
+    if (reloadedFor) await AsyncStorage.removeItem(DIRECTION_RELOAD_KEY)
+    return false
+  }
+  // Already reloaded for this direction and native still disagrees: keep the
+  // current layout instead of looping on the splash screen.
+  if (reloadedFor === target) return false
+  await AsyncStorage.setItem(DIRECTION_RELOAD_KEY, target)
   await reloadApp()
   return true
 }
