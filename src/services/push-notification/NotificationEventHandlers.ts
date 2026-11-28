@@ -1,12 +1,10 @@
-import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import type { RemoteMessage } from '@/services/FirebaseMessaging'
 import { navigate } from '@/utils/NavigationUtils'
 import { notificationDisplayManager } from './NotificationDisplayManager'
 import { notificationStorageManager } from './NotificationStorageManager'
 
 class NotificationEventHandlers {
-  async onForegroundMessage(
-    remoteMessage: FirebaseMessagingTypes.RemoteMessage
-  ): Promise<void> {
+  async onForegroundMessage(remoteMessage: RemoteMessage): Promise<void> {
     const notification =
       notificationStorageManager.parseRemoteMessageToNotification(remoteMessage)
     if (!notification) return
@@ -18,9 +16,7 @@ class NotificationEventHandlers {
     ])
   }
 
-  async onBackgroundMessage(
-    remoteMessage: FirebaseMessagingTypes.RemoteMessage
-  ): Promise<void> {
+  async onBackgroundMessage(remoteMessage: RemoteMessage): Promise<void> {
     const notification =
       notificationStorageManager.parseRemoteMessageToNotification(remoteMessage)
     if (!notification) return
@@ -31,9 +27,7 @@ class NotificationEventHandlers {
     ])
   }
 
-  async onNotificationOpened(
-    remoteMessage: FirebaseMessagingTypes.RemoteMessage
-  ): Promise<void> {
+  async onNotificationOpened(remoteMessage: RemoteMessage): Promise<void> {
     const notification =
       notificationStorageManager.parseRemoteMessageToNotification(remoteMessage)
     if (!notification) return
