@@ -2,6 +2,7 @@ import { I18nManager } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import * as Updates from 'expo-updates'
 import {
+  DIRECTION_RELOAD_KEY,
   DIRECTION_STORAGE_KEY,
   getDirectionPreference,
   isRtlLanguage,
@@ -66,21 +67,65 @@ describe('direction', () => {
     expect(await getDirectionPreference()).toBe('auto')
   })
 
-  it('forces RTL and reloads only when the direction changes', async () => {
-    const force = jest
-      .spyOn(I18nManager, 'forceRTL')
-      .mockImplementation(() => {})
-    jest.spyOn(I18nManager, 'allowRTL').mockImplementation(() => {})
-    Object.defineProperty(I18nManager, 'isRTL', {
-      value: false,
-      configurable: true,
+  describe('syncNativeDirection', () => {
+    let allow: jest.SpyInstance
+    let force: jest.SpyInstance
+    const setNativeRtl = (value: boolean) =>
+      Object.defineProperty(I18nManager, 'isRTL', {
+        value,
+        configurable: true,
+      })
+
+    beforeEach(async () => {
+      allow = jest.spyOn(I18nManager, 'allowRTL').mockImplementation(() => {})
+      force = jest.spyOn(I18nManager, 'forceRTL').mockImplementation(() => {})
+      await AsyncStorage.removeItem(DIRECTION_RELOAD_KEY)
+      jest.clearAllMocks()
     })
 
-    expect(await syncNativeDirection('en', 'auto')).toBe(false)
-    expect(Updates.reloadAsync).not.toHaveBeenCalled()
+    it('does nothing when native direction already matches', async () => {
+      setNativeRtl(false)
+      expect(await syncNativeDirection('en', 'auto')).toBe(false)
+      expect(allow).toHaveBeenCalledWith(false)
+      expect(force).toHaveBeenCalledWith(false)
+      expect(Updates.reloadAsync).not.toHaveBeenCalled()
+    })
 
-    expect(await syncNativeDirection('ar', 'auto')).toBe(true)
-    expect(force).toHaveBeenCalledWith(true)
-    expect(Updates.reloadAsync).toHaveBeenCalledTimes(1)
+    it('allows and forces RTL, then reloads once for Arabic', async () => {
+      setNativeRtl(false)
+      expect(await syncNativeDirection('ar', 'auto')).toBe(true)
+      expect(allow).toHaveBeenCalledWith(true)
+      expect(force).toHaveBeenCalledWith(true)
+      expect(Updates.reloadAsync).toHaveBeenCalledTimes(1)
+      expect(await AsyncStorage.getItem(DIRECTION_RELOAD_KEY)).toBe('rtl')
+
+      // After the reload native agrees, so the guard is cleared.
+      setNativeRtl(true)
+      expect(await syncNativeDirection('ar', 'auto')).toBe(false)
+      expect(await AsyncStorage.getItem(DIRECTION_RELOAD_KEY)).toBeNull()
+    })
+
+    it('disallows RTL for an LTR language on an RTL device', async () => {
+      // Arabic device locale: native starts RTL while the app is English.
+      setNativeRtl(true)
+      expect(await syncNativeDirection('en', 'auto')).toBe(true)
+      expect(allow).toHaveBeenCalledWith(false)
+      expect(force).toHaveBeenCalledWith(false)
+      expect(Updates.reloadAsync).toHaveBeenCalledTimes(1)
+    })
+
+    it('never reloads twice for the same direction', async () => {
+      setNativeRtl(true)
+      expect(await syncNativeDirection('en', 'auto')).toBe(true)
+      // Native still disagrees after the reload: stop instead of looping.
+      expect(await syncNativeDirection('en', 'auto')).toBe(false)
+      expect(await syncNativeDirection('en', 'auto')).toBe(false)
+      expect(Updates.reloadAsync).toHaveBeenCalledTimes(1)
+
+      // A different target direction may still reload.
+      setNativeRtl(false)
+      expect(await syncNativeDirection('ar', 'auto')).toBe(true)
+      expect(Updates.reloadAsync).toHaveBeenCalledTimes(2)
+    })
   })
 })
