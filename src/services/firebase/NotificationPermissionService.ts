@@ -1,4 +1,8 @@
-import createMessaging from '@/services/FirebaseMessaging'
+import {
+  AuthorizationStatus as FCMAuthorizationStatus,
+  hasPermission,
+  requestPermission,
+} from '@/services/FirebaseMessaging'
 import { isIOS } from '@/utils/CommonUtils'
 import notifee, { AuthorizationStatus } from '../Notifee'
 
@@ -28,11 +32,11 @@ class NotificationPermissionService {
   }
 
   private async requestIOSPermission(): Promise<boolean> {
-    const authStatus = await createMessaging().requestPermission()
+    const authStatus = await requestPermission()
 
     const isGranted =
-      authStatus === createMessaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === createMessaging.AuthorizationStatus.PROVISIONAL
+      authStatus === FCMAuthorizationStatus.AUTHORIZED ||
+      authStatus === FCMAuthorizationStatus.PROVISIONAL
 
     return isGranted
   }
@@ -47,11 +51,11 @@ class NotificationPermissionService {
   }
 
   private async checkIOSPermission(): Promise<boolean> {
-    const authStatus = await createMessaging().hasPermission()
+    const authStatus = await hasPermission()
 
     const isGranted =
-      authStatus === createMessaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === createMessaging.AuthorizationStatus.PROVISIONAL
+      authStatus === FCMAuthorizationStatus.AUTHORIZED ||
+      authStatus === FCMAuthorizationStatus.PROVISIONAL
 
     return isGranted
   }

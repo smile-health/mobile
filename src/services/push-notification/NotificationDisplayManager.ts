@@ -1,4 +1,4 @@
-import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import type { RemoteMessage } from '@/services/FirebaseMessaging'
 import { notificationChannelManager } from './NotificationChannelManager'
 import notifee, { AndroidImportance } from '../Notifee'
 
@@ -7,9 +7,7 @@ class NotificationDisplayManager {
     return `notif_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`
   }
 
-  async displayNotification(
-    remoteMessage: FirebaseMessagingTypes.RemoteMessage
-  ): Promise<void> {
+  async displayNotification(remoteMessage: RemoteMessage): Promise<void> {
     try {
       const { notification, data } = remoteMessage
 

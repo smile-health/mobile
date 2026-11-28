@@ -102,6 +102,7 @@ jest.mock('@/utils/CommonUtils', () => ({
 
 jest.mock('@/storage', () => ({
   loadLocalData: jest.fn().mockResolvedValue('mock-fcm-token'),
+  saveLocalData: jest.fn(),
 }))
 
 const mockNavigation: any = { replace: jest.fn() }

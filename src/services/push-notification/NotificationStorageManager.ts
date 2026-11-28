@@ -1,4 +1,4 @@
-import type { FirebaseMessagingTypes } from '@react-native-firebase/messaging'
+import type { RemoteMessage } from '@/services/FirebaseMessaging'
 import { saveLocalData } from '@/storage'
 import {
   PushNotificationData,
@@ -14,7 +14,7 @@ class NotificationStorageManager {
   }
 
   parseRemoteMessageToNotification(
-    remoteMessage: FirebaseMessagingTypes.RemoteMessage
+    remoteMessage: RemoteMessage
   ): PushNotificationItem | null {
     const { notification, data } = remoteMessage
     if (!notification?.title || !notification?.body) return null

@@ -1,4 +1,4 @@
-import messaging from './src/services/FirebaseMessaging'
+import { setBackgroundMessageHandler } from './src/services/FirebaseMessaging'
 import notifee from './src/services/Notifee'
 
 import { updateArrayData } from './src/storage'
@@ -50,9 +50,8 @@ const storeNotification = async (notification) => {
  */
 const incrementBadgeCount = async () => {
   try {
-    const { pushNotificationStorageService } = await import(
-      './src/services/push-notification/pushNotificationStorage.service'
-    )
+    const { pushNotificationStorageService } =
+      await import('./src/services/push-notification/pushNotificationStorage.service')
     await pushNotificationStorageService.incrementBadgeCount()
   } catch {
     // Silent error handling for background process
@@ -63,7 +62,7 @@ const incrementBadgeCount = async () => {
  * Background message handler for Firebase Cloud Messaging
  * This handler is called when the app is in the background or terminated
  */
-messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+setBackgroundMessageHandler(async (remoteMessage) => {
   try {
     const notification = parseRemoteMessageToNotification(remoteMessage)
     if (!notification) {

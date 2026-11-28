@@ -82,24 +82,27 @@ jest.mock('react-native-notify-kit', () => {
   }
 })
 
-// Mock @react-native-firebase/messaging
+// Mock @react-native-firebase/messaging (modular API, v22+)
 jest.mock('@react-native-firebase/messaging', () => {
-  const mockMessaging = {
-    hasPermission: jest.fn().mockResolvedValue(2),
-    requestPermission: jest.fn().mockResolvedValue(2),
+  const mockMessagingInstance = {}
+
+  return {
+    __esModule: true,
+    getMessaging: jest.fn(() => mockMessagingInstance),
+    hasPermission: jest.fn().mockResolvedValue(1),
+    requestPermission: jest.fn().mockResolvedValue(1),
     getToken: jest.fn().mockResolvedValue('mock-fcm-token'),
-    onMessage: jest.fn(),
-    onNotificationOpenedApp: jest.fn(),
+    onMessage: jest.fn(() => jest.fn()),
+    onNotificationOpenedApp: jest.fn(() => jest.fn()),
     getInitialNotification: jest.fn().mockResolvedValue(null),
-    onTokenRefresh: jest.fn(),
+    onTokenRefresh: jest.fn(() => jest.fn()),
     setBackgroundMessageHandler: jest.fn(),
     AuthorizationStatus: {
-      NOT_DETERMINED: 0,
-      DENIED: 1,
-      AUTHORIZED: 2,
-      PROVISIONAL: 3,
+      NOT_DETERMINED: -1,
+      DENIED: 0,
+      AUTHORIZED: 1,
+      PROVISIONAL: 2,
+      EPHEMERAL: 3,
     },
   }
-
-  return () => mockMessaging
 })

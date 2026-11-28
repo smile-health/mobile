@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { AppState } from 'react-native'
 import { firebaseMessagingService } from '@/services/firebase'
-import createMessaging from '@/services/FirebaseMessaging'
+import {
+  AuthorizationStatus as FCMAuthorizationStatus,
+  hasPermission as hasFCMPermission,
+} from '@/services/FirebaseMessaging'
 import notifee from '@/services/Notifee'
 import {
   pushNotificationStorageService,
@@ -125,17 +128,17 @@ export const useNotificationPermission = () => {
 
   const checkPermissionStatus = useCallback(async () => {
     try {
-      const authStatus = await createMessaging().hasPermission()
+      const authStatus = await hasFCMPermission()
 
       const status = (() => {
         switch (authStatus) {
-          case createMessaging.AuthorizationStatus.AUTHORIZED: {
+          case FCMAuthorizationStatus.AUTHORIZED: {
             return 'granted'
           }
-          case createMessaging.AuthorizationStatus.PROVISIONAL: {
+          case FCMAuthorizationStatus.PROVISIONAL: {
             return 'provisional'
           }
-          case createMessaging.AuthorizationStatus.DENIED: {
+          case FCMAuthorizationStatus.DENIED: {
             return 'denied'
           }
           default: {

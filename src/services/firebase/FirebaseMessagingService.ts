@@ -1,6 +1,12 @@
 import { navigate } from '@/utils/NavigationUtils'
 import { notificationPermissionService } from './NotificationPermissionService'
-import messaging from '../FirebaseMessaging'
+import {
+  getInitialNotification,
+  getToken,
+  onMessage,
+  onNotificationOpenedApp,
+  onTokenRefresh,
+} from '../FirebaseMessaging'
 import {
   notificationChannelManager,
   notificationDisplayManager,
@@ -58,7 +64,7 @@ class FirebaseMessagingService {
 
   async getFCMToken(): Promise<string | null> {
     try {
-      this.fcmToken = await messaging().getToken()
+      this.fcmToken = await getToken()
       return this.fcmToken
     } catch {
       return null
@@ -68,28 +74,26 @@ class FirebaseMessagingService {
   // Private implementation methods
   private setupMessageHandlersInternal(): void {
     // Foreground message handler
-    messaging().onMessage(async (remoteMessage) => {
+    onMessage(async (remoteMessage) => {
       await notificationDisplayManager.displayNotification(remoteMessage)
     })
 
     // App opened from background
-    messaging().onNotificationOpenedApp(() => {
+    onNotificationOpenedApp(() => {
       this.handleNotificationPress()
     })
 
     // App opened from quit state
-    messaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        if (remoteMessage) {
-          setTimeout(() => {
-            this.handleNotificationPress()
-          }, 2000)
-        }
-      })
+    getInitialNotification().then((remoteMessage) => {
+      if (remoteMessage) {
+        setTimeout(() => {
+          this.handleNotificationPress()
+        }, 2000)
+      }
+    })
 
     // Token refresh handler
-    messaging().onTokenRefresh((token) => {
+    onTokenRefresh((token) => {
       this.fcmToken = token
       // Token will be sent to backend during login process
     })

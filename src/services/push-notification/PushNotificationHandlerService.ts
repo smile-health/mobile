@@ -1,4 +1,8 @@
-import createMessaging from '@/services/FirebaseMessaging'
+import {
+  getInitialNotification,
+  onMessage,
+  onNotificationOpenedApp,
+} from '@/services/FirebaseMessaging'
 import { notificationChannelManager } from './NotificationChannelManager'
 import { notificationDisplayManager } from './NotificationDisplayManager'
 import { notificationEventHandlers } from './NotificationEventHandlers'
@@ -51,25 +55,23 @@ class PushNotificationHandlerService {
   }
 
   private setupFirebaseHandlers(): void {
-    createMessaging().onMessage(
+    onMessage(
       notificationEventHandlers.onForegroundMessage.bind(
         notificationEventHandlers
       )
     )
 
-    createMessaging().onNotificationOpenedApp((remoteMessage) => {
+    onNotificationOpenedApp((remoteMessage) => {
       notificationEventHandlers.onNotificationOpened(remoteMessage)
     })
 
-    createMessaging()
-      .getInitialNotification()
-      .then((remoteMessage) => {
-        if (remoteMessage) {
-          setTimeout(() => {
-            notificationEventHandlers.onNotificationOpened(remoteMessage)
-          }, 2000)
-        }
-      })
+    getInitialNotification().then((remoteMessage) => {
+      if (remoteMessage) {
+        setTimeout(() => {
+          notificationEventHandlers.onNotificationOpened(remoteMessage)
+        }, 2000)
+      }
+    })
   }
 
   private setupNotifeeHandlers(): void {
