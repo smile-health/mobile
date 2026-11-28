@@ -1,11 +1,11 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo } from 'react'
 import {
+  I18nManager,
   StyleSheet,
   Text,
   TextStyle,
   View,
   ViewStyle,
-  TouchableOpacity,
 } from 'react-native'
 import { Control, useController } from 'react-hook-form'
 import { Dropdown as BaseDropdown } from 'react-native-element-dropdown'
@@ -151,7 +151,7 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
     field.onChange()
   }
 
-  const renderRightIcon = () => {
+  const renderIcons = () => {
     return (
       <View className='flex-row items-center gap-x-2'>
         {showReset && (
@@ -168,19 +168,20 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
     )
   }
 
+  // react-native-element-dropdown lays its row out with `row-reverse` when
+  // I18nManager.isRTL, but React Native already mirrors `row` in RTL. The two
+  // flips cancel out, so whatever is passed as the right icon ends up on the
+  // physical right, on top of the label. Passing the icons as the left icon in
+  // RTL puts them on the physical left, i.e. the visual end of the field.
+  const iconProps = I18nManager.isRTL
+    ? { renderLeftIcon: renderIcons, renderRightIcon: renderNothing }
+    : { renderRightIcon: renderIcons }
+
   const shouldShowAsterisk = haveValue(field.value) && isMandatory
 
   const conditionalPlaceholder = useMemo(() => {
     return isMandatory ? '' : placeholder
   }, [isMandatory, placeholder])
-
-  const dropdownRef = useRef<any>(null)
-
-  const openDropdown = () => {
-    if (dropdownRef.current) {
-      dropdownRef.current.open()
-    }
-  }
 
   return (
     <View className={className.container}>
@@ -191,7 +192,6 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
         </Text>
       )}
       <BaseDropdown
-        ref={dropdownRef}
         style={styles.container}
         containerStyle={styles.listContainer}
         itemContainerStyle={styles.itemContainer}
@@ -201,7 +201,7 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
         inputSearchStyle={styles.inputSearch}
         valueField={valueField}
         labelField={labelField}
-        renderRightIcon={renderRightIcon}
+        {...iconProps}
         disable={disable}
         onChange={onChange}
         value={defaultValue}
@@ -210,17 +210,18 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
         {...rest}
       />
       {isMandatory && !defaultValue && (
-        <TouchableOpacity onPress={openDropdown} activeOpacity={0.7}>
+        // Placeholder drawn over the empty field. It must not take touches:
+        // the wrapper has zero height, so a press on the label was cancelled
+        // as "outside the button" and the field below never got the tap.
+        <View pointerEvents='none'>
           <Text
-            className={
-              (className.label,
-              'absolute text-gray-500 text-sm start-1 mt-[-35] py-2')
-            }
+            className='absolute text-gray-500 text-sm start-1 end-8 mt-[-35] py-2'
+            numberOfLines={1}
             {...getTestID(labelTestID)}>
             {label}
             <Text className='text-lavaRed'>*</Text>
           </Text>
-        </TouchableOpacity>
+        </View>
       )}
       {!!errors && (
         <Text
@@ -241,6 +242,8 @@ export default function Dropdown<T>(props: Readonly<DropdownProps<T>>) {
 }
 
 const baseContainerClassName = 'mt-2'
+
+const renderNothing = () => null
 
 const dropdownPresets = {
   default: {
